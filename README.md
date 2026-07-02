@@ -3,7 +3,7 @@
 Internal seller tool for **India Business International (IBI) · iINTELLIGENCEi**.
 **Live:** https://calculator.indiabusinessinternational.online/ · installable as a PWA (works offline).
 
-**Current version: v4.5** — shown in the top-left badge. Versioning: minor patches bump the decimal (v3.1), big features bump the major (v4). On each release also bump `APP_VERSION` in `index.html` and `CACHE` in `sw.js`.
+**Current version: v4.6** — shown in the top-left badge. (v4.6: brand accent colour changed to #7F00FF violet across UI, favicon, PWA icons and OG banner.) Versioning: minor patches bump the decimal (v3.1), big features bump the major (v4). On each release also bump `APP_VERSION` in `index.html` and `CACHE` in `sw.js`.
 
 ## Platforms
 
@@ -80,7 +80,7 @@ OCR titles from wide dashboard tables are often mangled. The **🤖 AI Product-N
 - **PWA install**: install banner (re-appears 24 h after dismissal), ⬇ Install button in the header, and an Install entry inside the ⚙ Settings menu. Service worker caches the app shell for offline use.
 - **Entry Date & Time** field — live clock displayed as `28 May 2026, Thursday, 01:38:00 PM`; 📅 Edit opens a calendar picker for manual entry; the chosen timestamp is recorded in History and Google Sheets.
 - **Backup & Restore** (⚙ Settings menu): download all local data (history, scans, settings) as JSON; restore from a backup file.
-- **Branding**: panel headings in #00c5ff on black (Roboto), IBI favicon + PWA icons, company logo banner at the top, dark/light **toggle switch**, version badge top-left.
+- **Branding**: panel headings in the brand accent on black (Roboto) — accent changed from #00c5ff to **#7F00FF (violet)** in v4.6 — IBI favicon + PWA icons, company logo banner at the top, dark/light **toggle switch**, version badge top-left.
 - **Mobile**: edge-to-edge layout (no side padding) for maximum screen area.
 - **Open Graph + Twitter Card** meta tags with a branded preview banner (`assets/og-banner.png`).
 - Local history: up to 24 saved calculations with per-item delete and Clear-all (existing feature, retained).

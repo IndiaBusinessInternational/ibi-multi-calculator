@@ -25,8 +25,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <!-- Favicon: IBI text on black, cyan text -->
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><rect width=%2232%22 height=%2232%22 rx=%226%22 fill=%22%23000%22/><text x=%2216%22 y=%2222%22 text-anchor=%22middle%22 font-family=%22Roboto, sans-serif%22 font-size=%2213%22 font-weight=%22900%22 fill=%22%2300c5ff%22 letter-spacing=%22-0.5%22>IBI</text></svg>">
-<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 180 180%22><rect width=%22180%22 height=%22180%22 rx=%2230%22 fill=%22%23000%22/><text x=%2290%22 y=%22120%22 text-anchor=%22middle%22 font-family=%22Roboto, sans-serif%22 font-size=%2272%22 font-weight=%22900%22 fill=%22%2300c5ff%22 letter-spacing=%22-3%22>IBI</text></svg>">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><rect width=%2232%22 height=%2232%22 rx=%226%22 fill=%22%23000%22/><text x=%2216%22 y=%2222%22 text-anchor=%22middle%22 font-family=%22Roboto, sans-serif%22 font-size=%2213%22 font-weight=%22900%22 fill=%22%237F00FF%22 letter-spacing=%22-0.5%22>IBI</text></svg>">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 180 180%22><rect width=%22180%22 height=%22180%22 rx=%2230%22 fill=%22%23000%22/><text x=%2290%22 y=%22120%22 text-anchor=%22middle%22 font-family=%22Roboto, sans-serif%22 font-size=%2272%22 font-weight=%22900%22 fill=%22%237F00FF%22 letter-spacing=%22-3%22>IBI</text></svg>">
 <style>
 /* ═════════════════ DESIGN TOKENS ═════════════════ */
 :root {
@@ -71,7 +71,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
   display:flex;
   align-items:center;
   justify-content:center;
-  border-bottom:1px solid rgba(0,206,209,.15);
+  border-bottom:1px solid rgba(127,0,255,.15);
 }
 .brand-banner img{
   max-height:90px;
@@ -85,11 +85,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 }
 
 /* ═════════════════ HEADER ═════════════════ */
-.header{background:var(--hbg);padding:0 22px;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(0,197,255,.18);}
-.header::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#00c5ff 40%,#00c5ff 60%,transparent);}
+.header{background:var(--hbg);padding:0 22px;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(127,0,255,.18);}
+.header::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#7F00FF 40%,#7F00FF 60%,transparent);}
 .header-left{display:flex;align-items:center;gap:14px;}
-.header-brand{font-size:14px;font-weight:700;color:#00c5ff;letter-spacing:.01em;line-height:1.2;}
-.header-sub{font-size:10.5px;color:#00c5ff;opacity:.75;margin-top:1px;font-weight:500;letter-spacing:.03em;}
+.header-brand{font-size:14px;font-weight:700;color:#7F00FF;letter-spacing:.01em;line-height:1.2;}
+.header-sub{font-size:10.5px;color:#7F00FF;opacity:.75;margin-top:1px;font-weight:500;letter-spacing:.03em;}
 .header-right{display:flex;align-items:center;gap:8px;}
 .header-badge{font-size:11px;font-weight:600;background:rgba(124,58,237,.18);color:#a78bfa;padding:4px 11px;border-radius:20px;border:1px solid rgba(124,58,237,.3);white-space:nowrap;}
 .bg-toggle,.kbd-toggle{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.13);border-radius:20px;padding:5px 12px;cursor:pointer;font-size:12px;font-weight:500;color:rgba(255,255,255,.7);font-family:var(--font);transition:all .2s;white-space:nowrap;}
@@ -152,10 +152,10 @@ body.dark .mode-btn.active .md{color:rgba(255,255,255,.65);}
 
 /* ═════════════════ PANELS ═════════════════ */
 .panel{background:var(--surface);border-radius:var(--r-lg);border:1px solid var(--border);box-shadow:var(--sh);overflow:hidden;}
-.panel-header{padding:14px 18px 13px;border-bottom:1px solid rgba(0,197,255,.25);background:#000;display:flex;align-items:center;gap:10px;}
-.panel-icon{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;background:rgba(0,197,255,.14);flex-shrink:0;}
-.panel-title{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#00c5ff;}
-.panel-sub{font-size:11px;color:rgba(0,197,255,.65);margin-top:1px;}
+.panel-header{padding:14px 18px 13px;border-bottom:1px solid rgba(127,0,255,.25);background:#000;display:flex;align-items:center;gap:10px;}
+.panel-icon{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;background:rgba(127,0,255,.14);flex-shrink:0;}
+.panel-title{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#7F00FF;}
+.panel-sub{font-size:11px;color:rgba(127,0,255,.65);margin-top:1px;}
 .panel-body{padding:18px;}
 
 /* ═════════════════ FIELDS ═════════════════ */
@@ -348,14 +348,14 @@ body.dark .mode-btn.active .md{color:rgba(255,255,255,.65);}
 .scan-drift .sd-x:hover{opacity:1;}
 
 /* ═════════════════ VERSION BADGE ═════════════════ */
-.ver-badge{font-size:10px;font-weight:700;font-family:var(--mono);background:rgba(0,197,255,.12);color:#00c5ff;border:1px solid rgba(0,197,255,.35);border-radius:6px;padding:2px 7px;letter-spacing:.04em;white-space:nowrap;align-self:flex-start;}
+.ver-badge{font-size:10px;font-weight:700;font-family:var(--mono);background:rgba(127,0,255,.12);color:#7F00FF;border:1px solid rgba(127,0,255,.35);border-radius:6px;padding:2px 7px;letter-spacing:.04em;white-space:nowrap;align-self:flex-start;}
 
 /* ═════════════════ THEME TOGGLE SWITCH ═════════════════ */
 .switch-wrap{display:flex;align-items:center;gap:7px;cursor:pointer;user-select:none;}
 .switch-lbl{font-size:11.5px;font-weight:500;color:rgba(255,255,255,.7);}
 .switch{position:relative;width:42px;height:22px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:22px;transition:background .25s;flex-shrink:0;}
 .switch::after{content:'☀️';position:absolute;top:1px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;font-size:11px;line-height:18px;text-align:center;transition:transform .25s;}
-body.dark .switch{background:#00c5ff;border-color:#00c5ff;}
+body.dark .switch{background:#7F00FF;border-color:#7F00FF;}
 body.dark .switch::after{transform:translateX(19px);content:'🌙';background:#08080f;}
 
 /* ═════════════════ SETTINGS MENU ═════════════════ */
@@ -371,16 +371,16 @@ body.dark .switch::after{transform:translateX(19px);content:'🌙';background:#0
 .settings-note{font-size:10.5px;color:var(--text3);padding:4px 12px 7px;line-height:1.5;}
 
 /* ═════════════════ PWA INSTALL ═════════════════ */
-.install-btn{display:none;align-items:center;gap:5px;background:#00c5ff;border:none;border-radius:20px;padding:6px 13px;cursor:pointer;font-size:12px;font-weight:700;color:#000;font-family:var(--font);transition:all .2s;white-space:nowrap;}
-.install-btn:hover{background:#41d4ff;}
+.install-btn{display:none;align-items:center;gap:5px;background:#7F00FF;border:none;border-radius:20px;padding:6px 13px;cursor:pointer;font-size:12px;font-weight:700;color:#fff;font-family:var(--font);transition:all .2s;white-space:nowrap;}
+.install-btn:hover{background:#9b4dff;}
 .install-btn.show{display:inline-flex;}
-.install-banner{position:fixed;left:50%;bottom:18px;transform:translateX(-50%) translateY(120px);background:#000;border:1px solid rgba(0,197,255,.4);border-radius:var(--r-lg);box-shadow:0 12px 40px rgba(0,0,0,.5);padding:14px 16px;display:flex;align-items:center;gap:12px;z-index:998;max-width:420px;width:calc(100vw - 24px);transition:transform .4s cubic-bezier(.34,1.56,.64,1);}
+.install-banner{position:fixed;left:50%;bottom:18px;transform:translateX(-50%) translateY(120px);background:#000;border:1px solid rgba(127,0,255,.4);border-radius:var(--r-lg);box-shadow:0 12px 40px rgba(0,0,0,.5);padding:14px 16px;display:flex;align-items:center;gap:12px;z-index:998;max-width:420px;width:calc(100vw - 24px);transition:transform .4s cubic-bezier(.34,1.56,.64,1);}
 .install-banner.show{transform:translateX(-50%) translateY(0);}
 .install-banner .ib-icon{width:40px;height:40px;border-radius:9px;flex-shrink:0;}
 .install-banner .ib-txt{flex:1;min-width:0;}
-.install-banner .ib-title{font-size:13px;font-weight:700;color:#00c5ff;}
+.install-banner .ib-title{font-size:13px;font-weight:700;color:#7F00FF;}
 .install-banner .ib-sub{font-size:11px;color:rgba(255,255,255,.6);margin-top:1px;line-height:1.4;}
-.install-banner .ib-install{background:#00c5ff;color:#000;border:none;border-radius:var(--r);padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font);white-space:nowrap;}
+.install-banner .ib-install{background:#7F00FF;color:#fff;border:none;border-radius:var(--r);padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font);white-space:nowrap;}
 .install-banner .ib-close{background:none;border:none;color:rgba(255,255,255,.5);font-size:16px;cursor:pointer;padding:4px;line-height:1;}
 
 /* ═════════════════ ENTRY DATE & TIME ═════════════════ */
@@ -1165,7 +1165,7 @@ function callClaude_(key, prompt) {
 // ═════════════════ VERSION ═════════════════
 // Major = big features (v3 → v4) · minor = small patches (v3.0 → v3.1).
 // Keep in sync with CACHE in sw.js on every release.
-const APP_VERSION = 'v4.5';
+const APP_VERSION = 'v4.6';
 
 // ═════════════════ PLATFORM CONFIG ═════════════════
 const PLATFORMS = {
