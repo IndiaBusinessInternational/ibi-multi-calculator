@@ -1,0 +1,1816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>IBI Multi-Platform Pricing Calculator</title>
+<meta name="description" content="Multi-platform eCommerce pricing calculator for Amazon, Flipkart, Meesho, Shopsy, ShopClues, IBI Website and Offline. By India Business International.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<!-- Favicon: IBI text on black, cyan text -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><rect width=%2232%22 height=%2232%22 rx=%226%22 fill=%22%23000%22/><text x=%2216%22 y=%2222%22 text-anchor=%22middle%22 font-family=%22Roboto, sans-serif%22 font-size=%2213%22 font-weight=%22900%22 fill=%22%2300c5ff%22 letter-spacing=%22-0.5%22>IBI</text></svg>">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 180 180%22><rect width=%22180%22 height=%22180%22 rx=%2230%22 fill=%22%23000%22/><text x=%2290%22 y=%22120%22 text-anchor=%22middle%22 font-family=%22Roboto, sans-serif%22 font-size=%2272%22 font-weight=%22900%22 fill=%22%2300c5ff%22 letter-spacing=%22-3%22>IBI</text></svg>">
+<style>
+/* ═════════════════ DESIGN TOKENS ═════════════════ */
+:root {
+  --bg:#f4f5f9; --surface:#fff; --surface2:#f0f1f6; --surface3:#e8eaf2;
+  --border:rgba(15,23,42,.08); --border-md:rgba(15,23,42,.14); --border-lg:rgba(15,23,42,.22);
+  --text:#0f172a; --text2:#475569; --text3:#94a3b8;
+  --purple:#7c3aed; --purple-bg:#ede9fe; --purple-dim:rgba(124,58,237,.12); --purple-2:#6d28d9;
+  --accent:#f97316; --accent-bg:#fff7ed; --accent-text:#c2410c;
+  --green:#16a34a; --green-bg:#f0fdf4; --green-2:#15803d;
+  --blue:#2563eb; --blue-bg:#eff6ff;
+  --red:#dc2626; --red-bg:#fef2f2; --red-2:#b91c1c;
+  --amber:#d97706; --amber-bg:#fffbeb;
+  --teal:#0d9488; --teal-bg:#f0fdfa; --teal-2:#0f766e;
+  --r:10px; --r-lg:14px; --r-xl:22px;
+  --sh-sm:0 1px 3px rgba(0,0,0,.05),0 1px 2px rgba(0,0,0,.04);
+  --sh:0 4px 20px rgba(0,0,0,.07),0 1px 4px rgba(0,0,0,.04);
+  --sh-lg:0 12px 36px rgba(0,0,0,.10),0 4px 12px rgba(0,0,0,.05);
+  --hbg:#08080f;
+  --font:'Roboto',-apple-system,BlinkMacSystemFont,sans-serif;
+  --mono:'Roboto Mono',ui-monospace,monospace;
+}
+body.dark {
+  --bg:#0c0c14; --surface:#13131f; --surface2:#1a1a28; --surface3:#21212f;
+  --border:rgba(255,255,255,.07); --border-md:rgba(255,255,255,.13); --border-lg:rgba(255,255,255,.22);
+  --text:#f0f2f8; --text2:#9ba3b8; --text3:#5a6178;
+  --purple-bg:#1e1040; --purple-dim:rgba(124,58,237,.18);
+  --accent-bg:#1c0e00; --accent-text:#fb923c;
+  --green-bg:#011f0e; --blue-bg:#070e2b; --red-bg:#1f0606;
+  --amber-bg:#140e00; --teal-bg:#021c1a;
+  --sh-sm:0 1px 3px rgba(0,0,0,.4); --sh:0 4px 20px rgba(0,0,0,.45);
+  --sh-lg:0 12px 36px rgba(0,0,0,.55); --hbg:#040407;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s;}
+
+/* ═════════════════ BRAND BANNER ═════════════════ */
+.brand-banner{
+  background:#000;
+  padding:18px 20px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-bottom:1px solid rgba(0,206,209,.15);
+}
+.brand-banner img{
+  max-height:90px;
+  width:auto;
+  max-width:100%;
+  display:block;
+}
+@media(max-width:680px){
+  .brand-banner{padding:12px 14px;}
+  .brand-banner img{max-height:55px;}
+}
+
+/* ═════════════════ HEADER ═════════════════ */
+.header{background:var(--hbg);padding:0 22px;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(0,197,255,.18);}
+.header::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#00c5ff 40%,#00c5ff 60%,transparent);}
+.header-left{display:flex;align-items:center;gap:14px;}
+.header-brand{font-size:14px;font-weight:700;color:#00c5ff;letter-spacing:.01em;line-height:1.2;}
+.header-sub{font-size:10.5px;color:#00c5ff;opacity:.75;margin-top:1px;font-weight:500;letter-spacing:.03em;}
+.header-right{display:flex;align-items:center;gap:8px;}
+.header-badge{font-size:11px;font-weight:600;background:rgba(124,58,237,.18);color:#a78bfa;padding:4px 11px;border-radius:20px;border:1px solid rgba(124,58,237,.3);white-space:nowrap;}
+.bg-toggle,.kbd-toggle{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.13);border-radius:20px;padding:5px 12px;cursor:pointer;font-size:12px;font-weight:500;color:rgba(255,255,255,.7);font-family:var(--font);transition:all .2s;white-space:nowrap;}
+.bg-toggle:hover,.kbd-toggle:hover{background:rgba(255,255,255,.13);color:#fff;}
+
+/* ═════════════════ LAYOUT ═════════════════ */
+.container{max-width:1080px;margin:0 auto;padding:18px 16px 40px;}
+.calc-area{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:14px;}
+@media(max-width:680px){
+  .calc-area{grid-template-columns:1fr;}
+  .header{height:auto;padding:9px 14px;flex-wrap:wrap;gap:6px;}
+  .header-brand{font-size:13px;}
+  .header-sub{font-size:10px;}
+  .header-badge,.kbd-toggle{display:none;}
+  .bg-toggle{padding:5px 11px;}
+  .header-left{gap:10px;}
+  .header-left svg{width:36px;height:30px;}
+  .container{padding:14px 12px 32px;}
+}
+
+/* ═════════════════ SECTION LABEL ═════════════════ */
+.section-label{font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:9px;display:flex;align-items:center;gap:8px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* ═════════════════ PLATFORM CHIPS ═════════════════ */
+.platform-wrap{margin-bottom:16px;}
+.platform-chips{display:flex;flex-wrap:wrap;gap:6px;}
+.pchip{padding:7px 14px;border-radius:var(--r-xl);border:1.5px solid var(--border-md);background:var(--surface);color:var(--text2);font-size:12.5px;font-weight:600;cursor:pointer;font-family:var(--font);transition:all .18s;white-space:nowrap;box-shadow:var(--sh-sm);display:inline-flex;align-items:center;gap:6px;}
+.pchip:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-1px);box-shadow:0 0 0 3px rgba(249,115,22,.1);}
+.pchip.active{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 3px 12px rgba(249,115,22,.4);transform:translateY(-1px);}
+.pchip.grp-b:hover{border-color:var(--blue);color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.1);}
+.pchip.grp-b.active{background:var(--blue);border-color:var(--blue);color:#fff;box-shadow:0 3px 12px rgba(37,99,235,.35);}
+.pchip.grp-c:hover{border-color:var(--teal);color:var(--teal);box-shadow:0 0 0 3px rgba(13,148,136,.1);}
+.pchip.grp-c.active{background:var(--teal);border-color:var(--teal);color:#fff;box-shadow:0 3px 12px rgba(13,148,136,.35);}
+.pchip-icon{font-size:11px;opacity:.8;}
+
+/* ═════════════════ MODE TOGGLE ═════════════════ */
+.mode-wrap{margin-bottom:14px;}
+.mode-toggle{display:grid;grid-template-columns:1fr 1fr;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:5px;gap:5px;box-shadow:var(--sh);}
+.mode-btn{padding:11px 14px;border-radius:var(--r);border:none;background:transparent;cursor:pointer;font-family:var(--font);color:var(--text3);text-align:center;transition:all .2s;line-height:1.4;}
+.mode-btn .mi{font-size:18px;display:block;margin-bottom:4px;}
+.mode-btn .mt{display:block;font-size:13px;font-weight:700;color:var(--text2);}
+.mode-btn .md{display:block;font-size:11px;font-weight:400;margin-top:2px;color:var(--text3);}
+.mode-btn.active{background:var(--hbg);box-shadow:var(--sh-sm);}
+.mode-btn.active .mt{color:#fff;}
+.mode-btn.active .md{color:rgba(255,255,255,.55);}
+body.dark .mode-btn.active{background:var(--purple);}
+body.dark .mode-btn.active .md{color:rgba(255,255,255,.65);}
+
+/* ═════════════════ NOTICE ═════════════════ */
+.notice{border-radius:var(--r);padding:11px 15px;font-size:13px;margin-bottom:18px;transition:all .25s;font-weight:400;display:flex;align-items:flex-start;gap:9px;line-height:1.55;}
+.notice-icon{font-size:15px;flex-shrink:0;margin-top:1px;}
+.notice strong{font-weight:700;}
+.notice.grp-a{background:var(--amber-bg);border:1px solid rgba(217,119,6,.22);color:var(--amber);}
+.notice.grp-b{background:var(--blue-bg);border:1px solid rgba(37,99,235,.22);color:var(--blue);}
+.notice.grp-c{background:var(--teal-bg);border:1px solid rgba(13,148,136,.22);color:var(--teal);}
+
+/* ═════════════════ PANELS ═════════════════ */
+.panel{background:var(--surface);border-radius:var(--r-lg);border:1px solid var(--border);box-shadow:var(--sh);overflow:hidden;}
+.panel-header{padding:14px 18px 13px;border-bottom:1px solid var(--border);background:var(--surface2);display:flex;align-items:center;gap:10px;}
+.panel-icon{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;background:var(--purple-dim);flex-shrink:0;}
+.panel-title{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text2);}
+.panel-sub{font-size:11px;color:var(--text3);margin-top:1px;}
+.panel-body{padding:18px;}
+
+/* ═════════════════ FIELDS ═════════════════ */
+.field{margin-bottom:13px;}
+.field:last-of-type{margin-bottom:0;}
+.field label{display:block;font-size:11.5px;font-weight:600;letter-spacing:.03em;color:var(--text2);margin-bottom:5px;text-transform:uppercase;}
+.input-group{display:flex;align-items:stretch;border-radius:var(--r);overflow:hidden;box-shadow:var(--sh-sm);}
+.input-addon{background:var(--surface2);border:1.5px solid var(--border-md);padding:0 11px;font-size:13px;color:var(--text3);display:flex;align-items:center;font-family:var(--mono);font-weight:500;flex-shrink:0;}
+.input-addon.left{border-right:none;border-radius:var(--r) 0 0 var(--r);}
+.input-addon.right{border-left:none;border-radius:0 var(--r) var(--r) 0;}
+.field input[type=number],.field input[type=text],.field select{flex:1;height:42px;font-size:14px;font-family:var(--mono);font-weight:500;color:var(--text);background:var(--surface);border:1.5px solid var(--border-md);padding:0 12px;outline:none;transition:border-color .15s,box-shadow .15s,background .15s;-webkit-appearance:none;appearance:none;width:100%;}
+.field input[type=text]{font-family:var(--font);font-weight:400;font-size:13.5px;}
+.field input:focus,.field select:focus{border-color:var(--purple);box-shadow:0 0 0 3px var(--purple-dim);}
+.field input.right-end{border-radius:0 var(--r) var(--r) 0;border-left:none;}
+.field input.left-end{border-radius:var(--r) 0 0 var(--r);border-right:none;}
+.field input.solo,.field select.solo{border-radius:var(--r);}
+.field input.hi{border-color:var(--blue);background:var(--blue-bg);}
+.field input.hi:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.15);}
+.field input.invalid,.field select.invalid{border-color:var(--red);background:var(--red-bg);}
+.field input.invalid:focus,.field select.invalid:focus{box-shadow:0 0 0 3px rgba(220,38,38,.15);}
+.hint{font-size:11px;color:var(--text3);margin-top:4px;line-height:1.5;}
+.hint.error{color:var(--red);font-weight:500;}
+.field select{cursor:pointer;background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 12 12%22><path fill=%22%2394a3b8%22 d=%22M6 8L1 3h10z%22/></svg>');background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;}
+
+/* ═════════════════ DIVIDERS ═════════════════ */
+.sdiv{font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--text3);margin:18px 0 12px;padding-top:14px;border-top:1px solid var(--border);display:flex;align-items:center;gap:8px;}
+.sdiv::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* ═════════════════ BUTTONS ═════════════════ */
+.btn-reset{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:500;color:var(--text3);background:none;border:1px solid var(--border);border-radius:var(--r);padding:6px 14px;cursor:pointer;margin-top:14px;font-family:var(--font);transition:all .15s;}
+.btn-reset:hover{background:var(--surface2);color:var(--text2);border-color:var(--border-md);}
+
+/* ═════════════════ METRICS ═════════════════ */
+.metrics-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;}
+.metric{border-radius:var(--r);padding:13px 14px;background:var(--surface2);border:1px solid var(--border);position:relative;overflow:hidden;animation:metric-fade .25s ease-out;}
+@keyframes metric-fade{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
+.metric::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--text3);}
+.metric.acc::before{background:var(--accent);} .metric.grn::before{background:var(--green);}
+.metric.blu::before{background:var(--blue);} .metric.red::before{background:var(--red);}
+.metric.teal::before{background:var(--teal);} .metric.purple::before{background:var(--purple);}
+.metric.acc{background:var(--accent-bg);} .metric.grn{background:var(--green-bg);}
+.metric.blu{background:var(--blue-bg);} .metric.red{background:var(--red-bg);}
+.metric.teal{background:var(--teal-bg);} .metric.purple{background:var(--purple-bg);}
+.metric-lbl{font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--text3);margin-bottom:6px;}
+.metric.acc .metric-lbl{color:var(--accent);} .metric.grn .metric-lbl{color:var(--green);}
+.metric.blu .metric-lbl{color:var(--blue);} .metric.red .metric-lbl{color:var(--red);}
+.metric.teal .metric-lbl{color:var(--teal);} .metric.purple .metric-lbl{color:var(--purple);}
+.metric-val{font-size:22px;font-weight:700;font-family:var(--mono);color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.2;letter-spacing:-.01em;}
+.metric.acc .metric-val{color:var(--accent-text);} .metric.grn .metric-val{color:var(--green);}
+.metric.blu .metric-val{color:var(--blue);} .metric.red .metric-val{color:var(--red);}
+.metric.teal .metric-val{color:var(--teal);} .metric.purple .metric-val{color:var(--purple);}
+.metric-note{font-size:10.5px;color:var(--text3);margin-top:4px;line-height:1.45;}
+
+.empty-state{padding:30px 20px;text-align:center;color:var(--text3);background:var(--surface2);border-radius:var(--r);border:1.5px dashed var(--border-md);grid-column:1/-1;}
+.empty-state .es-icon{font-size:32px;margin-bottom:8px;display:block;opacity:.5;}
+.empty-state .es-msg{font-size:13px;font-weight:500;}
+
+/* ═════════════════ BREAKDOWN ═════════════════ */
+.bk-sec{font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--text3);margin:18px 0 8px;padding-top:14px;border-top:1px solid var(--border);}
+.bk-row{display:flex;justify-content:space-between;align-items:center;font-size:12.5px;padding:6px 0;border-bottom:1px solid var(--border);}
+.bk-row:nth-child(even){background:var(--surface2);margin:0 -4px;padding:6px 4px;}
+.bk-row:last-child{border-bottom:none;}
+.bk-label{color:var(--text2);}
+.bk-val{font-family:var(--mono);font-size:12.5px;font-weight:500;color:var(--text);}
+.bk-row.total .bk-label{font-weight:700;color:var(--text);font-size:13px;}
+.bk-row.total .bk-val{font-weight:700;font-size:13px;}
+.bk-row.profit .bk-val{color:var(--green);}
+.bk-row.loss .bk-val{color:var(--red);font-weight:700;}
+.bk-row.hl .bk-label{color:var(--accent-text);font-weight:600;}
+.bk-row.hl .bk-val{color:var(--accent-text);font-weight:600;}
+.bk-row.settle .bk-label{color:var(--teal);font-weight:700;}
+.bk-row.settle .bk-val{color:var(--teal);font-weight:700;}
+
+/* ═════════════════ VIABILITY ═════════════════ */
+.viability{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:var(--r);border:1px solid var(--border);margin-top:16px;font-size:12.5px;font-weight:500;color:var(--text2);background:var(--surface2);transition:all .3s;box-shadow:var(--sh-sm);}
+.viability.good{background:var(--green-bg);border-color:rgba(22,163,74,.25);color:var(--green);}
+.viability.warn{background:var(--amber-bg);border-color:rgba(217,119,6,.25);color:var(--amber);}
+.viability.bad{background:var(--red-bg);border-color:rgba(220,38,38,.3);color:var(--red);font-weight:600;}
+.v-dot{width:8px;height:8px;border-radius:50%;background:var(--text3);flex-shrink:0;}
+.viability.good .v-dot{background:var(--green);box-shadow:0 0 0 3px rgba(22,163,74,.2);}
+.viability.warn .v-dot{background:var(--amber);box-shadow:0 0 0 3px rgba(217,119,6,.2);}
+.viability.bad .v-dot{background:var(--red);box-shadow:0 0 0 3px rgba(220,38,38,.2);animation:pulse-red 1.6s infinite;}
+@keyframes pulse-red{0%,100%{box-shadow:0 0 0 3px rgba(220,38,38,.2);}50%{box-shadow:0 0 0 6px rgba(220,38,38,.1);}}
+
+/* ═════════════════ ACTION BUTTONS ═════════════════ */
+.btn-actions{display:flex;flex-direction:column;gap:8px;margin-top:18px;}
+.btn-action{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:11px 16px;border-radius:var(--r);color:#fff;border:none;cursor:pointer;font-family:var(--font);font-size:13px;font-weight:700;transition:all .15s;letter-spacing:.01em;}
+.btn-action:disabled{opacity:.55;cursor:not-allowed;transform:none!important;}
+.btn-action svg{flex-shrink:0;}
+.btn-copy{background:var(--green);box-shadow:0 2px 8px rgba(22,163,74,.3);}
+.btn-copy:hover:not(:disabled){background:var(--green-2);box-shadow:0 4px 14px rgba(22,163,74,.4);transform:translateY(-1px);}
+.btn-copy.copied{background:#14532d;}
+.btn-send{background:var(--teal);box-shadow:0 2px 8px rgba(13,148,136,.35);}
+.btn-send:hover:not(:disabled){background:var(--teal-2);box-shadow:0 4px 14px rgba(13,148,136,.45);transform:translateY(-1px);}
+.btn-send.sending{background:var(--teal-2);cursor:wait;}
+.btn-send.success{background:#0f4f47;}
+.btn-save{background:var(--purple);box-shadow:0 2px 8px rgba(124,58,237,.3);}
+.btn-save:hover:not(:disabled){background:var(--purple-2);box-shadow:0 4px 14px rgba(124,58,237,.4);transform:translateY(-1px);}
+.kbd{display:inline-block;padding:1px 5px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.25);border-radius:4px;font-size:10px;font-family:var(--mono);font-weight:600;margin-left:6px;line-height:1.4;}
+
+/* ═════════════════ TOAST ═════════════════ */
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--text);color:var(--surface);padding:11px 22px;border-radius:var(--r-xl);font-size:13px;font-weight:600;box-shadow:0 10px 30px rgba(0,0,0,.35);transition:transform .35s cubic-bezier(.34,1.56,.64,1),opacity .35s;opacity:0;pointer-events:none;white-space:nowrap;z-index:999;max-width:90vw;text-overflow:ellipsis;overflow:hidden;}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+.toast.error{background:var(--red);color:#fff;}
+.toast.success{background:var(--green);color:#fff;}
+
+/* ═════════════════ HISTORY ═════════════════ */
+.history-wrap{margin-top:28px;}
+.history-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:10px;}
+.history-title{font-size:13px;font-weight:700;color:var(--text2);display:flex;align-items:center;gap:10px;}
+.history-count{font-size:11px;background:var(--purple-dim);border:1px solid rgba(124,58,237,.22);border-radius:20px;padding:2px 9px;color:var(--purple);font-weight:600;}
+.history-actions{display:flex;gap:6px;flex-wrap:wrap;}
+.btn-mini{font-size:11.5px;font-weight:600;padding:5px 11px;border-radius:var(--r);cursor:pointer;font-family:var(--font);transition:all .15s;border:1px solid var(--border-md);background:var(--surface);color:var(--text2);}
+.btn-mini:hover{background:var(--surface2);border-color:var(--border-lg);}
+.btn-mini.danger{color:var(--red);border-color:rgba(220,38,38,.22);}
+.btn-mini.danger:hover{background:var(--red-bg);}
+.history-search{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
+.history-search input{flex:1;min-width:160px;height:36px;font-size:13px;border:1.5px solid var(--border-md);border-radius:var(--r);background:var(--surface);color:var(--text);padding:0 12px;outline:none;font-family:var(--font);transition:border-color .15s,box-shadow .15s;}
+.history-search input:focus{border-color:var(--purple);box-shadow:0 0 0 3px var(--purple-dim);}
+.history-search select{height:36px;font-size:13px;border:1.5px solid var(--border-md);border-radius:var(--r);background:var(--surface);color:var(--text);padding:0 28px 0 12px;outline:none;cursor:pointer;font-family:var(--font);-webkit-appearance:none;appearance:none;background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 12 12%22><path fill=%22%2394a3b8%22 d=%22M6 8L1 3h10z%22/></svg>');background-repeat:no-repeat;background-position:right 10px center;}
+.history-empty{text-align:center;padding:34px 20px;background:var(--surface);border:1.5px dashed var(--border-md);border-radius:var(--r-lg);color:var(--text3);font-size:13px;line-height:1.8;}
+.history-empty strong{color:var(--text2);}
+.history-empty .he-icon{font-size:32px;display:block;margin-bottom:8px;opacity:.4;}
+.history-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;}
+.hist-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:13px 14px;cursor:pointer;transition:all .2s;position:relative;box-shadow:var(--sh-sm);}
+.hist-card:hover{border-color:var(--accent);box-shadow:0 6px 20px rgba(249,115,22,.14);transform:translateY(-2px);}
+.hist-card.active-card{border-color:var(--purple);background:var(--purple-bg);box-shadow:0 4px 16px rgba(124,58,237,.18);}
+.hist-card-name{font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:24px;}
+.hist-card-meta{font-size:10.5px;color:var(--text3);margin-bottom:9px;font-weight:400;display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.hist-card-pills{display:flex;flex-wrap:wrap;gap:4px;}
+.hist-pill{font-size:10.5px;padding:3px 8px;border-radius:var(--r-xl);font-family:var(--mono);font-weight:500;white-space:nowrap;}
+.pill-sp{background:var(--accent-bg);color:var(--accent-text);}
+.pill-np{background:var(--green-bg);color:var(--green);}
+.pill-np.loss{background:var(--red-bg);color:var(--red);}
+.pill-roi{background:var(--surface2);color:var(--text2);}
+.pill-settle{background:var(--teal-bg);color:var(--teal);}
+.pill-plat{background:var(--purple-dim);color:var(--purple);font-family:var(--font);font-weight:600;}
+.hist-del{position:absolute;top:9px;right:9px;width:22px;height:22px;border-radius:50%;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:13px;line-height:1;transition:all .15s;}
+.hist-del:hover{background:var(--red-bg);color:var(--red);}
+
+/* ═════════════════ GS SETUP ═════════════════ */
+.gs-setup-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--sh);margin-top:18px;overflow:hidden;}
+.gs-setup-header{display:flex;align-items:center;justify-content:space-between;padding:13px 18px;cursor:pointer;transition:background .15s;user-select:none;}
+.gs-setup-header:hover{background:var(--surface2);}
+.gs-setup-header.open{border-bottom:1px solid var(--border);}
+.gs-setup-title{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--text2);}
+.gs-setup-toggle{font-size:11.5px;color:var(--purple);font-weight:600;display:flex;align-items:center;gap:5px;}
+.gs-setup-body{padding:18px 20px;display:flex;flex-direction:column;gap:14px;}
+.gs-steps{display:flex;flex-direction:column;gap:10px;}
+.gs-step{display:flex;align-items:flex-start;gap:12px;font-size:12.5px;color:var(--text2);line-height:1.65;}
+.gs-step-num{width:22px;height:22px;border-radius:50%;background:var(--purple);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.gs-step strong{color:var(--text);font-weight:700;}
+.gs-url-row{display:flex;gap:8px;flex-wrap:wrap;}
+.gs-url-row input{flex:1;min-width:220px;height:40px;font-size:12px;font-family:var(--mono);border:1.5px solid var(--border-md);border-radius:var(--r);background:var(--surface);color:var(--text);padding:0 12px;outline:none;transition:border-color .15s,box-shadow .15s;}
+.gs-url-row input:focus{border-color:var(--purple);box-shadow:0 0 0 3px var(--purple-dim);}
+.gs-save-btn{height:40px;padding:0 16px;border-radius:var(--r);background:var(--purple);color:#fff;border:none;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font);transition:background .15s;white-space:nowrap;}
+.gs-save-btn:hover{background:var(--purple-2);}
+.gs-status{font-size:12px;font-weight:500;min-height:18px;}
+.gs-status.ok{color:var(--green);}
+.gs-status.err{color:var(--red);}
+.gs-code-label{font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);}
+.gs-code{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;font-family:var(--mono);font-size:11.5px;color:var(--text2);line-height:1.75;overflow-x:auto;white-space:pre;max-height:240px;overflow-y:auto;}
+.gs-copy-code-btn{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--text2);background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:7px 14px;cursor:pointer;font-family:var(--font);transition:all .15s;align-self:flex-start;}
+.gs-copy-code-btn:hover{background:var(--surface3);border-color:var(--border-md);}
+
+/* ═════════════════ KEYBOARD HINT MODAL ═════════════════ */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(6px);z-index:998;opacity:0;pointer-events:none;transition:opacity .25s;}
+.modal-bg.show{opacity:1;pointer-events:auto;}
+.modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.95);background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--sh-lg);padding:22px 26px;max-width:380px;width:90vw;z-index:999;opacity:0;pointer-events:none;transition:all .25s;}
+.modal.show{opacity:1;pointer-events:auto;transform:translate(-50%,-50%) scale(1);}
+.modal h3{font-size:14px;font-weight:700;margin-bottom:14px;color:var(--text);}
+.modal-table{width:100%;font-size:13px;}
+.modal-table tr td{padding:6px 0;}
+.modal-table tr td:last-child{text-align:right;}
+.modal-table .km{display:inline-block;padding:2px 7px;background:var(--surface2);border:1px solid var(--border-md);border-radius:5px;font-size:11px;font-family:var(--mono);font-weight:600;}
+.modal-close{margin-top:14px;width:100%;padding:9px;border-radius:var(--r);background:var(--purple);color:#fff;border:none;font-size:12px;font-weight:700;cursor:pointer;}
+
+/* ═════════════════ FOOTER ═════════════════ */
+.footer{text-align:center;margin-top:36px;padding-top:22px;border-top:1px solid var(--border);font-size:11.5px;color:var(--text3);line-height:2;}
+.footer strong{color:var(--text2);}
+
+/* ═════════════════ SCREENSHOT SCANNER ═════════════════ */
+.scan-panel{margin-bottom:18px;}
+.scan-clear{margin-left:auto;font-size:11.5px;font-weight:600;padding:5px 11px;border-radius:var(--r);cursor:pointer;font-family:var(--font);border:1px solid var(--border-md);background:var(--surface);color:var(--text2);transition:all .15s;}
+.scan-clear:hover{background:var(--red-bg);color:var(--red);border-color:rgba(220,38,38,.25);}
+.dropzone{border:2px dashed var(--border-lg);border-radius:var(--r-lg);padding:22px 18px;text-align:center;cursor:pointer;transition:all .2s;background:var(--surface2);}
+.dropzone:hover,.dropzone.drag{border-color:var(--purple);background:var(--purple-dim);}
+.dz-icon{font-size:26px;display:block;margin-bottom:6px;}
+.dz-msg{font-size:13px;color:var(--text2);}
+.dz-sub{font-size:11px;color:var(--text3);margin-top:4px;line-height:1.6;}
+.km-like{display:inline-block;padding:1px 6px;background:var(--surface3);border:1px solid var(--border-md);border-radius:4px;font-family:var(--mono);font-size:11px;font-weight:600;}
+.scan-grid{display:flex;flex-direction:column;gap:10px;margin-top:12px;}
+.scan-item{display:flex;gap:12px;border:1px solid var(--border);border-radius:var(--r);padding:10px;background:var(--surface);}
+.scan-thumb{width:120px;height:auto;max-height:90px;object-fit:cover;object-position:left top;border-radius:6px;border:1px solid var(--border);flex-shrink:0;}
+.scan-body{flex:1;min-width:0;}
+.scan-state{font-size:12px;font-weight:600;color:var(--text2);margin-bottom:6px;}
+.scan-bar{height:6px;background:var(--surface3);border-radius:4px;overflow:hidden;}
+.scan-bar-fill{height:100%;background:var(--purple);border-radius:4px;transition:width .2s;width:0%;}
+.scan-prods{display:flex;flex-direction:column;gap:8px;}
+.scan-prod{border:1px solid var(--border);border-radius:var(--r);padding:9px 11px;background:var(--surface2);}
+.scan-prod-name{font-size:12.5px;font-weight:600;color:var(--text);margin-bottom:5px;line-height:1.4;}
+.scan-asin{font-family:var(--mono);font-size:10.5px;color:var(--text3);font-weight:500;}
+.scan-chips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px;}
+.scan-chip{font-size:11px;padding:2px 8px;border-radius:12px;background:var(--blue-bg);color:var(--blue);font-family:var(--mono);font-weight:500;}
+.scan-chip.fee{background:var(--accent-bg);color:var(--accent-text);}
+.scan-apply{font-size:12px;font-weight:700;padding:6px 12px;border-radius:var(--r);background:var(--purple);color:#fff;border:none;cursor:pointer;font-family:var(--font);transition:background .15s;}
+.scan-apply:hover{background:var(--purple-2);}
+@media(max-width:680px){.scan-item{flex-direction:column;}.scan-thumb{width:100%;max-height:120px;}}
+
+/* ═════════════════ SCROLLBAR ═════════════════ */
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border-md);border-radius:10px;}
+::-webkit-scrollbar-thumb:hover{background:var(--border-lg);}
+input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{opacity:.5;}
+</style>
+</head>
+<body>
+
+<!-- ═════════════════ BRAND BANNER ═════════════════ -->
+<div class="brand-banner">
+  <img src="ibi-logo.png" alt="India Business International — eCommerce for the World">
+</div>
+
+<!-- ═════════════════ HEADER (slim sticky toolbar) ═════════════════ -->
+<header class="header">
+  <div class="header-left">
+    <div>
+      <div class="header-brand">IBI Multi-Platform Pricing Calculator</div>
+      <div class="header-sub">iINTELLIGENCEi · Internal Seller Tool</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="header-badge" id="platform-badge">Amazon · Seller Tool</div>
+    <button class="kbd-toggle" onclick="showKbdHelp()" title="Keyboard shortcuts">⌨ Shortcuts</button>
+    <button class="bg-toggle" onclick="toggleBg()" id="bg-toggle-btn"><span>🌙</span> Dark mode</button>
+  </div>
+</header>
+
+<!-- ═════════════════ MAIN ═════════════════ -->
+<div class="container">
+
+  <div class="platform-wrap">
+    <div class="section-label">Select platform</div>
+    <div class="platform-chips">
+      <button class="pchip grp-a active" data-pid="amazon"     onclick="setPlatform('amazon')"><span class="pchip-icon">🛒</span>Amazon</button>
+      <button class="pchip grp-a"        data-pid="amazbazaar" onclick="setPlatform('amazbazaar')"><span class="pchip-icon">🛍</span>Amazon Bazaar</button>
+      <button class="pchip grp-b"        data-pid="flipkart"   onclick="setPlatform('flipkart')"><span class="pchip-icon">📦</span>Flipkart</button>
+      <button class="pchip grp-b"        data-pid="shopsy"     onclick="setPlatform('shopsy')"><span class="pchip-icon">🛒</span>Shopsy</button>
+      <button class="pchip grp-b"        data-pid="meesho"     onclick="setPlatform('meesho')"><span class="pchip-icon">📱</span>Meesho</button>
+      <button class="pchip grp-b"        data-pid="shopclues"  onclick="setPlatform('shopclues')"><span class="pchip-icon">🎁</span>ShopClues</button>
+      <button class="pchip grp-a"        data-pid="ibiwebsite" onclick="setPlatform('ibiwebsite')"><span class="pchip-icon">🌐</span>IBI Website</button>
+      <button class="pchip grp-c"        data-pid="offline"    onclick="setPlatform('offline')"><span class="pchip-icon">🏪</span>Offline</button>
+    </div>
+  </div>
+
+  <div class="mode-wrap" id="mode-wrap">
+    <div class="mode-toggle">
+      <button class="mode-btn active" id="btn-m1" onclick="setMode(1)">
+        <span class="mi">🧮</span>
+        <span class="mt" id="mt1">Mode 1 — Find Selling Price</span>
+        <span class="md" id="md1">Enter costs → get ideal selling price</span>
+      </button>
+      <button class="mode-btn" id="btn-m2" onclick="setMode(2)">
+        <span class="mi">🔍</span>
+        <span class="mt" id="mt2">Mode 2 — Check Existing Listing</span>
+        <span class="md" id="md2">Enter current price → check profit</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="notice grp-a" id="notice">
+    <span class="notice-icon">ℹ️</span>
+    <span id="notice-text"></span>
+  </div>
+
+  <!-- ── SCREENSHOT SCANNER ── -->
+  <div class="panel scan-panel">
+    <div class="panel-header">
+      <div class="panel-icon">📸</div>
+      <div>
+        <div class="panel-title">Scan Listing Screenshot · Seller Dashboard</div>
+        <div class="panel-sub">Upload or paste a screenshot from Amazon Seller Central — price &amp; fees are extracted automatically</div>
+      </div>
+      <button class="scan-clear" id="scan-clear-btn" style="display:none" onclick="clearScans()">✕ Clear scans</button>
+    </div>
+    <div class="panel-body">
+      <div class="dropzone" id="dropzone" onclick="el('scan-file').click()">
+        <span class="dz-icon">🖼️</span>
+        <div class="dz-msg"><strong>Click to upload</strong> · drag &amp; drop · or press <span class="km-like">Ctrl+V</span> anywhere on this page to paste a screenshot</div>
+        <div class="dz-sub">Works with Manage Inventory screenshots — reads Product title, ASIN, SKU, Price, Total fees, FBA fee, Units sold &amp; Sales rank. Multiple products per screenshot supported.</div>
+      </div>
+      <input type="file" id="scan-file" accept="image/*" multiple style="display:none" onchange="handleScanFiles(this.files); this.value='';">
+      <div class="scan-grid" id="scan-results"></div>
+    </div>
+  </div>
+
+  <div class="calc-area">
+
+    <!-- ── INPUT PANEL ── -->
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-icon">📋</div>
+        <div>
+          <div class="panel-title" id="in-head">Inputs · Your costs</div>
+          <div class="panel-sub">All values in Indian Rupees (₹)</div>
+        </div>
+      </div>
+      <div class="panel-body">
+
+        <div class="field">
+          <label>Product name <span style="color:var(--text3);font-weight:400;text-transform:none;letter-spacing:0">(for history & sheets)</span></label>
+          <input type="text" id="pname" class="solo" placeholder="e.g. iINTELLIGENCEi Coconut Coir Brush, 2 Pack" maxlength="120">
+        </div>
+
+        <div class="field">
+          <label>Product / manufacturing / wholesale cost</label>
+          <div class="input-group"><span class="input-addon left">₹</span><input class="right-end" type="number" id="cost" value="30" min="0" step="0.01" oninput="calc()"></div>
+          <div class="hint" id="hint-cost"></div>
+        </div>
+
+        <div class="field">
+          <label>GST rate</label>
+          <select id="gst" class="solo" onchange="calc()">
+            <option value="0">0%</option>
+            <option value="3">3%</option>
+            <option value="5" selected>5% (default)</option>
+            <option value="18">18%</option>
+            <option value="40">40%</option>
+          </select>
+          <div class="hint">Select the applicable GST rate for this product</div>
+        </div>
+
+        <div class="field" id="row-pack">
+          <label>Packaging cost</label>
+          <div class="input-group"><span class="input-addon left">₹</span><input class="right-end" type="number" id="pack" value="20" min="0" step="0.01" oninput="calc()"></div>
+          <div class="hint">Inner pack — pouches, labels, bubble wrap, tape</div>
+        </div>
+
+        <div class="field" id="row-carton">
+          <label>Carton box cost</label>
+          <div class="input-group"><span class="input-addon left">₹</span><input class="right-end" type="number" id="carton" value="0" min="0" step="0.01" oninput="calc()"></div>
+          <div class="hint">Outer carton box per unit — enter manually based on your supplier rate</div>
+        </div>
+
+        <div class="field" id="row-ship">
+          <label>Shipping / logistics cost</label>
+          <div class="input-group"><span class="input-addon left">₹</span><input class="right-end" type="number" id="ship" value="64.90" min="0" step="0.01" oninput="calc()"></div>
+        </div>
+
+        <div class="field" id="row-pfee">
+          <label id="lbl-pfee">Platform fee (₹ — from Seller Central)</label>
+          <div class="input-group"><span class="input-addon left">₹</span><input class="right-end" type="number" id="pfee" value="30" min="0" step="0.01" oninput="calc()"></div>
+          <div class="hint" id="hint-pfee">Copy the exact "Total fees" shown alongside your listing</div>
+        </div>
+
+        <div class="field" id="row-b-sp" style="display:none">
+          <label>Selling price on platform (incl. GST)</label>
+          <div class="input-group"><span class="input-addon left">₹</span><input class="right-end hi" type="number" id="b-sp-input" value="299" min="0" step="0.01" oninput="calc()"></div>
+          <div class="hint" id="hint-b-sp">Selling price visible on your platform dashboard</div>
+        </div>
+
+        <div class="field" id="row-b-settle" style="display:none">
+          <label>Bank settlement amount</label>
+          <div class="input-group"><span class="input-addon left">₹</span><input class="right-end" type="number" id="b-settle-input" value="240" min="0" step="0.01" oninput="calc()"></div>
+          <div class="hint" id="hint-b-settle">Amount the platform deposits to your bank</div>
+        </div>
+
+        <div class="field" id="row-gstpay" style="display:none">
+          <label style="text-transform:none;letter-spacing:0;display:flex;align-items:center;gap:8px;cursor:pointer;font-size:12.5px;">
+            <input type="checkbox" id="gstpay" checked onchange="calc()" style="width:16px;height:16px;accent-color:var(--purple);cursor:pointer;flex-shrink:0;">
+            Deduct GST payable on sale from settlement
+          </label>
+          <div class="hint">The bank settlement includes GST that you must remit to the government. Keep ON for true net profit; turn OFF to treat the settlement as final in-hand money.</div>
+        </div>
+
+        <div class="field">
+          <label>Other charges (ads, storage, misc)</label>
+          <div class="input-group"><span class="input-addon left">₹</span><input class="right-end" type="number" id="other" value="0" min="0" step="0.01" oninput="calc()"></div>
+        </div>
+
+        <div id="m1-fields">
+          <div class="sdiv">Pricing parameters</div>
+          <div class="field">
+            <label>Target profit margin</label>
+            <div class="input-group"><input class="left-end" type="number" id="profit" value="25" min="1" max="500" step="0.5" oninput="calc()"><span class="input-addon right">%</span></div>
+            <div class="hint">% of total cost · Default 25%</div>
+          </div>
+          <div class="field" id="row-mrpmult">
+            <label>MRP multiplier</label>
+            <div class="input-group"><input class="left-end" type="number" id="mrpmult" value="1.5" min="1.0" max="10.0" step="0.1" oninput="calc()"><span class="input-addon right">×</span></div>
+            <div class="hint">Standard 1.5× · Premium 2× – 3×</div>
+          </div>
+        </div>
+
+        <div id="m2-fields" style="display:none">
+          <div class="sdiv" id="m2-sdiv">Your existing listing</div>
+          <div class="field">
+            <label id="lbl-cursp">Current selling price (incl. GST)</label>
+            <div class="input-group"><span class="input-addon left">₹</span><input class="right-end hi" type="number" id="cur-sp" value="749" min="0" step="0.01" oninput="calc()"></div>
+            <div class="hint" id="hint-cursp">The price currently shown to customers</div>
+          </div>
+          <div class="field" id="row-mrpmult2">
+            <label>MRP multiplier</label>
+            <div class="input-group"><input class="left-end" type="number" id="mrpmult2" value="1.5" min="1.0" max="10.0" step="0.1" oninput="calc()"><span class="input-addon right">×</span></div>
+          </div>
+        </div>
+
+        <button class="btn-reset" onclick="resetDefaults()" title="Reset (Ctrl+R)">↺ Reset to defaults</button>
+      </div>
+    </div>
+
+    <!-- ── RESULTS PANEL ── -->
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-icon">📊</div>
+        <div>
+          <div class="panel-title" id="out-head">Results · Live calculations</div>
+          <div class="panel-sub">Updates as you type</div>
+        </div>
+      </div>
+      <div class="panel-body">
+
+        <div class="metrics-grid" id="metrics-grid">
+          <div class="empty-state">
+            <span class="es-icon">📊</span>
+            <div class="es-msg">Enter your costs to see results</div>
+          </div>
+        </div>
+
+        <div class="bk-sec">Cost breakdown</div>
+        <div class="bk-row"><span class="bk-label">Product / manufacturing</span><span class="bk-val" id="b-cost">—</span></div>
+        <div class="bk-row" id="bkrow-pack"><span class="bk-label">Packaging</span><span class="bk-val" id="b-pack">—</span></div>
+        <div class="bk-row" id="bkrow-carton"><span class="bk-label">Carton box</span><span class="bk-val" id="b-carton">—</span></div>
+        <div class="bk-row" id="bkrow-ship"><span class="bk-label">Shipping / logistics</span><span class="bk-val" id="b-ship">—</span></div>
+        <div class="bk-row"><span class="bk-label">Other charges</span><span class="bk-val" id="b-other">—</span></div>
+        <div class="bk-row" id="bkrow-fee"><span class="bk-label" id="bklbl-fee">Platform fee</span><span class="bk-val" id="b-fee">—</span></div>
+        <div class="bk-row total"><span class="bk-label">Total expense</span><span class="bk-val" id="b-total">—</span></div>
+
+        <div class="bk-sec">Revenue breakdown</div>
+        <div class="bk-row"><span class="bk-label">Selling price (excl. GST)</span><span class="bk-val" id="b-spex">—</span></div>
+        <div class="bk-row"><span class="bk-label">GST collected</span><span class="bk-val" id="b-gst">—</span></div>
+        <div class="bk-row" id="bkrow-settle"><span class="bk-label settle" id="bklbl-settle">Bank settlement</span><span class="bk-val" id="b-settle">—</span></div>
+        <div class="bk-row" id="bkrow-gstpay"><span class="bk-label">GST payable on sale (to govt)</span><span class="bk-val" id="b-gstpay">—</span></div>
+        <div class="bk-row" id="bkrow-netrev"><span class="bk-label">Net seller revenue</span><span class="bk-val" id="b-rev">—</span></div>
+        <div class="bk-row profit" id="bk-profit"><span class="bk-label">Net profit</span><span class="bk-val" id="b-np2">—</span></div>
+
+        <div class="bk-sec">Key ratios</div>
+        <div class="bk-row"><span class="bk-label" id="bklbl-bep">Break-even selling price</span><span class="bk-val" id="b-bep">—</span></div>
+        <div class="bk-row"><span class="bk-label">Gross margin on selling price</span><span class="bk-val" id="b-gm">—</span></div>
+        <div class="bk-row"><span class="bk-label">Markup / ROI on base cost</span><span class="bk-val" id="b-roi2">—</span></div>
+        <div class="bk-row hl" id="bkrow-mrp"><span class="bk-label">MRP printed on packaging</span><span class="bk-val" id="b-mrp2">—</span></div>
+
+        <div class="viability" id="viability">
+          <div class="v-dot" id="v-dot"></div>
+          <div id="v-text">Enter your costs to see viability assessment.</div>
+        </div>
+
+        <div class="btn-actions">
+          <button class="btn-action btn-copy" id="copyBtn" onclick="copyToSheets()" title="Copy (Ctrl+Shift+C)">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            <span>Copy → Paste into Google Sheets</span>
+          </button>
+          <button class="btn-action btn-send" id="sendBtn" onclick="sendToSheets()" title="Send (Ctrl+Enter)">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            <span>Send → Google Sheets</span>
+          </button>
+          <button class="btn-action btn-save" onclick="saveToHistory()" title="Save (Ctrl+S)">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            <span>Save to History</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── GOOGLE SHEETS SETUP ── -->
+  <div class="gs-setup-wrap">
+    <div class="gs-setup-header" onclick="toggleGsSetup()">
+      <div class="gs-setup-title">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--green)"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        Google Sheets Auto-Send Setup
+      </div>
+      <span class="gs-setup-toggle" id="gs-toggle-icon">✓ Configured · ▼ View</span>
+    </div>
+    <div class="gs-setup-body" id="gs-setup-body" style="display:none">
+      <div class="gs-steps">
+        <div class="gs-step"><span class="gs-step-num">1</span><span>Open your Google Sheet → click <strong>Extensions → Apps Script</strong></span></div>
+        <div class="gs-step"><span class="gs-step-num">2</span><span>Paste the latest GAS code (separate tabs per platform) → <strong>Deploy → New deployment → Web App → Anyone</strong> → copy the URL</span></div>
+        <div class="gs-step"><span class="gs-step-num">3</span><span>Paste the URL below → click <strong>Save URL</strong>. Each calculation will go into its platform's own tab automatically.</span></div>
+      </div>
+      <div class="gs-url-row">
+        <input type="text" id="gs-url-input" placeholder="https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec" spellcheck="false" value="https://script.google.com/macros/s/AKfycbzPiL83w51WalDJkVtGsF2MVU3Y4vE4KoN9ctP47qScwCGHCZEdXFQ-UMDrYLlyykGD/exec">
+        <button class="gs-save-btn" onclick="saveGsUrl()">Save URL</button>
+      </div>
+      <div class="gs-status" id="gs-status"></div>
+      <div class="gs-code-label">Latest Apps Script code (paste this entire block):</div>
+      <pre class="gs-code" id="gs-code-block">// ══════════════════════════════════════════════════════
+//  IBI Multi-Platform Pricing Calculator — GAS v3.0
+//  India Business International · Dr. T. Sasimurugan
+// ══════════════════════════════════════════════════════
+// FEATURES:
+// • Auto-creates separate tabs per platform
+// • Master "📊 Summary" tab with live aggregates
+// • Platform-wise headers with branded purple styling
+// • Auto-colored Net Profit cells (green/red)
+// • Validates incoming data, logs errors
+// ══════════════════════════════════════════════════════
+
+var SUMMARY_TAB  = '📊 Summary';
+var BRAND_COLOR  = '#7c3aed';
+var BRAND_LIGHT  = '#ede9fe';
+var HEADER_FONT  = '#ffffff';
+var PROFIT_GREEN = '#16a34a';
+var LOSS_RED     = '#dc2626';
+
+function doPost(e) {
+  try {
+    var data = JSON.parse(e.postData.contents);
+    if (!data || !data.headers || !data.values) {
+      return jsonResp({ status: 'error', message: 'Missing data' });
+    }
+    var platform = (data.platform || 'Unknown').toString().trim();
+    var ss       = SpreadsheetApp.getActiveSpreadsheet();
+    var sheet    = getOrCreatePlatformSheet(ss, platform, data.headers);
+
+    sheet.appendRow(data.values);
+    var newRow = sheet.getLastRow();
+    styleDataRow(sheet, newRow, data.values.length);
+    colorProfitCell(sheet, newRow, data.headers, data.values);
+    sheet.autoResizeColumns(1, data.headers.length);
+    updateSummaryTab(ss);
+
+    return jsonResp({ status:'ok', tab: sheet.getName(), row: newRow });
+  } catch(err) {
+    return jsonResp({ status:'error', message: err.toString() });
+  }
+}
+
+function doGet(e) {
+  return jsonResp({ status:'ok', message:'IBI Calculator endpoint active' });
+}
+
+function jsonResp(obj) {
+  return ContentService.createTextOutput(JSON.stringify(obj))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function getOrCreatePlatformSheet(ss, platform, headers) {
+  var sheet = ss.getSheetByName(platform);
+  if (!sheet) {
+    var summary = ss.getSheetByName(SUMMARY_TAB);
+    sheet = summary
+      ? ss.insertSheet(platform, summary.getIndex())
+      : ss.insertSheet(platform);
+  }
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(headers);
+    sheet.getRange(1, 1, 1, headers.length)
+      .setFontWeight('bold').setBackground(BRAND_COLOR)
+      .setFontColor(HEADER_FONT).setFontFamily('Roboto')
+      .setFontSize(10).setHorizontalAlignment('center')
+      .setVerticalAlignment('middle').setWrap(true);
+    sheet.setFrozenRows(1);
+    sheet.setRowHeight(1, 40);
+    sheet.setTabColor(BRAND_COLOR);
+  }
+  return sheet;
+}
+
+function styleDataRow(sheet, row, cols) {
+  var rng = sheet.getRange(row, 1, 1, cols);
+  rng.setFontFamily('Roboto Mono').setFontSize(10);
+  if (row % 2 === 0) rng.setBackground(BRAND_LIGHT);
+}
+
+function colorProfitCell(sheet, row, headers, values) {
+  var idx = -1;
+  for (var i = 0; i < headers.length; i++) {
+    if (headers[i] && headers[i].toString().indexOf('Net Profit') !== -1) {
+      idx = i + 1; break;
+    }
+  }
+  if (idx === -1) return;
+  var v = parseFloat(values[idx - 1]);
+  if (isNaN(v)) return;
+  sheet.getRange(row, idx)
+    .setFontColor(v < 0 ? LOSS_RED : PROFIT_GREEN)
+    .setFontWeight('bold');
+}
+
+function updateSummaryTab(ss) {
+  var summary = ss.getSheetByName(SUMMARY_TAB);
+  if (!summary) {
+    summary = ss.insertSheet(SUMMARY_TAB, 0);
+    summary.setTabColor('#16a34a');
+  }
+  summary.clear();
+  summary.getRange('A1:F1').merge()
+    .setValue('📊 IBI Pricing Calculator — Live Summary')
+    .setFontWeight('bold').setFontSize(14)
+    .setBackground(BRAND_COLOR).setFontColor(HEADER_FONT)
+    .setHorizontalAlignment('center');
+  summary.setRowHeight(1, 32);
+  summary.getRange('A2:F2').merge()
+    .setValue('Last refreshed: ' + new Date().toLocaleString('en-IN', {timeZone:'Asia/Kolkata'}))
+    .setFontSize(9).setFontColor('#666').setHorizontalAlignment('center');
+  var hdrs = ['Platform','# Calcs','Avg Profit (₹)','Total Profit (₹)','Avg ROI (%)','Last Updated'];
+  summary.getRange(4,1,1,hdrs.length).setValues([hdrs])
+    .setFontWeight('bold').setBackground('#f3eeff').setFontColor(BRAND_COLOR)
+    .setFontFamily('Roboto').setFontSize(10).setHorizontalAlignment('center');
+
+  var sheets = ss.getSheets(), rowIdx = 5;
+  var gC = 0, gP = 0, gR = 0, gN = 0;
+
+  for (var s = 0; s < sheets.length; s++) {
+    var sh = sheets[s], name = sh.getName();
+    if (name === SUMMARY_TAB || sh.getLastRow() < 2) continue;
+    var hRow = sh.getRange(1,1,1,sh.getLastColumn()).getValues()[0];
+    var pIdx = findCol(hRow,'Net Profit'),
+        rIdx = findCol(hRow,'ROI'),
+        dIdx = findCol(hRow,'Date');
+    if (pIdx === -1) continue;
+    var data = sh.getRange(2,1,sh.getLastRow()-1,sh.getLastColumn()).getValues();
+    var c = 0, p = 0, rs = 0, rc = 0, ld = '';
+    for (var r = 0; r < data.length; r++) {
+      var pv = parseFloat(data[r][pIdx]), rv = parseFloat(data[r][rIdx]);
+      if (!isNaN(pv)) { c++; p += pv; }
+      if (!isNaN(rv)) { rs += rv; rc++; }
+      if (dIdx !== -1 && data[r][dIdx]) ld = data[r][dIdx].toString();
+    }
+    if (c === 0) continue;
+    var avgP = p/c, avgR = rc>0 ? rs/rc : 0;
+    summary.getRange(rowIdx,1,1,6).setValues([[name,c,avgP.toFixed(2),p.toFixed(2),avgR.toFixed(1)+'%',ld]]);
+    summary.getRange(rowIdx,4).setFontColor(p>=0?PROFIT_GREEN:LOSS_RED).setFontWeight('bold');
+    rowIdx++; gC += c; gP += p; gR += rs; gN += rc;
+  }
+
+  if (gC > 0) {
+    summary.getRange(rowIdx,1,1,6).setValues([['── TOTAL ──',gC,(gP/gC).toFixed(2),gP.toFixed(2),(gN>0?(gR/gN).toFixed(1):'0.0')+'%','']])
+      .setFontWeight('bold').setBackground('#f0f1f6').setFontColor(BRAND_COLOR);
+    summary.getRange(rowIdx,4).setFontColor(gP>=0?PROFIT_GREEN:LOSS_RED);
+  }
+  summary.autoResizeColumns(1,6);
+  summary.setColumnWidth(1,160);
+  summary.setColumnWidth(6,180);
+}
+
+function findCol(hdr, key) {
+  var s = key.toLowerCase();
+  for (var i = 0; i < hdr.length; i++)
+    if (hdr[i] && hdr[i].toString().toLowerCase().indexOf(s) !== -1) return i;
+  return -1;
+}
+
+function refreshSummaryNow() {
+  updateSummaryTab(SpreadsheetApp.getActiveSpreadsheet());
+}</pre>
+      <button class="gs-copy-code-btn" onclick="copyAppScript()">
+        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copy Apps Script Code
+      </button>
+    </div>
+  </div>
+
+  <!-- ── HISTORY ── -->
+  <div class="history-wrap">
+    <div class="history-header">
+      <div class="history-title">📋 Calculation History <span class="history-count" id="hist-count">0 / 24</span></div>
+      <div class="history-actions">
+        <button class="btn-mini" onclick="exportHistoryCSV()">⬇ Export CSV</button>
+        <button class="btn-mini danger" onclick="clearHistory()">Clear all</button>
+      </div>
+    </div>
+    <div class="history-search" id="hist-search-wrap" style="display:none">
+      <input type="text" id="hist-search" placeholder="🔎 Search by product name…" oninput="renderHistory()">
+      <select id="hist-filter" onchange="renderHistory()">
+        <option value="">All platforms</option>
+        <option value="amazon">Amazon</option>
+        <option value="amazbazaar">Amazon Bazaar</option>
+        <option value="flipkart">Flipkart</option>
+        <option value="shopsy">Shopsy</option>
+        <option value="meesho">Meesho</option>
+        <option value="shopclues">ShopClues</option>
+        <option value="ibiwebsite">IBI Website</option>
+        <option value="offline">Offline</option>
+      </select>
+    </div>
+    <div id="history-list">
+      <div class="history-empty">
+        <span class="he-icon">📋</span>
+        No calculations saved yet.<br>
+        <strong>Calculate a product, then click Save to History</strong> <span class="kbd" style="background:var(--purple-dim);color:var(--purple);border-color:rgba(124,58,237,.25)">Ctrl + S</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <strong>India Business International (IBI)</strong> · iINTELLIGENCEi · eCommerce for the World<br>
+    Multi-Platform Pricing Calculator · Amazon fee structure effective 16 March 2026<br>
+    Built for <strong>Dr. T. Sasimurugan</strong>, Founder &amp; CEO · Internal Seller Tool
+  </div>
+
+</div>
+
+<!-- ═════════════════ KEYBOARD SHORTCUTS MODAL ═════════════════ -->
+<div class="modal-bg" id="kbd-bg" onclick="hideKbdHelp()"></div>
+<div class="modal" id="kbd-modal">
+  <h3>⌨ Keyboard Shortcuts</h3>
+  <table class="modal-table">
+    <tr><td>Save to History</td><td><span class="km">Ctrl</span> + <span class="km">S</span></td></tr>
+    <tr><td>Send to Google Sheets</td><td><span class="km">Ctrl</span> + <span class="km">Enter</span></td></tr>
+    <tr><td>Copy to clipboard</td><td><span class="km">Ctrl</span> + <span class="km">Shift</span> + <span class="km">C</span></td></tr>
+    <tr><td>Paste screenshot to scan</td><td><span class="km">Ctrl</span> + <span class="km">V</span></td></tr>
+    <tr><td>Reset to defaults</td><td><span class="km">Ctrl</span> + <span class="km">R</span></td></tr>
+    <tr><td>Switch to Mode 1</td><td><span class="km">Alt</span> + <span class="km">1</span></td></tr>
+    <tr><td>Switch to Mode 2</td><td><span class="km">Alt</span> + <span class="km">2</span></td></tr>
+    <tr><td>Show this help</td><td><span class="km">?</span></td></tr>
+  </table>
+  <button class="modal-close" onclick="hideKbdHelp()">Close</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ═════════════════ PLATFORM CONFIG ═════════════════
+const PLATFORMS = {
+  amazon:     { label:'Amazon',        grp:'A', defFee:30,  defShip:64.90, defPack:20 },
+  amazbazaar: { label:'Amazon Bazaar', grp:'A', defFee:20,  defShip:64.90, defPack:20 },
+  flipkart:   { label:'Flipkart',      grp:'B', defFee:0,   defShip:0,     defPack:20 },
+  shopsy:     { label:'Shopsy',        grp:'B', defFee:0,   defShip:0,     defPack:20 },
+  meesho:     { label:'Meesho',        grp:'B', defFee:0,   defShip:0,     defPack:20 },
+  shopclues:  { label:'ShopClues',     grp:'B', defFee:0,   defShip:0,     defPack:20 },
+  ibiwebsite: { label:'IBI Website',   grp:'A', defFee:0,   defShip:64.90, defPack:20 },
+  offline:    { label:'Offline',       grp:'C', defFee:0,   defShip:0,     defPack:0  }
+};
+
+const HIST_KEY = 'ibi_calc_history_v4';
+const MAX_HIST = 24;
+const GS_URL_KEY = 'ibi_gs_script_url';
+const GS_URL_DEFAULT = 'https://script.google.com/macros/s/AKfycbzPiL83w51WalDJkVtGsF2MVU3Y4vE4KoN9ctP47qScwCGHCZEdXFQ-UMDrYLlyykGD/exec';
+
+let _last = {}, _mode = 1, _pid = 'amazon', _activeHistId = null, _idCounter = 0;
+
+const fd = n => '₹' + Math.abs(n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');
+const fdSigned = n => (n < 0 ? '−' : '') + fd(n);
+const fp = n => n.toFixed(1) + '%';
+const el = id => document.getElementById(id);
+const show = (id, v) => { const e = el(id); if(e) e.style.display = v ? '' : 'none'; };
+const safeNum = v => { const x = parseFloat(v); return (isNaN(x) || !isFinite(x)) ? 0 : Math.max(0, x); };
+
+// ═════════════════ INPUT VALIDATION ═════════════════
+function validateInputs() {
+  let ok = true;
+  // Cost validation
+  const costEl = el('cost');
+  const costVal = parseFloat(costEl.value);
+  if (isNaN(costVal) || costVal < 0) {
+    costEl.classList.add('invalid');
+    el('hint-cost').textContent = '⚠ Cost must be 0 or greater';
+    el('hint-cost').className = 'hint error';
+    ok = false;
+  } else {
+    costEl.classList.remove('invalid');
+    el('hint-cost').textContent = '';
+    el('hint-cost').className = 'hint';
+  }
+  return ok;
+}
+
+// ═════════════════ PLATFORM ═════════════════
+function setPlatform(pid) {
+  if (!PLATFORMS[pid]) return;
+  _pid = pid;
+  const pc = PLATFORMS[pid];
+  document.querySelectorAll('.pchip').forEach(c => c.classList.remove('active'));
+  document.querySelector(`[data-pid="${pid}"]`).classList.add('active');
+  el('platform-badge').textContent = pc.label + ' · Seller Tool';
+  const grp = pc.grp;
+
+  show('mode-wrap', true);
+
+  if (grp === 'B') {
+    el('mt1').textContent = 'Mode 1 — New Listing';
+    el('md1').textContent = 'Costs + profit% → required bank settlement';
+    el('mt2').textContent = 'Mode 2 — Check Existing Listing';
+    el('md2').textContent = 'SP + settlement from dashboard → verify profit';
+  } else {
+    el('mt1').textContent = 'Mode 1 — Find Selling Price';
+    el('md1').textContent = 'Enter costs → get ideal selling price';
+    el('mt2').textContent = 'Mode 2 — Check Existing Listing';
+    el('md2').textContent = 'Enter current price → check profit & ROI';
+  }
+
+  if (grp === 'A') {
+    el('lbl-pfee').textContent = pc.label === 'IBI Website'
+      ? 'Payment gateway / platform fee (₹)'
+      : 'Platform fee (₹ — from Seller Central)';
+    el('hint-pfee').textContent = pc.label === 'IBI Website'
+      ? 'Payment gateway charge per order (e.g. Razorpay, PayU)'
+      : 'Copy the exact "Total fees" shown alongside your listing';
+  }
+
+  if (grp === 'B') {
+    el('hint-b-sp').textContent     = `Selling price visible on your ${pc.label} dashboard`;
+    el('hint-b-settle').textContent = `Amount ${pc.label} deposits to your bank`;
+    el('bklbl-settle').textContent  = 'Bank settlement amount';
+  }
+
+  setMode(_mode);
+
+  show('bkrow-pack',   grp !== 'C');
+  show('bkrow-carton', grp !== 'C');
+  show('bkrow-ship',   grp === 'A');
+  show('bkrow-fee',    grp !== 'C');
+  show('bkrow-settle', grp === 'B');
+  show('bkrow-netrev', true);
+  show('bkrow-mrp',    grp !== 'B');
+}
+
+// ═════════════════ MODE ═════════════════
+function setMode(m) {
+  _mode = m;
+  el('btn-m1').classList.toggle('active', m === 1);
+  el('btn-m2').classList.toggle('active', m === 2);
+
+  const grp = PLATFORMS[_pid].grp;
+  const lbl = PLATFORMS[_pid].label;
+
+  el('m1-fields').style.display = m === 1 ? '' : 'none';
+  el('m2-fields').style.display = (m === 2 && grp !== 'B') ? '' : 'none';
+
+  if (grp === 'B') {
+    show('row-pack',     true);
+    show('row-carton',   true);
+    show('row-ship',     false);
+    show('row-pfee',     false);
+    show('row-b-sp',     m === 2);
+    show('row-b-settle', m === 2);
+    show('row-gstpay',   true);
+    show('row-mrpmult',  false);
+
+    if (m === 1) {
+      el('in-head').textContent   = `Inputs · New ${lbl} listing`;
+      el('out-head').textContent  = 'Results · Required bank settlement';
+      el('notice').className      = 'notice grp-b';
+      el('notice-text').innerHTML = `<strong>📦 ${lbl} — New Listing:</strong>&nbsp; Enter your costs and target profit %. Calculator tells you the <strong>exact Bank Settlement Amount</strong> to enter on ${lbl} when creating the listing.`;
+    } else {
+      el('in-head').textContent   = `Inputs · Existing ${lbl} listing`;
+      el('out-head').textContent  = 'Results · Profitability check';
+      el('hint-b-sp').textContent     = `Selling price visible on ${lbl} dashboard`;
+      el('hint-b-settle').textContent = `Bank settlement on ${lbl} dashboard`;
+      el('notice').className      = 'notice grp-b';
+      el('notice-text').innerHTML = `<strong>🔍 ${lbl} — Existing Listing:</strong>&nbsp; Enter your costs, the <strong>selling price</strong> and <strong>bank settlement</strong> — both visible on your ${lbl} dashboard — to verify real profit, GST, gross margin and ROI.`;
+    }
+  } else {
+    show('row-pack',    grp !== 'C');
+    show('row-carton',  grp !== 'C');
+    show('row-ship',    grp === 'A');
+    show('row-pfee',    grp === 'A');
+    show('row-b-sp',    false);
+    show('row-b-settle',false);
+    show('row-gstpay',  false);
+    show('row-mrpmult', m === 1);
+
+    if (m === 1) {
+      el('in-head').textContent  = 'Inputs · Your costs';
+      el('out-head').textContent = 'Results · Suggested pricing';
+      el('notice').className     = `notice grp-${grp.toLowerCase()}`;
+      el('notice-text').innerHTML = grp === 'A'
+        ? `<strong>🛒 ${lbl}:</strong>&nbsp; Enter your costs + platform fee from Seller Central. Calculator finds your ideal selling price, MRP and profit.`
+        : `<strong>🏪 Offline:</strong>&nbsp; Enter product cost, GST and target profit to find your ideal offline selling price.`;
+    } else {
+      el('in-head').textContent  = 'Inputs · Existing listing';
+      el('out-head').textContent = 'Results · Profitability check';
+      el('hint-cursp').textContent = `Price currently shown to customers on ${lbl}`;
+      el('m2-sdiv').textContent    = `Your existing ${lbl} listing`;
+      el('notice').className     = `notice grp-${grp.toLowerCase()}`;
+      el('notice-text').innerHTML = grp === 'A'
+        ? `<strong>🔍 ${lbl}:</strong>&nbsp; Enter your current listing price and platform fee to verify if this listing is profitable.`
+        : `<strong>🔍 Offline:</strong>&nbsp; Enter your current selling price to check profitability against your costs.`;
+    }
+  }
+  calc();
+}
+
+// ═════════════════ CALC ═════════════════
+function calc() {
+  if (!validateInputs()) return;
+
+  const cost   = safeNum(el('cost').value);
+  const gst    = safeNum(el('gst').value);
+  const other  = safeNum(el('other').value);
+  const pc     = PLATFORMS[_pid];
+  const grp    = pc.grp;
+
+  const pack   = grp !== 'C' ? safeNum(el('pack').value) : 0;
+  const carton = grp !== 'C' ? safeNum(el('carton').value) : 0;
+  const ship   = grp === 'A' ? safeNum(el('ship').value) : 0;
+  const pfee   = grp === 'A' ? safeNum(el('pfee').value) : 0;
+
+  const baseCost = cost + pack + carton + ship + other;
+  if (baseCost <= 0) {
+    showEmptyResults();
+    return;
+  }
+
+  const gst_frac  = gst / 100;
+  const gstDeduct = grp === 'B' && !!(el('gstpay') && el('gstpay').checked);
+  let sp_in = 0, sp_ex = 0, mrp = 0, mult = 1.5, pr_used = null;
+  let bank_settlement = 0, fee_amt = 0, gst_payable = 0;
+
+  if (grp === 'B') {
+    if (_mode === 1) {
+      pr_used = Math.max(0.01, parseFloat(el('profit').value) || 25);
+      const targetNet = baseCost * (1 + pr_used / 100);
+      bank_settlement = gstDeduct ? targetNet * (1 + gst_frac) : targetNet;
+      gst_payable     = bank_settlement - targetNet;
+      fee_amt = 0;
+    } else {
+      sp_in           = safeNum(el('b-sp-input').value);
+      bank_settlement = safeNum(el('b-settle-input').value);
+      if (sp_in <= 0 || bank_settlement <= 0) { showEmptyResults(); return; }
+      sp_ex       = sp_in / (1 + gst_frac);
+      fee_amt     = Math.max(0, sp_in - bank_settlement);
+      gst_payable = gstDeduct ? sp_in - sp_ex : 0;
+    }
+  } else if (_mode === 1) {
+    pr_used = Math.max(0.01, parseFloat(el('profit').value) || 25);
+    mult    = grp !== 'C' ? Math.max(1, parseFloat(el('mrpmult').value) || 1.5) : 1.5;
+    sp_ex   = baseCost * (1 + pr_used / 100) + pfee;
+    sp_in   = sp_ex * (1 + gst_frac);
+    mrp     = sp_in * mult;
+    fee_amt = pfee;
+  } else {
+    sp_in   = safeNum(el('cur-sp').value);
+    mult    = Math.max(1, parseFloat(el('mrpmult2').value) || 1.5);
+    if (sp_in <= 0) { showEmptyResults(); return; }
+    sp_ex   = sp_in / (1 + gst_frac);
+    mrp     = sp_in * mult;
+    fee_amt = pfee;
+  }
+
+  const gst_amt    = sp_ex > 0 ? sp_ex * gst_frac : 0;
+  const net_rev    = grp === 'B' ? bank_settlement - gst_payable : (sp_ex - pfee);
+  const net_profit = net_rev - baseCost;
+  const total_exp  = baseCost + (grp !== 'C' ? fee_amt : 0);
+  const roi        = baseCost > 0 ? (net_profit / baseCost) * 100 : 0;
+  const g_margin   = sp_ex > 0 ? (net_profit / sp_ex) * 100 : 0;
+  const bep_in     = grp === 'B'
+    ? (gstDeduct ? baseCost * (1 + gst_frac) : baseCost)
+    : (baseCost + (grp !== 'C' ? fee_amt : 0)) * (1 + gst_frac);
+
+  _last = { mode:_mode, pid:_pid, grp, cost, gst, pack, carton, ship, pfee, other,
+    pr_used, mult, baseCost, sp_ex, sp_in, mrp, gst_amt, fee_amt, gst_payable, gstDeduct,
+    bank_settlement, net_rev, net_profit, total_exp, roi, g_margin, bep_in };
+
+  renderMetrics(grp, sp_in, sp_ex, mrp, bank_settlement, net_profit, g_margin, roi);
+  renderBreakdown(grp, cost, pack, carton, ship, other, fee_amt, total_exp, sp_ex, gst_amt, bank_settlement, net_rev, net_profit, bep_in, g_margin, roi, mrp, baseCost);
+  renderViability(net_profit, roi);
+}
+
+function showEmptyResults() {
+  el('metrics-grid').innerHTML = '<div class="empty-state"><span class="es-icon">📊</span><div class="es-msg">Enter valid values to see results</div></div>';
+  ['b-cost','b-pack','b-carton','b-ship','b-other','b-fee','b-total','b-spex','b-gst','b-settle','b-gstpay','b-rev','b-np2','b-bep','b-gm','b-roi2','b-mrp2'].forEach(id => { const e = el(id); if (e) e.textContent = '—'; });
+  el('viability').className = 'viability';
+  el('v-text').textContent = 'Enter your costs to see viability assessment.';
+}
+
+function renderMetrics(grp, sp_in, sp_ex, mrp, bank_settlement, net_profit, g_margin, roi) {
+  const d = el('metrics-grid');
+  const isLoss = net_profit < 0;
+  const npCls  = isLoss ? 'red' : 'grn';
+  const lbl    = PLATFORMS[_pid].label;
+  const gstAmt = sp_ex * (_last.gst/100);
+
+  if (grp === 'B') {
+    const isMode1 = _last.mode === 1;
+    d.innerHTML = isMode1 ? `
+      <div class="metric teal" style="grid-column:1/-1;">
+        <div class="metric-lbl">✦ Required bank settlement on ${lbl}</div>
+        <div class="metric-val" style="font-size:28px;">${fd(bank_settlement)}</div>
+        <div class="metric-note">Enter this exact amount when creating your listing · Based on ${fp(_last.pr_used||25)} target profit${_last.gstDeduct ? ' · incl. GST payable on sale' : ''}</div>
+      </div>
+      <div class="metric ${npCls}">
+        <div class="metric-lbl">Net profit per unit</div>
+        <div class="metric-val">${fdSigned(net_profit)}</div>
+        <div class="metric-note">settlement − total costs</div>
+      </div>
+      <div class="metric purple">
+        <div class="metric-lbl">ROI / Markup</div>
+        <div class="metric-val">${fp(roi)}</div>
+        <div class="metric-note">return on base cost</div>
+      </div>
+      <div class="metric">
+        <div class="metric-lbl">Break-even settlement</div>
+        <div class="metric-val">${fd(_last.bep_in)}</div>
+        <div class="metric-note">min to cover all costs${_last.gstDeduct ? ' + GST payable' : ''}</div>
+      </div>` : `
+      <div class="metric teal" style="grid-column:1/-1;">
+        <div class="metric-lbl">Actual bank settlement received</div>
+        <div class="metric-val" style="font-size:28px;">${fd(bank_settlement)}</div>
+        <div class="metric-note">Amount deposited to your bank by ${lbl}</div>
+      </div>
+      <div class="metric acc">
+        <div class="metric-lbl">Selling price (incl. GST)</div>
+        <div class="metric-val">${fd(sp_in)}</div>
+        <div class="metric-note">excl. GST: ${fd(sp_ex)} · GST: ${fd(gstAmt)}</div>
+      </div>
+      <div class="metric ${npCls}">
+        <div class="metric-lbl">Net profit per unit</div>
+        <div class="metric-val">${fdSigned(net_profit)}</div>
+        <div class="metric-note">gross margin: ${fp(g_margin)}</div>
+      </div>
+      <div class="metric purple">
+        <div class="metric-lbl">ROI / Markup</div>
+        <div class="metric-val">${fp(roi)}</div>
+        <div class="metric-note">return on base cost</div>
+      </div>`;
+  } else {
+    d.innerHTML = `
+      <div class="metric acc">
+        <div class="metric-lbl">Selling price (incl. GST)</div>
+        <div class="metric-val">${fd(sp_in)}</div>
+        <div class="metric-note">excl. GST: ${fd(sp_ex)}</div>
+      </div>
+      <div class="metric blu">
+        <div class="metric-lbl">MRP (print on pack)</div>
+        <div class="metric-val">${fd(mrp)}</div>
+        <div class="metric-note">at ${(_last.mult||1.5).toFixed(1)}× selling price</div>
+      </div>
+      <div class="metric ${npCls}">
+        <div class="metric-lbl">Net profit per unit</div>
+        <div class="metric-val">${fdSigned(net_profit)}</div>
+        <div class="metric-note">gross margin: ${fp(g_margin)}</div>
+      </div>
+      <div class="metric purple">
+        <div class="metric-lbl">ROI / Markup</div>
+        <div class="metric-val">${fp(roi)}</div>
+        <div class="metric-note">return on base cost</div>
+      </div>`;
+  }
+}
+
+function renderBreakdown(grp, cost, pack, carton, ship, other, fee_amt, total_exp, sp_ex, gst_amt, bank_settlement, net_rev, net_profit, bep_in, g_margin, roi, mrp, baseCost) {
+  el('b-cost').textContent  = fd(cost);
+  el('b-pack').textContent  = fd(pack);
+  el('b-carton').textContent = fd(carton);
+  el('b-ship').textContent  = fd(ship);
+  el('b-other').textContent = fd(other);
+  el('b-fee').textContent   = grp === 'B' && _mode === 1 ? '— (not available)' : fd(fee_amt);
+  el('bklbl-fee').textContent = grp === 'B'
+    ? (_mode === 1 ? 'Platform deduction (not available)' : 'Platform deduction (implied)')
+    : grp === 'C' ? '' : 'Platform fee';
+  el('b-total').textContent = grp === 'B' && _mode === 1 ? fd(baseCost) : fd(total_exp);
+  el('b-spex').textContent  = grp === 'B' && _mode === 1 ? '— (set on platform)' : fd(sp_ex);
+  el('b-gst').textContent   = grp === 'B' && _mode === 1 ? '— (set on platform)' : fd(gst_amt);
+  if (grp === 'B') el('b-settle').textContent = fd(bank_settlement);
+  show('bkrow-gstpay', grp === 'B' && _last.gstDeduct);
+  el('b-gstpay').textContent = '− ' + fd(_last.gst_payable || 0);
+  el('b-rev').textContent   = fd(net_rev);
+  el('b-np2').textContent   = fdSigned(net_profit);
+  el('bk-profit').className = net_profit >= 0 ? 'bk-row profit' : 'bk-row loss';
+  const bepLbl = el('bklbl-bep');
+  if (bepLbl) bepLbl.textContent = grp === 'B' ? 'Break-even bank settlement' : 'Break-even selling price';
+  el('b-bep').textContent = grp === 'B'
+    ? fd(bep_in) + ' (min settlement to break even)'
+    : fd(bep_in) + ' (incl. GST)';
+  el('b-gm').textContent    = grp === 'B' && _mode === 1 ? '—' : fp(g_margin);
+  el('b-roi2').textContent  = fp(roi);
+  if (grp !== 'B') el('b-mrp2').textContent = fd(mrp);
+}
+
+function renderViability(net_profit, roi) {
+  const vb = el('viability'), vtx = el('v-text');
+  vb.className = 'viability';
+  if (net_profit < 0) {
+    vb.classList.add('bad');
+    vtx.textContent = '✗ Loss — losing ' + fd(net_profit) + ' per unit. Raise price or cut costs urgently.';
+  } else if (roi >= 30) {
+    vb.classList.add('good');
+    vtx.textContent = '✓ Excellent — ROI ' + fp(roi) + '. Strong profitability. Good to list on ' + PLATFORMS[_pid].label + '.';
+  } else if (roi >= 15) {
+    vb.classList.add('warn');
+    vtx.textContent = '~ Acceptable — ROI ' + fp(roi) + '. Consider reducing costs or raising price.';
+  } else {
+    vb.classList.add('bad');
+    vtx.textContent = '⚠ Caution — ROI ' + fp(roi) + '. Thin margins. Review before listing.';
+  }
+}
+
+// ═════════════════ RESET ═════════════════
+function resetDefaults() {
+  const pc = PLATFORMS[_pid];
+  el('pname').value          = '';
+  el('cost').value           = 30;
+  el('gst').value            = '5';
+  el('pack').value           = pc.defPack;
+  el('carton').value         = 0;
+  el('ship').value           = pc.defShip;
+  el('pfee').value           = pc.defFee;
+  el('other').value          = 0;
+  el('profit').value         = 25;
+  el('mrpmult').value        = 1.5;
+  el('cur-sp').value         = 749;
+  el('mrpmult2').value       = 1.5;
+  el('b-sp-input').value     = 299;
+  el('b-settle-input').value = 240;
+  document.querySelectorAll('.invalid').forEach(e => e.classList.remove('invalid'));
+  calc();
+  showToast('↺ Defaults restored');
+}
+
+// ═════════════════ FIXED SHEET COLUMNS ═════════════════
+function buildSheetData() {
+  const pname = el('pname').value.trim() || '—';
+  const d  = new Date();
+  const ds = d.toLocaleDateString('en-IN') + ' ' + d.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+  const grp = _last.grp;
+  const n   = v => (v !== null && v !== undefined && !isNaN(parseFloat(v))) ? parseFloat(v).toFixed(2) : 'N/A';
+  const modeLabel = grp === 'B'
+    ? (_last.mode === 1 ? 'Mode 1 — New Listing (Settlement Calculated)' : 'Mode 2 — Check Existing Listing')
+    : (_last.mode === 1 ? 'Mode 1 — Find Selling Price' : 'Mode 2 — Check Existing Listing');
+
+  const headers = [
+    'Product Name', 'Platform', 'Date & Time', 'Calculator Mode',
+    '--- INPUTS ---',
+    'Product Cost (₹)', 'GST Rate (%)', 'Packaging Cost (₹)', 'Carton Box Cost (₹)',
+    'Shipping Cost (₹)', 'Platform Fee (₹)',
+    'Selling Price — Dashboard (₹)', 'Bank Settlement — Dashboard (₹)',
+    'Other Charges (₹)', 'Target Profit (%)', 'MRP Multiplier (×)',
+    '--- OUTPUTS ---',
+    'Selling Price incl. GST (₹)', 'Selling Price excl. GST (₹)',
+    'MRP on Pack (₹)', 'Required / Actual Bank Settlement (₹)',
+    'Platform Deduction (₹)', 'Net Profit per Unit (₹)',
+    'Gross Margin (%)', 'ROI / Markup (%)',
+    '--- BREAKDOWN ---',
+    'Total Base Cost (₹)', 'Total Expense (₹)', 'GST Collected (₹)',
+    'Net Seller Revenue (₹)',
+    grp === 'B' ? 'Break-even Bank Settlement (₹)' : 'Break-even Selling Price incl. GST (₹)'
+  ];
+
+  const values = [
+    pname, PLATFORMS[_last.pid].label, ds, modeLabel, '',
+    n(_last.cost), n(_last.gst), n(_last.pack),
+    grp !== 'C' ? n(_last.carton) : 'N/A',
+    grp === 'A' ? n(_last.ship) : 'N/A',
+    grp === 'A' ? n(_last.pfee) : 'N/A',
+    grp === 'B' && _last.mode === 2 ? n(_last.sp_in) : 'N/A',
+    grp === 'B' && _last.mode === 2 ? n(_last.bank_settlement) : 'N/A',
+    n(_last.other),
+    grp === 'B' ? n(_last.pr_used) : (_last.mode === 1 ? n(_last.pr_used) : 'N/A'),
+    grp !== 'B' ? n(_last.mult) : 'N/A',
+    '',
+    grp === 'B' && _last.mode === 1 ? 'N/A' : n(_last.sp_in),
+    grp === 'B' && _last.mode === 1 ? 'N/A' : n(_last.sp_ex),
+    grp !== 'B' ? n(_last.mrp) : 'N/A',
+    grp === 'B' ? n(_last.bank_settlement) : 'N/A',
+    grp === 'B' && _last.mode === 1 ? 'N/A' : (grp === 'C' ? 'N/A' : n(_last.fee_amt)),
+    n(_last.net_profit),
+    grp === 'B' && _last.mode === 1 ? 'N/A' : n(_last.g_margin),
+    n(_last.roi),
+    '',
+    n(_last.baseCost),
+    grp === 'B' && _last.mode === 1 ? 'N/A' : n(_last.total_exp),
+    grp === 'B' && _last.mode === 1 ? 'N/A' : n(_last.gst_amt),
+    n(_last.net_rev),
+    n(_last.bep_in)
+  ];
+
+  return { headers, values, platform: PLATFORMS[_last.pid].label };
+}
+
+// ═════════════════ COPY TO SHEETS ═════════════════
+function copyToSheets() {
+  if (!_last.baseCost) { showToast('⚠ Enter values first', 'error'); return; }
+  const { headers, values } = buildSheetData();
+  navigator.clipboard.writeText(headers.join('\t')+'\n'+values.join('\t')).then(() => {
+    const btn = el('copyBtn');
+    btn.classList.add('copied');
+    btn.querySelector('span').textContent = '✓ Copied! Press Ctrl+V in Google Sheets';
+    showToast('✓ Copied! Now paste into Google Sheets', 'success');
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.querySelector('span').textContent = 'Copy → Paste into Google Sheets';
+    }, 3000);
+  }).catch(() => showToast('⚠ Could not copy — try a different browser', 'error'));
+}
+
+// ═════════════════ SEND TO SHEETS ═════════════════
+async function sendToSheets() {
+  if (!_last.baseCost) { showToast('⚠ Enter values first', 'error'); return; }
+  const gsUrl = localStorage.getItem(GS_URL_KEY) || GS_URL_DEFAULT;
+  const btn = el('sendBtn');
+  btn.disabled = true;
+  btn.classList.add('sending');
+  btn.querySelector('span').textContent = 'Sending…';
+
+  const data = buildSheetData();
+
+  try {
+    await fetch(gsUrl, {
+      method: 'POST', mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    btn.classList.remove('sending');
+    btn.classList.add('success');
+    btn.querySelector('span').textContent = '✓ Sent to ' + data.platform + ' tab!';
+    showToast('✓ Sent to "' + data.platform + '" tab in Google Sheets', 'success');
+    setTimeout(() => {
+      btn.disabled = false;
+      btn.classList.remove('success');
+      btn.querySelector('span').textContent = 'Send → Google Sheets';
+    }, 3500);
+  } catch(err) {
+    btn.classList.remove('sending');
+    btn.disabled = false;
+    btn.querySelector('span').textContent = 'Send → Google Sheets';
+    showToast('⚠ Send failed. Check Apps Script URL', 'error');
+  }
+}
+
+// ═════════════════ TOAST ═════════════════
+let _toastTimer = null;
+function showToast(msg, type) {
+  const t = el('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (type ? ' ' + type : '');
+  if (_toastTimer) clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => t.className = 'toast' + (type ? ' ' + type : ''), 3500);
+}
+
+// ═════════════════ BG TOGGLE ═════════════════
+function toggleBg() {
+  const isDark = document.body.classList.toggle('dark');
+  el('bg-toggle-btn').innerHTML = isDark
+    ? '<span>☀️</span> Light mode'
+    : '<span>🌙</span> Dark mode';
+  localStorage.setItem('ibi_theme', isDark ? 'dark' : 'light');
+}
+(function(){
+  if (localStorage.getItem('ibi_theme') === 'dark') {
+    document.body.classList.add('dark');
+    const b = el('bg-toggle-btn');
+    if (b) b.innerHTML = '<span>☀️</span> Light mode';
+  }
+})();
+
+// ═════════════════ GS SETUP ═════════════════
+function saveGsUrl() {
+  const url = el('gs-url-input').value.trim();
+  if (!url.startsWith('https://script.google.com')) {
+    setGsStatus('err', '⚠ Please enter a valid Google Apps Script URL');
+    return;
+  }
+  localStorage.setItem(GS_URL_KEY, url);
+  setGsStatus('ok', '✓ URL saved! Send button is ready');
+}
+function setGsStatus(type, msg) {
+  const s = el('gs-status');
+  s.textContent = msg;
+  s.className = 'gs-status ' + type;
+}
+function toggleGsSetup() {
+  const body = el('gs-setup-body');
+  const icon = el('gs-toggle-icon');
+  const hdr  = document.querySelector('.gs-setup-header');
+  const open = body.style.display === 'none';
+  body.style.display = open ? '' : 'none';
+  icon.textContent   = open ? '▲ Collapse' : '✓ Configured · ▼ View';
+  hdr.classList.toggle('open', open);
+}
+function copyAppScript() {
+  const code = el('gs-code-block').textContent;
+  navigator.clipboard.writeText(code).then(() => {
+    showToast('✓ GAS code copied! Paste in Apps Script editor', 'success');
+  }).catch(() => showToast('⚠ Could not copy', 'error'));
+}
+(function(){
+  const saved = localStorage.getItem(GS_URL_KEY) || GS_URL_DEFAULT;
+  if (el('gs-url-input')) el('gs-url-input').value = saved;
+})();
+
+// ═════════════════ HISTORY ═════════════════
+function uniqueId() { _idCounter++; return Date.now() + '_' + _idCounter; }
+
+function saveToHistory() {
+  if (!_last.baseCost) { showToast('⚠ Calculate a product first', 'error'); return; }
+  const pname = el('pname').value.trim();
+  if (!pname) { showToast('⚠ Enter a Product Name first', 'error'); el('pname').focus(); return; }
+  const history = getHistory();
+  const entry = {
+    id: uniqueId(), pname, pid: _pid,
+    date: new Date().toLocaleDateString('en-IN') + ' ' + new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'}),
+    timestamp: Date.now(), mode: _last.mode,
+    cost: el('cost').value, gst: el('gst').value, pack: el('pack').value,
+    carton: el('carton').value, ship: el('ship').value, pfee: el('pfee').value,
+    other: el('other').value,
+    profit: el('profit').value, mrpmult: el('mrpmult').value,
+    cursp: el('cur-sp').value, mrpmult2: el('mrpmult2').value,
+    bspinput: el('b-sp-input').value, bsettle: el('b-settle-input').value,
+    gstpay: el('gstpay').checked ? 1 : 0,
+    sp_in: _last.sp_in, net_profit: _last.net_profit, roi: _last.roi,
+    mrp: _last.mrp, bank_settlement: _last.bank_settlement, grp: _last.grp
+  };
+  history.unshift(entry);
+  if (history.length > MAX_HIST) history.length = MAX_HIST;
+  localStorage.setItem(HIST_KEY, JSON.stringify(history));
+  _activeHistId = entry.id;
+  renderHistory();
+  showToast('✓ Saved — "' + pname.substring(0,30) + (pname.length>30?'…':'') + '"', 'success');
+}
+
+function getHistory() {
+  try { return JSON.parse(localStorage.getItem(HIST_KEY)) || []; } catch(e) { return []; }
+}
+
+function restoreFromHistory(id) {
+  const entry = getHistory().find(e => e.id === id || e.id === parseInt(id));
+  if (!entry) return;
+  _activeHistId = entry.id;
+  setPlatform(entry.pid);
+  setMode(entry.mode);
+  el('pname').value          = entry.pname;
+  el('cost').value           = entry.cost;
+  el('gst').value            = entry.gst;
+  el('pack').value           = entry.pack;
+  el('carton').value         = entry.carton || 0;
+  el('ship').value           = entry.ship;
+  el('pfee').value           = entry.pfee;
+  el('other').value          = entry.other;
+  el('profit').value         = entry.profit;
+  el('mrpmult').value        = entry.mrpmult;
+  el('cur-sp').value         = entry.cursp;
+  el('mrpmult2').value       = entry.mrpmult2;
+  el('b-sp-input').value     = entry.bspinput  || 299;
+  el('b-settle-input').value = entry.bsettle   || 240;
+  el('gstpay').checked       = entry.gstpay === undefined ? true : !!entry.gstpay;
+  calc();
+  renderHistory();
+  window.scrollTo({top:0,behavior:'smooth'});
+  showToast('↩ Restored: ' + entry.pname.substring(0,28) + (entry.pname.length>28?'…':''));
+}
+
+function deleteFromHistory(id, event) {
+  event.stopPropagation();
+  const history = getHistory().filter(e => e.id !== id && e.id !== parseInt(id));
+  localStorage.setItem(HIST_KEY, JSON.stringify(history));
+  if (_activeHistId === id) _activeHistId = null;
+  renderHistory();
+}
+
+function clearHistory() {
+  if (!confirm('Clear all saved history? This cannot be undone.')) return;
+  localStorage.removeItem(HIST_KEY);
+  _activeHistId = null;
+  renderHistory();
+  showToast('History cleared');
+}
+
+function exportHistoryCSV() {
+  const history = getHistory();
+  if (history.length === 0) { showToast('⚠ No history to export', 'error'); return; }
+  const headers = ['Product Name','Platform','Date','Mode','Selling Price (₹)','Bank Settlement (₹)','MRP (₹)','Net Profit (₹)','ROI (%)'];
+  const rows = history.map(e => [
+    `"${e.pname.replace(/"/g, '""')}"`,
+    PLATFORMS[e.pid]?.label || e.pid,
+    e.date, e.mode === 1 ? 'Mode 1' : 'Mode 2',
+    parseFloat(e.sp_in).toFixed(2),
+    parseFloat(e.bank_settlement || 0).toFixed(2),
+    parseFloat(e.mrp || 0).toFixed(2),
+    parseFloat(e.net_profit).toFixed(2),
+    parseFloat(e.roi).toFixed(1)
+  ].join(','));
+  const csv = headers.join(',') + '\n' + rows.join('\n');
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  const ds   = new Date().toISOString().slice(0,10);
+  a.href = url; a.download = `IBI-Pricing-History-${ds}.csv`;
+  a.click(); URL.revokeObjectURL(url);
+  showToast('✓ Downloaded CSV with ' + history.length + ' calculations', 'success');
+}
+
+function renderHistory() {
+  const all = getHistory();
+  const container = el('history-list');
+  el('hist-count').textContent = all.length + ' / ' + MAX_HIST;
+  show('hist-search-wrap', all.length > 0);
+
+  if (all.length === 0) {
+    container.innerHTML = '<div class="history-empty"><span class="he-icon">📋</span>No calculations saved yet.<br><strong>Calculate a product, then click Save to History</strong> <span class="kbd" style="background:var(--purple-dim);color:var(--purple);border-color:rgba(124,58,237,.25)">Ctrl + S</span></div>';
+    return;
+  }
+
+  const search = el('hist-search')?.value.toLowerCase() || '';
+  const filter = el('hist-filter')?.value || '';
+  const history = all.filter(e =>
+    (filter === '' || e.pid === filter) &&
+    (search === '' || e.pname.toLowerCase().includes(search))
+  );
+
+  if (history.length === 0) {
+    container.innerHTML = '<div class="history-empty"><span class="he-icon">🔍</span>No matches found for your search.</div>';
+    return;
+  }
+
+  const fd2 = n => '₹' + parseFloat(n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');
+  const fp2 = n => parseFloat(n).toFixed(1) + '%';
+  container.innerHTML = '<div class="history-grid">' + history.map(e => {
+    const isActive = e.id === _activeHistId;
+    const isLoss   = parseFloat(e.net_profit) < 0;
+    const grp      = e.grp || 'A';
+    const settle   = grp === 'B' ? `<span class="hist-pill pill-settle">⚐ ${fd2(e.bank_settlement||0)}</span>` : '';
+    const mrpPill  = grp !== 'B' ? `<span class="hist-pill pill-roi">MRP ${fd2(e.mrp||0)}</span>` : '';
+    const safeId   = String(e.id).replace(/'/g, "\\'");
+    return `<div class="hist-card ${isActive?'active-card':''}" onclick="restoreFromHistory('${safeId}')">
+      <button class="hist-del" onclick="deleteFromHistory('${safeId}',event)" title="Remove">✕</button>
+      <div class="hist-card-name" title="${e.pname}">${e.pname}</div>
+      <div class="hist-card-meta">${PLATFORMS[e.pid]?.label||e.pid} · ${e.date} · ${e.mode===1?'Mode 1':'Mode 2'}</div>
+      <div class="hist-card-pills">
+        <span class="hist-pill pill-sp">${fd2(e.sp_in)}</span>
+        <span class="hist-pill pill-np ${isLoss?'loss':''}">${isLoss?'−':'+'}${fd2(Math.abs(e.net_profit))}</span>
+        <span class="hist-pill pill-roi">ROI ${fp2(e.roi)}</span>
+        ${settle}${mrpPill}
+        <span class="hist-pill pill-plat">${PLATFORMS[e.pid]?.label||e.pid}</span>
+      </div>
+    </div>`;
+  }).join('') + '</div>';
+}
+
+// ═════════════════ SCREENSHOT SCANNER (OCR) ═════════════════
+// Upload / drag-drop / paste (Ctrl+V) Seller Central screenshots.
+// Tesseract.js OCR runs fully in the browser; extracted price & fees
+// are applied straight into the calculator.
+let _scanned = [], _tessPromise = null;
+// OCR often confuses 0/O — accept both and normalise to B0…
+const ASIN_RE = /\bB[0O][A-Z0-9]{8}\b/;
+const fixAsin = a => a ? 'B0' + a.slice(2) : '';
+
+function loadTesseract() {
+  if (window.Tesseract) return Promise.resolve();
+  if (_tessPromise) return _tessPromise;
+  _tessPromise = new Promise((res, rej) => {
+    const s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js';
+    s.onload = res;
+    s.onerror = () => { _tessPromise = null; rej(new Error('Could not load OCR engine — check internet connection')); };
+    document.head.appendChild(s);
+  });
+  return _tessPromise;
+}
+
+function blobToCanvas(file) {
+  return new Promise((res, rej) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      // Upscale small screenshots — Seller Central text is tiny, OCR needs ~2× size
+      const scale = img.width < 2400 ? 2 : 1.25;
+      const c = document.createElement('canvas');
+      c.width  = Math.round(img.width * scale);
+      c.height = Math.round(img.height * scale);
+      const ctx = c.getContext('2d');
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
+      ctx.filter = 'grayscale(1) contrast(1.25)';
+      ctx.drawImage(img, 0, 0, c.width, c.height);
+      res(c);
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); rej(new Error('Could not read image file')); };
+    img.src = url;
+  });
+}
+
+function _amt(s) {
+  if (!s) return null;
+  const m = s.match(/(\d[\d,]*(?:\.\d{1,2})?)/);
+  return m ? parseFloat(m[1].replace(/,/g, '')) : null;
+}
+function _amtAfter(line, label) {
+  const i = line.toLowerCase().indexOf(label);
+  return i === -1 ? null : _amt(line.slice(i + label.length));
+}
+
+// Column labels that end a title fragment — OCR merges table columns into one line
+const STOP_RE = /(units sold|page views|sales rank|sales\b|inr\b|₹|calculate revenue|shipping cost|available|on-hand|unfulfillable|inbound|reserved|total fee|fba fee|minimum price|maximum price|price\b|featured offer|lowest price|business price|potential lower|view reference|bazaar|variation family)/i;
+const DATE_RE = /^\s*\d{1,2}\s+\w{3,5}\.?\s+\d{4},?\s+\d{1,2}:\d{2}\s*(am|pm)?\s*/i;
+
+function _titleFrag(l) {
+  let s = l.replace(/^\s*(in)?active\b[:\s]*/i, '');
+  s = s.replace(DATE_RE, '').replace(DATE_RE, '');
+  const m = s.match(STOP_RE);
+  if (m) s = s.slice(0, m.index);
+  return s.trim();
+}
+
+function parseSellerText(raw) {
+  const lines = raw.split(/\n/).map(l => l.trim()).filter(l => l.length > 1);
+  // Product blocks start at brand-title lines; fallback to ASIN anchors
+  let starts = [];
+  lines.forEach((l, i) => { if (/intelligence/i.test(l) && l.length > 12) starts.push(i); });
+  starts = starts.filter((v, i) => i === 0 || v - starts[i - 1] > 3);
+  if (!starts.length) {
+    lines.forEach((l, i) => { if (ASIN_RE.test(l)) starts.push(Math.max(0, i - 3)); });
+    starts = starts.filter((v, i) => i === 0 || v - starts[i - 1] > 3);
+  }
+  if (!starts.length) starts = [0];
+
+  return starts.map((s, bi) => {
+    const end  = bi + 1 < starts.length ? starts[bi + 1] : lines.length;
+    const bl   = lines.slice(bi === 0 ? 0 : s, end);
+    // The fee row can sit on the line just above the title anchor — peek back
+    const peek = bi > 0 ? lines.slice(Math.max(0, s - 2), s) : [];
+    const p = { title: '', asin: fixAsin((bl.join(' ').match(ASIN_RE) || [''])[0]), sku: '',
+      price: null, fees: null, fbaFee: null, minPrice: null, maxPrice: null,
+      unitsSold: null, salesRank: null };
+
+    // Title: cleaned fragments of the first lines, until ASIN/SKU metadata begins
+    let frags = 0;
+    for (const l of bl) {
+      if (/^(asin|sku)\b/i.test(l) || ASIN_RE.test(l)) break;
+      const f = _titleFrag(l);
+      if (!f) continue;
+      p.title += (p.title ? ' ' : '') + f;
+      if (++frags >= 3 || p.title.length > 150) break;
+    }
+    p.title = p.title.replace(/\s*[|\-–]\s*$/, '').trim();
+
+    const scanLines = bl.concat(peek);
+    for (let i = 0; i < scanLines.length; i++) {
+      const l = scanLines[i], low = l.toLowerCase();
+      if (p.fees == null && low.includes('total fee')) {
+        p.fees = _amtAfter(l, 'total fee');
+        if (p.fees == null && scanLines[i + 1] && /^[₹\d]/.test(scanLines[i + 1])) p.fees = _amt(scanLines[i + 1]);
+      }
+      if (p.fbaFee == null && low.includes('fba fee')) p.fbaFee = _amtAfter(l, 'fba fee');
+      if (p.price == null && low.includes('featured offer')) p.price = _amtAfter(l.split('+')[0], 'featured offer');
+      if (p.minPrice == null && low.includes('minimum price')) p.minPrice = _amtAfter(l, 'minimum price');
+      if (p.maxPrice == null && low.includes('maximum price')) p.maxPrice = _amtAfter(l, 'maximum price');
+      if (p.unitsSold == null && low.includes('units sold')) p.unitsSold = _amtAfter(l, 'units sold');
+      if (p.salesRank == null && low.includes('sales rank')) p.salesRank = _amtAfter(l, 'sales rank');
+      if (!p.sku && /^sku\b/i.test(l)) p.sku = _titleFrag(l.replace(/^sku\s*/i, ''));
+    }
+    // Fallback price: the price-input line ("INR 1,350.00") — first one is the main Price box
+    if (p.price == null) {
+      for (const l of bl) {
+        if (/\binr\b/i.test(l)) { const v = _amtAfter(l, 'inr'); if (v != null) { p.price = v; break; } }
+      }
+    }
+    return p;
+  }).filter(p => p.asin || p.fees != null || p.price != null);
+}
+
+function esc(s) { return (s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+function handleScanFiles(files) {
+  [...files].forEach(f => { if (f && f.type.startsWith('image/')) scanImage(f); });
+}
+
+async function scanImage(file) {
+  const box = document.createElement('div');
+  box.className = 'scan-item';
+  const url = URL.createObjectURL(file);
+  box.innerHTML = `<img class="scan-thumb" src="${url}" alt="screenshot">
+    <div class="scan-body">
+      <div class="scan-state">⏳ Loading OCR engine (first time takes a few seconds)…</div>
+      <div class="scan-bar"><div class="scan-bar-fill"></div></div>
+    </div>`;
+  el('scan-results').prepend(box);
+  show('scan-clear-btn', true);
+  const state = box.querySelector('.scan-state'), fill = box.querySelector('.scan-bar-fill');
+  try {
+    await loadTesseract();
+    state.textContent = '🔍 Scanning screenshot…';
+    const canvas = await blobToCanvas(file);
+    const { data } = await Tesseract.recognize(canvas, 'eng', {
+      logger: m => { if (m.status === 'recognizing text') fill.style.width = Math.round(m.progress * 100) + '%'; }
+    });
+    const prods = parseSellerText(data.text || '');
+    if (!prods.length) {
+      state.innerHTML = '⚠ No listing data recognised — try a sharper / larger screenshot of the Manage Inventory page.';
+      fill.parentElement.remove();
+      return;
+    }
+    box.querySelector('.scan-body').innerHTML =
+      `<div class="scan-state">✓ Found ${prods.length} product${prods.length > 1 ? 's' : ''} — click Apply to load one into the calculator</div><div class="scan-prods"></div>`;
+    const wrap = box.querySelector('.scan-prods');
+    prods.forEach(p => {
+      const idx = _scanned.push(p) - 1;
+      const chips = [
+        p.price     != null ? `<span class="scan-chip">Price ₹${p.price.toFixed(2)}</span>` : '',
+        p.fees      != null ? `<span class="scan-chip fee">Total fees ₹${p.fees.toFixed(2)}</span>` : '',
+        p.fbaFee    != null ? `<span class="scan-chip fee">FBA fee ₹${p.fbaFee.toFixed(2)}</span>` : '',
+        p.minPrice  != null ? `<span class="scan-chip">Min ₹${p.minPrice.toFixed(2)}</span>` : '',
+        p.maxPrice  != null ? `<span class="scan-chip">Max ₹${p.maxPrice.toFixed(2)}</span>` : '',
+        p.unitsSold != null ? `<span class="scan-chip">Units sold ${p.unitsSold}</span>` : '',
+        p.salesRank != null ? `<span class="scan-chip">Rank ${p.salesRank.toLocaleString('en-IN')}</span>` : ''
+      ].join('');
+      const div = document.createElement('div');
+      div.className = 'scan-prod';
+      div.innerHTML = `<div class="scan-prod-name">${esc(p.title) || '(title not read)'}${p.asin ? ` <span class="scan-asin">${p.asin}</span>` : ''}${p.sku ? ` <span class="scan-asin">· ${esc(p.sku)}</span>` : ''}</div>
+        <div class="scan-chips">${chips || '<span class="scan-chip">No amounts detected</span>'}</div>
+        <button class="scan-apply" onclick="applyScan(${idx})">→ Apply to calculator</button>`;
+      wrap.appendChild(div);
+    });
+    showToast(`✓ Extracted ${prods.length} product${prods.length > 1 ? 's' : ''} from screenshot`, 'success');
+  } catch (err) {
+    state.textContent = '⚠ ' + (err.message || 'Scan failed');
+    if (fill.parentElement) fill.parentElement.remove();
+  }
+}
+
+function applyScan(i) {
+  const p = _scanned[i];
+  if (!p) return;
+  setPlatform('amazon');   // Seller Central screenshots → Amazon
+  setMode(2);              // existing listing check
+  if (p.title)         el('pname').value  = p.title.slice(0, 120);
+  if (p.price  != null) el('cur-sp').value = p.price;
+  if (p.fees   != null) el('pfee').value   = p.fees;
+  calc();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  showToast('✓ Scanned data applied — now enter your product, packing & shipping costs', 'success');
+}
+
+function clearScans() {
+  _scanned = [];
+  el('scan-results').innerHTML = '';
+  show('scan-clear-btn', false);
+}
+
+(function initScanner() {
+  const dz = el('dropzone');
+  ['dragover', 'dragenter'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.add('drag'); }));
+  ['dragleave', 'drop'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.remove('drag'); }));
+  dz.addEventListener('drop', e => handleScanFiles(e.dataTransfer.files));
+  document.addEventListener('paste', e => {
+    const items = [...(e.clipboardData ? e.clipboardData.items : [])].filter(it => it.type.startsWith('image/'));
+    if (!items.length) return;   // normal text paste — leave it alone
+    e.preventDefault();
+    items.forEach(it => { const f = it.getAsFile(); if (f) scanImage(f); });
+    showToast('📸 Screenshot received — scanning…');
+  });
+})();
+
+// ═════════════════ KEYBOARD SHORTCUTS ═════════════════
+function showKbdHelp() { el('kbd-bg').classList.add('show'); el('kbd-modal').classList.add('show'); }
+function hideKbdHelp() { el('kbd-bg').classList.remove('show'); el('kbd-modal').classList.remove('show'); }
+
+document.addEventListener('keydown', (e) => {
+  // Ignore shortcuts when typing in inputs (except Ctrl/Alt combinations)
+  const inField = ['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName);
+  const ctrl = e.ctrlKey || e.metaKey;
+
+  if (e.key === 'Escape') { hideKbdHelp(); return; }
+  if (!inField && e.key === '?') { e.preventDefault(); showKbdHelp(); return; }
+
+  if (ctrl && e.key === 's') { e.preventDefault(); saveToHistory(); }
+  else if (ctrl && e.key === 'Enter') { e.preventDefault(); sendToSheets(); }
+  else if (ctrl && e.shiftKey && (e.key === 'C' || e.key === 'c')) { e.preventDefault(); copyToSheets(); }
+  else if (ctrl && e.key === 'r' && !e.shiftKey) { e.preventDefault(); resetDefaults(); }
+  else if (e.altKey && e.key === '1') { e.preventDefault(); setMode(1); }
+  else if (e.altKey && e.key === '2') { e.preventDefault(); setMode(2); }
+});
+
+// ═════════════════ INIT ═════════════════
+setPlatform('amazon');
+setMode(1);
+renderHistory();
+</script>
+</body>
+</html>
