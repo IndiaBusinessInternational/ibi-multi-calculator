@@ -3,7 +3,7 @@
 Internal seller tool for **India Business International (IBI) · iINTELLIGENCEi**.
 **Live:** https://calculator.indiabusinessinternational.online/ · installable as a PWA (works offline).
 
-**Current version: v4.1** — shown in the top-left badge. Versioning: minor patches bump the decimal (v3.1), big features bump the major (v4). On each release also bump `APP_VERSION` in `index.html` and `CACHE` in `sw.js`.
+**Current version: v4.2** — shown in the top-left badge. Versioning: minor patches bump the decimal (v3.1), big features bump the major (v4). On each release also bump `APP_VERSION` in `index.html` and `CACHE` in `sw.js`.
 
 ## Platforms
 
@@ -47,6 +47,10 @@ Tips for best OCR accuracy: screenshot at 100% browser zoom or larger, PNG forma
 
 - **Copy → Paste**: copies a tab-separated header + value row for manual pasting.
 - **Send → Google Sheets**: POSTs to a Google Apps Script web app (URL configurable in the setup section). The GAS code (`IBI_Calculator_GAS.gs`, also embedded in the page) auto-creates one tab per platform plus a live 📊 Summary tab.
+
+## v4.2 — Flipkart listing-price estimate (Fixed Fee rate card)
+
+For **Flipkart · Mode 1 (New Listing)** the calculator now also suggests the **listing price**: required settlement + Fixed Fee + 18% GST on the fee. A **Seller tier** selector (Bronze/Silver/Gold/Diamond, remembered) picks the fee slab from the account's Rate Card of **02 Jul 2026** (reflects the Fixed Fee revision effective that date; account category has 0% commission and ₹0 collection fee). Slab boundaries are resolved self-consistently (a settlement near ₹300 automatically moves to the ₹301–500 fee). When Flipkart next revises fees, update the `FLIPKART_FIXED_FEE` table at the top of the script in `index.html`.
 
 ## v4.0 — AI Product-Name Extraction (optional)
 

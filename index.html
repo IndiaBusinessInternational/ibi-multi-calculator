@@ -608,6 +608,17 @@ input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-
           <div class="hint">The bank settlement includes GST that you must remit to the government. Keep ON for true net profit; turn OFF to treat the settlement as final in-hand money.</div>
         </div>
 
+        <div class="field" id="row-fktier" style="display:none">
+          <label>Flipkart seller tier <span style="color:var(--text3);font-weight:400;text-transform:none;letter-spacing:0">(for Fixed Fee estimate)</span></label>
+          <select id="fk-tier" class="solo" onchange="saveFkTier(this.value)">
+            <option value="bronze">Bronze Seller</option>
+            <option value="silver" selected>Silver Seller</option>
+            <option value="gold">Gold Seller</option>
+            <option value="diamond">Diamond Seller (₹0 Fixed Fee)</option>
+          </select>
+          <div class="hint">Rate Card 02 Jul 2026 · slabs ₹0–300 / ₹301–500 / ₹501–1000 / ₹1000+ · 0% commission &amp; ₹0 collection fee for your category · Fixed Fee attracts 18% GST</div>
+        </div>
+
         <div class="field">
           <label>Other charges (ads, storage, misc)</label>
           <div class="input-group"><span class="input-addon left">₹</span><input class="right-end" type="number" id="other" value="0" min="0" step="0.01" oninput="calc()"></div>
@@ -1126,7 +1137,7 @@ function callClaude_(key, prompt) {
 // ═════════════════ VERSION ═════════════════
 // Major = big features (v3 → v4) · minor = small patches (v3.0 → v3.1).
 // Keep in sync with CACHE in sw.js on every release.
-const APP_VERSION = 'v4.1';
+const APP_VERSION = 'v4.2';
 
 // ═════════════════ PLATFORM CONFIG ═════════════════
 const PLATFORMS = {
@@ -1138,6 +1149,17 @@ const PLATFORMS = {
   shopclues:  { label:'ShopClues',     grp:'B', defFee:0,   defShip:0,     defPack:20 },
   ibiwebsite: { label:'IBI Website',   grp:'A', defFee:0,   defShip:64.90, defPack:20 },
   offline:    { label:'Offline',       grp:'C', defFee:0,   defShip:0,     defPack:0  }
+};
+
+// Flipkart Fixed Fee per order, EXCL. 18% GST — Rate Card pulled 02 Jul 2026
+// (reflects the Fixed Fee revision effective 2 Jul 2026). Account category:
+// artificial jewellery — 0% commission, ₹0 collection fee, so the forward
+// deduction ≈ Fixed Fee × 1.18. Update this table when Flipkart revises fees.
+const FLIPKART_FIXED_FEE = {
+  bronze:  [[300, 12], [500, 21], [1000, 22], [Infinity, 25]],
+  silver:  [[300, 2],  [500, 11], [1000, 12], [Infinity, 15]],
+  gold:    [[300, 2],  [500, 11], [1000, 12], [Infinity, 15]],
+  diamond: [[Infinity, 0]]
 };
 
 const HIST_KEY = 'ibi_calc_history_v4';
@@ -1243,6 +1265,7 @@ function setMode(m) {
     show('row-b-sp',     m === 2);
     show('row-b-settle', m === 2);
     show('row-gstpay',   true);
+    show('row-fktier',   _pid === 'flipkart' && m === 1);
     show('row-mrpmult',  false);
 
     if (m === 1) {
@@ -1266,6 +1289,7 @@ function setMode(m) {
     show('row-b-sp',    false);
     show('row-b-settle',false);
     show('row-gstpay',  false);
+    show('row-fktier',  false);
     show('row-mrpmult', m === 1);
 
     if (m === 1) {
@@ -1315,6 +1339,8 @@ function calc() {
   let sp_in = 0, sp_ex = 0, mrp = 0, mult = 1.5, pr_used = null;
   let bank_settlement = 0, fee_amt = 0, gst_payable = 0;
 
+  let fk_fee = null, fk_listing = null;
+
   if (grp === 'B') {
     if (_mode === 1) {
       pr_used = Math.max(0.01, parseFloat(el('profit').value) || 25);
@@ -1322,6 +1348,20 @@ function calc() {
       bank_settlement = gstDeduct ? targetNet * (1 + gst_frac) : targetNet;
       gst_payable     = bank_settlement - targetNet;
       fee_amt = 0;
+      // Flipkart: 0% commission category → deduction ≈ Fixed Fee × 1.18 GST.
+      // Find the slab whose fee gives a listing price consistent with itself.
+      if (_pid === 'flipkart') {
+        const tier = el('fk-tier') ? el('fk-tier').value : 'silver';
+        for (const [max, fee] of (FLIPKART_FIXED_FEE[tier] || FLIPKART_FIXED_FEE.silver)) {
+          const L = bank_settlement + fee * 1.18;
+          if (L <= max) { fk_fee = fee; fk_listing = L; break; }
+        }
+        if (fk_listing == null) {
+          const t = FLIPKART_FIXED_FEE[el('fk-tier') ? el('fk-tier').value : 'silver'];
+          const fee = t[t.length - 1][1];
+          fk_fee = fee; fk_listing = bank_settlement + fee * 1.18;
+        }
+      }
     } else {
       sp_in           = safeNum(el('b-sp-input').value);
       bank_settlement = safeNum(el('b-settle-input').value);
@@ -1358,7 +1398,7 @@ function calc() {
 
   _last = { mode:_mode, pid:_pid, grp, cost, gst, pack, carton, ship, pfee, other,
     pr_used, mult, baseCost, sp_ex, sp_in, mrp, gst_amt, fee_amt, gst_payable, gstDeduct,
-    bank_settlement, net_rev, net_profit, total_exp, roi, g_margin, bep_in };
+    bank_settlement, net_rev, net_profit, total_exp, roi, g_margin, bep_in, fk_fee, fk_listing };
 
   renderMetrics(grp, sp_in, sp_ex, mrp, bank_settlement, net_profit, g_margin, roi);
   renderBreakdown(grp, cost, pack, carton, ship, other, fee_amt, total_exp, sp_ex, gst_amt, bank_settlement, net_rev, net_profit, bep_in, g_margin, roi, mrp, baseCost);
@@ -1401,7 +1441,13 @@ function renderMetrics(grp, sp_in, sp_ex, mrp, bank_settlement, net_profit, g_ma
         <div class="metric-lbl">Break-even settlement</div>
         <div class="metric-val">${fd(_last.bep_in)}</div>
         <div class="metric-note">min to cover all costs${_last.gstDeduct ? ' + GST payable' : ''}</div>
-      </div>` : `
+      </div>
+      ${_last.fk_listing != null ? `
+      <div class="metric blu" style="grid-column:1/-1;">
+        <div class="metric-lbl">Suggested Flipkart listing price</div>
+        <div class="metric-val">${fd(_last.fk_listing)}</div>
+        <div class="metric-note">settlement + Fixed Fee ₹${_last.fk_fee} + 18% GST on fee · ${el('fk-tier').options[el('fk-tier').selectedIndex].text} · 0% commission category · Rate Card 02 Jul 2026</div>
+      </div>` : ''}` : `
       <div class="metric teal" style="grid-column:1/-1;">
         <div class="metric-lbl">Actual bank settlement received</div>
         <div class="metric-val" style="font-size:28px;">${fd(bank_settlement)}</div>
@@ -1493,6 +1539,16 @@ function renderViability(net_profit, roi) {
     vtx.textContent = '⚠ Caution — ROI ' + fp(roi) + '. Thin margins. Review before listing.';
   }
 }
+
+// ═════════════════ FLIPKART SELLER TIER ═════════════════
+function saveFkTier(v) {
+  localStorage.setItem('ibi_fk_tier', v);
+  calc();
+}
+(function () {
+  const saved = localStorage.getItem('ibi_fk_tier');
+  if (saved && el('fk-tier')) el('fk-tier').value = saved;
+})();
 
 // ═════════════════ RESET ═════════════════
 function resetDefaults() {
