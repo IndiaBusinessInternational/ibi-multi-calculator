@@ -419,7 +419,7 @@ input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-
       <div class="panel-icon">📸</div>
       <div>
         <div class="panel-title">Scan Listing Screenshot · Seller Dashboard</div>
-        <div class="panel-sub">Upload or paste a screenshot from Amazon Seller Central — price &amp; fees are extracted automatically</div>
+        <div class="panel-sub">Upload or paste a screenshot from Amazon Seller Central or Flipkart/Shopsy Seller Hub — price &amp; fees are extracted automatically</div>
       </div>
       <button class="scan-clear" id="scan-clear-btn" style="display:none" onclick="clearScans()">✕ Clear scans</button>
     </div>
@@ -427,7 +427,7 @@ input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-
       <div class="dropzone" id="dropzone" onclick="el('scan-file').click()">
         <span class="dz-icon">🖼️</span>
         <div class="dz-msg"><strong>Click to upload</strong> · drag &amp; drop · or press <span class="km-like">Ctrl+V</span> anywhere on this page to paste a screenshot</div>
-        <div class="dz-sub">Works with Manage Inventory screenshots — reads Product title, ASIN, SKU, Price, Total fees, FBA fee, Units sold &amp; Sales rank. Multiple products per screenshot supported.</div>
+        <div class="dz-sub"><strong>Amazon</strong> — Manage Inventory rows: title, ASIN, SKU, Price, Total fees, FBA fee, Units sold, Sales rank (multiple products per screenshot).<br><strong>Flipkart / Shopsy</strong> — open a listing's <em>Listing Details</em> panel: title, SKU, FSN, Bank Settlement, Listing Price, Fees &amp; Taxes, Logistics fee. Platform is detected automatically.</div>
       </div>
       <input type="file" id="scan-file" accept="image/*" multiple style="display:none" onchange="handleScanFiles(this.files); this.value='';">
       <div class="scan-grid" id="scan-results"></div>
@@ -1655,7 +1655,7 @@ function parseSellerText(raw) {
     const bl   = lines.slice(bi === 0 ? 0 : s, end);
     // The fee row can sit on the line just above the title anchor — peek back
     const peek = bi > 0 ? lines.slice(Math.max(0, s - 2), s) : [];
-    const p = { title: '', asin: fixAsin((bl.join(' ').match(ASIN_RE) || [''])[0]), sku: '',
+    const p = { platform: 'amazon', title: '', asin: fixAsin((bl.join(' ').match(ASIN_RE) || [''])[0]), sku: '',
       price: null, fees: null, fbaFee: null, minPrice: null, maxPrice: null,
       unitsSold: null, salesRank: null };
 
@@ -1695,6 +1695,74 @@ function parseSellerText(raw) {
   }).filter(p => p.asin || p.fees != null || p.price != null);
 }
 
+// ── Flipkart / Shopsy Seller Hub — "Listing Details" panel ──
+// Finds the first amount after a label across all lines. With requireCurrency,
+// only accepts "label: ₹123" style matches (skips the label reused as a plain
+// input caption or filter chip elsewhere on the page).
+function _labelAmt(lines, label, requireCurrency) {
+  for (const l of lines) {
+    const i = l.toLowerCase().indexOf(label);
+    if (i === -1) continue;
+    const rest = l.slice(i + label.length);
+    if (requireCurrency && !/^[\s:：]*[₹%]/.test(rest)) continue;
+    const v = _amt(rest);
+    if (v != null) return v;
+  }
+  return null;
+}
+
+function parseFlipkartText(raw) {
+  const lines = raw.split(/\n/).map(l => l.trim()).filter(l => l.length > 1);
+  const joined = lines.join(' ');
+  const p = { platform: /shopsy/i.test(joined) ? 'shopsy' : 'flipkart',
+    title: '', sku: '', fsn: '', listingPrice: null, settlement: null,
+    feesTaxes: null, logistics: null, sellerPrice: null };
+
+  const fsnM = joined.match(/fsn\s*id[:\s]*([A-Z0-9]{10,20})/i);
+  if (fsnM) p.fsn = fsnM[1].toUpperCase();
+
+  // Title sits between "Listing Details" and "SKU ID" — skip dashboard noise
+  const JUNK_RE = /(seller lens|by flipkart|install|improve listings|identify top|win buy|monitor ratings|search rate card|seller hub|recos \(|recos\b|minoq|reduce returns|more filters|current pricing|settlement & price|settlement to price|buyer'?s questions|all \(\d)/i;
+  const si = lines.findIndex(l => /sku\s*id/i.test(l));
+  if (si > 0) {
+    const li = lines.findIndex(l => /listing details/i.test(l));
+    const from = (li >= 0 && li < si) ? li + 1 : Math.max(0, si - 3);
+    for (let i = from; i < si; i++) {
+      const l = lines[i];
+      if (JUNK_RE.test(l) || DATE_RE.test(l)) continue;
+      p.title += (p.title ? ' ' : '') + l;
+      if (p.title.length > 160) break;
+    }
+    const skuM = lines[si].match(/sku\s*id[:\s]*(.+)/i);
+    if (skuM) p.sku = skuM[1].split(/fsn/i)[0].trim();
+  }
+  p.title = p.title.trim();
+
+  // Prefer the "Current Pricing — Bank Settlement: ₹220" header over the
+  // calculator's pending input; fall back to the "Apply ₹X as Settlement" button
+  p.settlement = _labelAmt(lines, 'bank settlement', true);
+  if (p.settlement == null) {
+    const m = joined.match(/apply\s*₹?\s*([\d,]+(?:\.\d{1,2})?)\s*as settlement/i);
+    if (m) p.settlement = parseFloat(m[1].replace(/,/g, ''));
+  }
+  if (p.settlement == null) p.settlement = _labelAmt(lines, 'bank settlement', false);
+
+  const lp1 = _labelAmt(lines, 'listing price', true);
+  p.listingPrice = lp1 != null ? lp1 : _labelAmt(lines, 'listing price', false);
+  p.feesTaxes    = _labelAmt(lines, 'average fees and taxes', false);
+  p.logistics    = _labelAmt(lines, 'customer logistics fee', false);
+  p.sellerPrice  = _labelAmt(lines, 'seller price', false);
+
+  return (p.settlement != null || p.listingPrice != null || p.fsn) ? [p] : [];
+}
+
+// Dispatch by dashboard fingerprint: Flipkart/Shopsy panels carry FSN / Bank
+// Settlement wording that never appears in Amazon Seller Central rows.
+function parseScreenshot(text) {
+  if (/fsn\s*id|bank settlement|settlement to price|seller hub/i.test(text)) return parseFlipkartText(text);
+  return parseSellerText(text);
+}
+
 function esc(s) { return (s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
 function handleScanFiles(files) {
@@ -1720,9 +1788,9 @@ async function scanImage(file) {
     const { data } = await Tesseract.recognize(canvas, 'eng', {
       logger: m => { if (m.status === 'recognizing text') fill.style.width = Math.round(m.progress * 100) + '%'; }
     });
-    const prods = parseSellerText(data.text || '');
+    const prods = parseScreenshot(data.text || '');
     if (!prods.length) {
-      state.innerHTML = '⚠ No listing data recognised — try a sharper / larger screenshot of the Manage Inventory page.';
+      state.innerHTML = '⚠ No listing data recognised — try a sharper / larger screenshot (Amazon Manage Inventory row, or Flipkart/Shopsy Listing Details panel).';
       fill.parentElement.remove();
       return;
     }
@@ -1730,8 +1798,15 @@ async function scanImage(file) {
       `<div class="scan-state">✓ Found ${prods.length} product${prods.length > 1 ? 's' : ''} — click Apply to load one into the calculator</div><div class="scan-prods"></div>`;
     const wrap = box.querySelector('.scan-prods');
     prods.forEach(p => {
-      const idx = _scanned.push(p) - 1;
-      const chips = [
+      const idx  = _scanned.push(p) - 1;
+      const isFk = p.platform === 'flipkart' || p.platform === 'shopsy';
+      const chips = (isFk ? [
+        p.listingPrice != null ? `<span class="scan-chip">Listing ₹${p.listingPrice.toFixed(2)}</span>` : '',
+        p.settlement   != null ? `<span class="scan-chip fee">Settlement ₹${p.settlement.toFixed(2)}</span>` : '',
+        p.feesTaxes    != null ? `<span class="scan-chip">Fees+Taxes ₹${p.feesTaxes.toFixed(2)}</span>` : '',
+        p.logistics    != null ? `<span class="scan-chip">Logistics ₹${p.logistics.toFixed(2)}</span>` : '',
+        p.sellerPrice  != null ? `<span class="scan-chip">Seller price ₹${p.sellerPrice.toFixed(2)}</span>` : ''
+      ] : [
         p.price     != null ? `<span class="scan-chip">Price ₹${p.price.toFixed(2)}</span>` : '',
         p.fees      != null ? `<span class="scan-chip fee">Total fees ₹${p.fees.toFixed(2)}</span>` : '',
         p.fbaFee    != null ? `<span class="scan-chip fee">FBA fee ₹${p.fbaFee.toFixed(2)}</span>` : '',
@@ -1739,12 +1814,14 @@ async function scanImage(file) {
         p.maxPrice  != null ? `<span class="scan-chip">Max ₹${p.maxPrice.toFixed(2)}</span>` : '',
         p.unitsSold != null ? `<span class="scan-chip">Units sold ${p.unitsSold}</span>` : '',
         p.salesRank != null ? `<span class="scan-chip">Rank ${p.salesRank.toLocaleString('en-IN')}</span>` : ''
-      ].join('');
+      ]).join('');
+      const platLbl = PLATFORMS[p.platform] ? PLATFORMS[p.platform].label : 'Amazon';
+      const pid = p.asin || p.fsn || '';
       const div = document.createElement('div');
       div.className = 'scan-prod';
-      div.innerHTML = `<div class="scan-prod-name">${esc(p.title) || '(title not read)'}${p.asin ? ` <span class="scan-asin">${p.asin}</span>` : ''}${p.sku ? ` <span class="scan-asin">· ${esc(p.sku)}</span>` : ''}</div>
+      div.innerHTML = `<div class="scan-prod-name">${esc(p.title) || '(title not read)'}${pid ? ` <span class="scan-asin">${esc(pid)}</span>` : ''}${p.sku ? ` <span class="scan-asin">· ${esc(p.sku)}</span>` : ''} <span class="scan-asin">· ${platLbl}</span></div>
         <div class="scan-chips">${chips || '<span class="scan-chip">No amounts detected</span>'}</div>
-        <button class="scan-apply" onclick="applyScan(${idx})">→ Apply to calculator</button>`;
+        <button class="scan-apply" onclick="applyScan(${idx})">→ Apply to calculator (${platLbl})</button>`;
       wrap.appendChild(div);
     });
     showToast(`✓ Extracted ${prods.length} product${prods.length > 1 ? 's' : ''} from screenshot`, 'success');
@@ -1757,14 +1834,24 @@ async function scanImage(file) {
 function applyScan(i) {
   const p = _scanned[i];
   if (!p) return;
-  setPlatform('amazon');   // Seller Central screenshots → Amazon
-  setMode(2);              // existing listing check
-  if (p.title)         el('pname').value  = p.title.slice(0, 120);
-  if (p.price  != null) el('cur-sp').value = p.price;
-  if (p.fees   != null) el('pfee').value   = p.fees;
-  calc();
+  if (p.platform === 'flipkart' || p.platform === 'shopsy') {
+    setPlatform(p.platform);
+    setMode(2);              // existing listing check (SP + settlement)
+    if (p.title)               el('pname').value          = p.title.slice(0, 120);
+    if (p.listingPrice != null) el('b-sp-input').value     = p.listingPrice;
+    if (p.settlement   != null) el('b-settle-input').value = p.settlement;
+    calc();
+    showToast('✓ ' + PLATFORMS[p.platform].label + ' data applied — verify GST rate & enter your costs', 'success');
+  } else {
+    setPlatform('amazon');   // Seller Central screenshots → Amazon
+    setMode(2);              // existing listing check
+    if (p.title)          el('pname').value  = p.title.slice(0, 120);
+    if (p.price  != null) el('cur-sp').value = p.price;
+    if (p.fees   != null) el('pfee').value   = p.fees;
+    calc();
+    showToast('✓ Scanned data applied — now enter your product, packing & shipping costs', 'success');
+  }
   window.scrollTo({ top: 0, behavior: 'smooth' });
-  showToast('✓ Scanned data applied — now enter your product, packing & shipping costs', 'success');
 }
 
 function clearScans() {

@@ -18,14 +18,14 @@ Single-file web app — open `index.html` in any modern browser (Chrome/Edge rec
 
 ## 📸 Screenshot Scanner (added July 2026)
 
-Scan listings straight from the **Amazon Seller Central → Manage Inventory** page:
+Scan listings straight from your seller dashboards. Take a screenshot (`Win+Shift+S`), then **paste (`Ctrl+V`) anywhere on the page**, drag & drop it onto the scan panel, or click the panel to upload. Multiple images are supported. OCR (Tesseract.js) runs fully in the browser — the first scan downloads the engine, so internet is needed. The dashboard type is **detected automatically**:
 
-1. Take a screenshot of the inventory row(s) — `Win+Shift+S` works well.
-2. In the calculator, either **paste (`Ctrl+V`) anywhere on the page**, drag & drop the image onto the scan panel, or click the panel to upload files. Multiple images and multiple products per image are supported.
-3. OCR (Tesseract.js, runs fully in the browser — first scan downloads the engine, needs internet) reads each product block and extracts: **Product title, ASIN, SKU, Price (Featured offer), Total fees, FBA fee, Min/Max price, Units sold, Sales rank**.
-4. Click **→ Apply to calculator** on a product: it switches to *Amazon · Mode 2*, fills the product name, current selling price and platform fee. You then enter your own product/packaging/shipping costs to get true profitability.
+- **Amazon Seller Central → Manage Inventory**: extracts Product title, ASIN, SKU, Price (Featured offer), Total fees, FBA fee, Min/Max price, Units sold, Sales rank. Multiple products per screenshot supported. *Apply* switches to **Amazon · Mode 2** and fills name, selling price and platform fee.
+- **Flipkart / Shopsy Seller Hub → Listing Details panel** (click a listing to open it): extracts Product title, SKU ID, FSN ID, **Bank Settlement** (current pricing — not the pending input), **Listing Price**, Average Fees & Taxes, Seller Price, Customer Logistics Fees. Shopsy is recognised by its "Shopsy Budget" tab. *Apply* switches to **Flipkart/Shopsy · Mode 2** and fills name, listing price and bank settlement.
 
-Tips for best OCR accuracy: screenshot at 100% browser zoom or larger, PNG format, include the full row from title through the "Total fees" column.
+After applying, enter your own product/packaging/shipping costs and confirm the GST rate to get true profitability.
+
+Tips for best OCR accuracy: screenshot at 100% browser zoom or larger, PNG format. For Amazon include the full row from title through the "Total fees" column; for Flipkart/Shopsy capture the Listing Details panel (cropping to just the panel improves accuracy).
 
 ## Logic notes (re-verified July 2026)
 
