@@ -950,7 +950,8 @@ function aiExtract_(d) {
     '(Amazon Seller Central inventory or order page, Flipkart/Shopsy Seller Hub, Meesho ' +
     'Supplier Panel, or ShopClues Store Manager). The OCR interleaves table columns, so ' +
     'product names may be broken across lines and mixed with other data. Extract EVERY ' +
-    'distinct product listing. Respond with ONLY a JSON array - no markdown fences, no ' +
+    'distinct product listing. The seller brands are exactly "iINTELLIGENCEi" and "IBI" - ' +
+    'preserve that exact spelling in titles. Respond with ONLY a JSON array - no markdown fences, no ' +
     'commentary. Each element: {"title":"full clean product name, OCR errors fixed",' +
     '"id":"ASIN / FSN / Product ID if visible, else empty string",' +
     '"price": main selling or listing price as number or null,' +
