@@ -582,6 +582,22 @@ input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-
           <div class="input-group"><span class="input-addon left">₹</span><input class="right-end" type="number" id="ship" value="64.90" min="0" step="0.01" oninput="calc()"></div>
         </div>
 
+        <div class="field" id="row-amzest" style="display:none">
+          <label>Amazon fee auto-estimate <span style="color:var(--text3);font-weight:400;text-transform:none;letter-spacing:0">(fee schedule 10 Jun 2026)</span></label>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <select id="amz-cat" class="solo" style="flex:2;min-width:190px" onchange="saveAmzEst()">
+              <option value="manual" selected>✍ Manual — I'll enter Total fees myself</option>
+            </select>
+            <select id="amz-ch" class="solo" style="flex:1;min-width:150px" onchange="saveAmzEst()">
+              <option value="easyship" selected>Easy Ship</option>
+              <option value="selfship">Self-Ship</option>
+              <option value="flex">Seller Flex</option>
+              <option value="fba">FBA (Fulfilment Centre)</option>
+            </select>
+          </div>
+          <div class="hint" id="amz-est-hint">Pick your product's fee category to auto-calculate referral + closing fee + 18% GST</div>
+        </div>
+
         <div class="field" id="row-pfee">
           <label id="lbl-pfee">Platform fee (₹ — from Seller Central)</label>
           <div class="input-group"><span class="input-addon left">₹</span><input class="right-end" type="number" id="pfee" value="30" min="0" step="0.01" oninput="calc()"></div>
@@ -1137,7 +1153,7 @@ function callClaude_(key, prompt) {
 // ═════════════════ VERSION ═════════════════
 // Major = big features (v3 → v4) · minor = small patches (v3.0 → v3.1).
 // Keep in sync with CACHE in sw.js on every release.
-const APP_VERSION = 'v4.2';
+const APP_VERSION = 'v4.3';
 
 // ═════════════════ PLATFORM CONFIG ═════════════════
 const PLATFORMS = {
@@ -1161,6 +1177,58 @@ const FLIPKART_FIXED_FEE = {
   gold:    [[300, 2],  [500, 11], [1000, 12], [Infinity, 15]],
   diamond: [[Infinity, 0]]
 };
+
+// ── Amazon.in fee schedule effective 10 Jun 2026 (all fees excl. 18% GST) ──
+// Referral slabs: [[maxItemPrice, %], …] · fba: closing fee for ₹0-300 / ₹301-500
+// at fulfilment centre (Group A/C = 20/18, Group B/D = 13/14, standard = 26/22);
+// 501-1000 → ₹27, >1000 → ₹52 for all. Easy Ship / Self-Ship / Seller Flex use Table 1.
+const AMAZON_CATS = {
+  'fashion-jewellery': { label: 'Fashion Jewellery',                                          slabs: [[1000,0],[Infinity,22.5]],            fba: [13,14] },
+  'kitchen-tools':     { label: 'Kitchen Tools & Supplies — Choppers, Knives, Bakeware',      slabs: [[1000,0],[Infinity,12.5]],            fba: [26,22] },
+  'cookware':          { label: 'Cookware, Tableware & Dinnerware',                           slabs: [[1000,0],[Infinity,12.5]],            fba: [26,22] },
+  'kitchen-glass':     { label: 'Kitchen — Glassware & Ceramicware',                          slabs: [[1000,0],[Infinity,12.5]],            fba: [26,22] },
+  'kitchen-other':     { label: 'Kitchen — Other products',                                   slabs: [[1000,0],[Infinity,12.5]],            fba: [26,22] },
+  'containers':        { label: 'Containers, Boxes, Bottles & Kitchen Storage',               slabs: [[1000,0],[Infinity,12]],              fba: [26,22] },
+  'cleaning-appl':     { label: 'Cleaning & Home Appliances',                                 slabs: [[1000,0],[5000,7.5],[Infinity,8.5]],  fba: [26,22] },
+  'home-storage':      { label: 'Home Storage (excl. kitchen containers)',                    slabs: [[1000,0],[Infinity,15]],              fba: [20,18] },
+  'home-decor':        { label: 'Home Decor Products',                                        slabs: [[1000,0],[Infinity,17]],              fba: [20,18] },
+  'home-other':        { label: 'Home — Other products',                                      slabs: [[1000,0],[Infinity,18]],              fba: [20,18] },
+  'rugs':              { label: 'Rugs & Doormats',                                            slabs: [[1000,0],[Infinity,9]],               fba: [20,14] },
+  'craft':             { label: 'Craft Materials',                                            slabs: [[1000,0],[Infinity,5]],               fba: [20,14] },
+  'hi-wallpaper':      { label: 'Home Improvement — Wallpapers & Accessories',                slabs: [[1000,0],[Infinity,6.5]],             fba: [20,18] },
+  'wall-paints':       { label: 'Wall Paints & Tools',                                        slabs: [[1000,0],[Infinity,6]],               fba: [20,18] },
+  'hi-access':         { label: 'Home Improvement Accessories',                               slabs: [[1000,0],[Infinity,13.5]],            fba: [20,14] },
+  'hi-kitchenbath':    { label: 'Home Improvement — Kitchen & Bath, Cleaning, Electricals, Hardware', slabs: [[1000,0],[Infinity,12]],      fba: [26,22] },
+  'hi-other':          { label: 'Home Improvement — Other products',                          slabs: [[1000,0],[Infinity,13.5]],            fba: [20,18] },
+  'garden-plants':     { label: 'Lawn & Garden — Plants, Seeds, Bulbs & Gardening Tools',     slabs: [[1000,0],[Infinity,11]],              fba: [20,18] },
+  'furniture-other':   { label: 'Furniture — Other products',                                 slabs: [[1000,0],[15000,15.5],[Infinity,11]], fba: [26,22] },
+  'office-arts':       { label: 'Office Products — Arts & Crafts',                            slabs: [[1000,0],[Infinity,5]],               fba: [26,22] },
+  'office-supplies':   { label: 'Office Products — Office Supplies',                          slabs: [[1000,0],[Infinity,13]],              fba: [20,18] },
+  'office-writing':    { label: 'Office Products — Writing Instruments',                      slabs: [[1000,0],[Infinity,14]],              fba: [26,22] },
+  'office-other':      { label: 'Office — Other products',                                    slabs: [[1000,0],[Infinity,11.5]],            fba: [20,18] }
+};
+
+function amazonClosingFee(ch, price, fba) {
+  if (ch === 'fba') {
+    if (price <= 300)  return fba[0];
+    if (price <= 500)  return fba[1];
+    if (price <= 1000) return 27;
+    return 52;
+  }
+  const t = { easyship: [1, 22, 45, 76], selfship: [20, 26, 51, 101], flex: [6, 12, 35, 66] }[ch] || [1, 22, 45, 76];
+  return price <= 300 ? t[0] : price <= 500 ? t[1] : price <= 1000 ? t[2] : t[3];
+}
+
+// Returns { total (incl. 18% GST), ref, close, pct } or null
+function amazonFeeEstimate(price, cat, ch) {
+  const c = AMAZON_CATS[cat];
+  if (!c || !(price > 0)) return null;
+  let pct = 0;
+  for (const [max, p] of c.slabs) { if (price <= max) { pct = p; break; } }
+  const ref   = price * pct / 100;
+  const close = amazonClosingFee(ch, price, c.fba);
+  return { total: (ref + close) * 1.18, ref, close, pct };
+}
 
 const HIST_KEY = 'ibi_calc_history_v4';
 const MAX_HIST = 24;
@@ -1262,6 +1330,7 @@ function setMode(m) {
     show('row-carton',   true);
     show('row-ship',     false);
     show('row-pfee',     false);
+    show('row-amzest',   false);
     show('row-b-sp',     m === 2);
     show('row-b-settle', m === 2);
     show('row-gstpay',   true);
@@ -1286,6 +1355,7 @@ function setMode(m) {
     show('row-carton',  grp !== 'C');
     show('row-ship',    grp === 'A');
     show('row-pfee',    grp === 'A');
+    show('row-amzest',  _pid === 'amazon' || _pid === 'amazbazaar');
     show('row-b-sp',    false);
     show('row-b-settle',false);
     show('row-gstpay',  false);
@@ -1326,7 +1396,7 @@ function calc() {
   const pack   = grp !== 'C' ? safeNum(el('pack').value) : 0;
   const carton = grp !== 'C' ? safeNum(el('carton').value) : 0;
   const ship   = grp === 'A' ? safeNum(el('ship').value) : 0;
-  const pfee   = grp === 'A' ? safeNum(el('pfee').value) : 0;
+  let   pfee   = grp === 'A' ? safeNum(el('pfee').value) : 0;
 
   const baseCost = cost + pack + carton + ship + other;
   if (baseCost <= 0) {
@@ -1336,6 +1406,34 @@ function calc() {
 
   const gst_frac  = gst / 100;
   const gstDeduct = grp === 'B' && !!(el('gstpay') && el('gstpay').checked);
+
+  // ── Amazon fee auto-estimate (referral + closing + 18% GST) ──
+  const amzOn = (_pid === 'amazon' || _pid === 'amazbazaar') && el('amz-cat') && el('amz-cat').value !== 'manual';
+  if (amzOn) {
+    const cat = el('amz-cat').value, ch = el('amz-ch').value;
+    let est = null;
+    if (_mode === 2) {
+      est = amazonFeeEstimate(safeNum(el('cur-sp').value), cat, ch);
+    } else {
+      // Mode 1: fee depends on final price — iterate to the fixed point
+      const pr = Math.max(0.01, parseFloat(el('profit').value) || 25);
+      let fee = 0;
+      for (let i = 0; i < 6; i++) {
+        const spi = (baseCost * (1 + pr / 100) + fee) * (1 + gst_frac);
+        const e = amazonFeeEstimate(spi, cat, ch);
+        if (!e) break;
+        est = e; fee = e.total;
+      }
+    }
+    if (est) {
+      pfee = est.total;
+      el('pfee').value = est.total.toFixed(2);
+      el('amz-est-hint').textContent = '✓ Auto: referral ₹' + est.ref.toFixed(2) + ' (' + est.pct + '%) + closing ₹' + est.close.toFixed(2) + ' + 18% GST = ₹' + est.total.toFixed(2)
+        + (ch === 'fba' ? ' · FBA weight-handling fee NOT included — put it in Shipping cost' : '');
+    }
+  } else if (el('amz-est-hint')) {
+    el('amz-est-hint').textContent = 'Pick your product\'s fee category to auto-calculate referral + closing fee + 18% GST';
+  }
   let sp_in = 0, sp_ex = 0, mrp = 0, mult = 1.5, pr_used = null;
   let bank_settlement = 0, fee_amt = 0, gst_payable = 0;
 
@@ -1539,6 +1637,27 @@ function renderViability(net_profit, roi) {
     vtx.textContent = '⚠ Caution — ROI ' + fp(roi) + '. Thin margins. Review before listing.';
   }
 }
+
+// ═════════════════ AMAZON FEE ESTIMATOR ═════════════════
+function saveAmzEst() {
+  localStorage.setItem('ibi_amz_cat', el('amz-cat').value);
+  localStorage.setItem('ibi_amz_ch', el('amz-ch').value);
+  calc();
+}
+(function () {
+  const sel = el('amz-cat');
+  if (sel) {
+    for (const k in AMAZON_CATS) {
+      const o = document.createElement('option');
+      o.value = k; o.textContent = AMAZON_CATS[k].label;
+      sel.appendChild(o);
+    }
+    const savedCat = localStorage.getItem('ibi_amz_cat');
+    if (savedCat && (savedCat === 'manual' || AMAZON_CATS[savedCat])) sel.value = savedCat;
+    const savedCh = localStorage.getItem('ibi_amz_ch');
+    if (savedCh && el('amz-ch').querySelector(`option[value="${savedCh}"]`)) el('amz-ch').value = savedCh;
+  }
+})();
 
 // ═════════════════ FLIPKART SELLER TIER ═════════════════
 function saveFkTier(v) {

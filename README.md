@@ -3,7 +3,7 @@
 Internal seller tool for **India Business International (IBI) · iINTELLIGENCEi**.
 **Live:** https://calculator.indiabusinessinternational.online/ · installable as a PWA (works offline).
 
-**Current version: v4.2** — shown in the top-left badge. Versioning: minor patches bump the decimal (v3.1), big features bump the major (v4). On each release also bump `APP_VERSION` in `index.html` and `CACHE` in `sw.js`.
+**Current version: v4.3** — shown in the top-left badge. Versioning: minor patches bump the decimal (v3.1), big features bump the major (v4). On each release also bump `APP_VERSION` in `index.html` and `CACHE` in `sw.js`.
 
 ## Platforms
 
@@ -47,6 +47,10 @@ Tips for best OCR accuracy: screenshot at 100% browser zoom or larger, PNG forma
 
 - **Copy → Paste**: copies a tab-separated header + value row for manual pasting.
 - **Send → Google Sheets**: POSTs to a Google Apps Script web app (URL configurable in the setup section). The GAS code (`IBI_Calculator_GAS.gs`, also embedded in the page) auto-creates one tab per platform plus a live 📊 Summary tab.
+
+## v4.3 — Amazon fee auto-estimate (fee schedule 10 Jun 2026)
+
+For **Amazon / Amazon Bazaar**, pick the product's **fee category** (23 of the account's categories, most 0% referral ≤ ₹1,000) and **fulfilment channel** (Easy Ship / Self-Ship / Seller Flex / FBA) — the platform fee is then calculated automatically as *referral % + closing fee + 18% GST* and filled into the Platform-fee field, with the breakdown shown. In Mode 1 the fee/price interdependency is solved iteratively (slab-consistent). FBA weight-handling fees are **not** included — enter them in the Shipping-cost field. Select "✍ Manual" to type the Total fees from Seller Central as before. Verified against live listings: Easy Ship ≤₹300 closing ₹1 → the ₹1.18 "Total fees" seen on FBM listings; FBA ₹689 → ₹31.86 (= ₹241.90 shown − ₹210.04 FBA fee). Fee tables live in `AMAZON_CATS` / `amazonClosingFee` in `index.html` — update on Amazon's next revision. Note: claims for incorrect referral/closing fees must be filed within 30 days of the order.
 
 ## v4.2 — Flipkart listing-price estimate (Fixed Fee rate card)
 
