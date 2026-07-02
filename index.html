@@ -2188,7 +2188,15 @@ function clearScans() {
 // ═════════════════ SETTINGS MENU ═════════════════
 function toggleSettings(e) {
   e.stopPropagation();
-  el('settings-menu').classList.toggle('open');
+  const m = el('settings-menu');
+  m.classList.toggle('open');
+  if (m.classList.contains('open')) {
+    // Keep the dropdown inside the viewport — on mobile the header wraps and
+    // the ⚙ button can sit near the LEFT edge, pushing the menu off-screen
+    m.style.right = '';
+    const r = m.getBoundingClientRect();
+    if (r.left < 8) m.style.right = (r.left - 8) + 'px';
+  }
 }
 document.addEventListener('click', e => {
   const m = el('settings-menu');
