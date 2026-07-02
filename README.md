@@ -3,7 +3,7 @@
 Internal seller tool for **India Business International (IBI) · iINTELLIGENCEi**.
 **Live:** https://calculator.indiabusinessinternational.online/ · installable as a PWA (works offline).
 
-**Current version: v4.4** — shown in the top-left badge. Versioning: minor patches bump the decimal (v3.1), big features bump the major (v4). On each release also bump `APP_VERSION` in `index.html` and `CACHE` in `sw.js`.
+**Current version: v4.5** — shown in the top-left badge. Versioning: minor patches bump the decimal (v3.1), big features bump the major (v4). On each release also bump `APP_VERSION` in `index.html` and `CACHE` in `sw.js`.
 
 ## Platforms
 
@@ -47,6 +47,10 @@ Tips for best OCR accuracy: screenshot at 100% browser zoom or larger, PNG forma
 
 - **Copy → Paste**: copies a tab-separated header + value row for manual pasting.
 - **Send → Google Sheets**: POSTs to a Google Apps Script web app (URL configurable in the setup section). The GAS code (`IBI_Calculator_GAS.gs`, also embedded in the page) auto-creates one tab per platform plus a live 📊 Summary tab.
+
+## v4.5 — OCR ₹-glyph fix (critical scanner accuracy)
+
+Tesseract frequently misreads the **₹ symbol as a digit glued to the number** — ₹1,350 becomes 21,350 and ₹376.42 becomes 3376.42 — which silently produced wrong prices/fees from scans. Fixed with three defenses: (1) **majority vote** — the price appears in several places (Featured/Lowest/Business offer, INR input box; Item/Grand/Unit total on order pages) and the glue error rarely corrupts all of them identically; (2) **plausibility de-glue** — amounts exceeding a sane ceiling (fees > ~50% of price, shipping > ₹1,200, Flipkart settlement > listing price, ShopClues payout > selling price) get leading digits stripped until they fit; (3) fee values falling on a neighbouring OCR line are now matched by their 2-decimal pattern instead of grabbing dates. **Note:** scans saved before v4.5 still hold the old wrong numbers — press **✕ Clear Off** on the scan panel and re-scan.
 
 ## v4.4 — Scan-drift safeguard
 

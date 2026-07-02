@@ -1165,7 +1165,7 @@ function callClaude_(key, prompt) {
 // ═════════════════ VERSION ═════════════════
 // Major = big features (v3 → v4) · minor = small patches (v3.0 → v3.1).
 // Keep in sync with CACHE in sw.js on every release.
-const APP_VERSION = 'v4.4';
+const APP_VERSION = 'v4.5';
 
 // ═════════════════ PLATFORM CONFIG ═════════════════
 const PLATFORMS = {
@@ -2156,9 +2156,37 @@ function _amtAfter(line, label) {
   const i = line.toLowerCase().indexOf(label);
   return i === -1 ? null : _amt(line.slice(i + label.length));
 }
+// Last "…d.dd" amount in a line — currency values always carry 2 decimals,
+// so this skips dates/counts when scanning fallback lines
+function _lastDecAmt(s) {
+  const m = (s || '').match(/\d[\d,]*\.\d{2}/g);
+  return m ? parseFloat(m[m.length - 1].replace(/,/g, '')) : null;
+}
+// OCR often reads the ₹ glyph as a digit glued to the number
+// (₹1,350 → 21,350 · ₹376.42 → 3376.42). If a value exceeds a plausible
+// ceiling, strip leading digits until it fits; null if it never fits.
+function fixGlue(v, max) {
+  if (v == null || !(v > max)) return v;
+  let s = String(v);
+  for (let i = 0; i < 2 && parseFloat(s) > max && /^\d/.test(s) && s.length > 1; i++) s = s.slice(1);
+  const n = parseFloat(s);
+  return (!isNaN(n) && n <= max && n > 0) ? n : null;
+}
+// Majority vote across several OCR readings of the same price — the ₹-glue
+// error rarely corrupts every occurrence the same way
+function _voteAmt(cands) {
+  const cnt = {};
+  cands.forEach(v => { if (v != null && v > 0) cnt[v] = (cnt[v] || 0) + 1; });
+  let best = null, bc = 0;
+  for (const k in cnt) {
+    const v = parseFloat(k);
+    if (cnt[k] > bc || (cnt[k] === bc && best != null && v < best)) { best = v; bc = cnt[k]; }
+  }
+  return best;
+}
 
 // Column labels that end a title fragment — OCR merges table columns into one line
-const STOP_RE = /(units sold|page views|sales rank|sales\b|inr\b|₹|calculate revenue|shipping cost|available|on-hand|unfulfillable|inbound|reserved|total fee|fba fee|minimum price|maximum price|price\b|featured offer|lowest price|business price|potential lower|view reference|bazaar|variation family)/i;
+const STOP_RE = /(units sold|page views|sales rank|sales\b|sold\b|views\b|rank\b|revenue\b|inr\b|₹|calculate revenue|shipping cost|available|on-hand|unfulfillable|inbound|reserved|total fee|fba fee|minimum price|maximum price|price\b|featured offer|lowest price|business price|potential lower|view reference|bazaar|variation family)/i;
 const DATE_RE = /^\s*\d{1,2}\s+\w{3,5}\.?\s+\d{4},?\s+\d{1,2}:\d{2}\s*(am|pm)?\s*/i;
 
 function _titleFrag(l) {
@@ -2202,26 +2230,32 @@ function parseSellerText(raw) {
     p.title = p.title.replace(/\s*[|\-–]\s*$/, '').trim();
 
     const scanLines = bl.concat(peek);
+    const priceCands = [];
     for (let i = 0; i < scanLines.length; i++) {
       const l = scanLines[i], low = l.toLowerCase();
       if (p.fees == null && low.includes('total fee')) {
         p.fees = _amtAfter(l, 'total fee');
-        if (p.fees == null && scanLines[i + 1] && /^[₹\d]/.test(scanLines[i + 1])) p.fees = _amt(scanLines[i + 1]);
+        // value may sit on one of the next lines — currency values carry 2 decimals
+        if (p.fees == null) p.fees = _lastDecAmt(scanLines[i + 1]) ?? _lastDecAmt(scanLines[i + 2]);
       }
-      if (p.fbaFee == null && low.includes('fba fee')) p.fbaFee = _amtAfter(l, 'fba fee');
-      if (p.price == null && low.includes('featured offer')) p.price = _amtAfter(l.split('+')[0], 'featured offer');
+      if (p.fbaFee == null && low.includes('fba fee')) p.fbaFee = _amtAfter(l, 'fba fee') ?? _lastDecAmt(scanLines[i + 1]);
+      if (low.includes('featured offer')) priceCands.push(_amtAfter(l.split('+')[0], 'featured offer'));
+      if (low.includes('lowest price'))   priceCands.push(_amtAfter(l.split('+')[0], 'lowest price'));
+      if (low.includes('business price')) priceCands.push(_amtAfter(l.split('+')[0], 'business price'));
+      if (/\binr\b/i.test(l))             priceCands.push(_amtAfter(l, 'inr'));
       if (p.minPrice == null && low.includes('minimum price')) p.minPrice = _amtAfter(l, 'minimum price');
       if (p.maxPrice == null && low.includes('maximum price')) p.maxPrice = _amtAfter(l, 'maximum price');
       if (p.unitsSold == null && low.includes('units sold')) p.unitsSold = _amtAfter(l, 'units sold');
       if (p.salesRank == null && low.includes('sales rank')) p.salesRank = _amtAfter(l, 'sales rank');
       if (!p.sku && /^sku\b/i.test(l)) p.sku = _titleFrag(l.replace(/^sku\s*/i, ''));
     }
-    // Fallback price: the price-input line ("INR 1,350.00") — first one is the main Price box
-    if (p.price == null) {
-      for (const l of bl) {
-        if (/\binr\b/i.test(l)) { const v = _amtAfter(l, 'inr'); if (v != null) { p.price = v; break; } }
-      }
-    }
+    // Price by majority vote across Featured/Lowest/Business/INR readings —
+    // an OCR ₹→digit glue error rarely hits every occurrence identically
+    p.price = _voteAmt(priceCands);
+    // De-glue fees against the voted price (fees are never ~50%+ of price)
+    const feeCeil = p.price ? Math.max(300, p.price * 0.5) : 2000;
+    p.fees   = fixGlue(p.fees, feeCeil);
+    p.fbaFee = fixGlue(p.fbaFee, feeCeil);
     return p;
   }).filter(p => p.asin || p.fees != null || p.price != null);
 }
@@ -2280,9 +2314,12 @@ function parseFlipkartText(raw) {
 
   const lp1 = _labelAmt(lines, 'listing price', true);
   p.listingPrice = lp1 != null ? lp1 : _labelAmt(lines, 'listing price', false);
-  p.feesTaxes    = _labelAmt(lines, 'average fees and taxes', false);
-  p.logistics    = _labelAmt(lines, 'customer logistics fee', false);
+  p.feesTaxes    = fixGlue(_labelAmt(lines, 'average fees and taxes', false), 500);
+  p.logistics    = fixGlue(_labelAmt(lines, 'customer logistics fee', false), 500);
   p.sellerPrice  = _labelAmt(lines, 'seller price', false);
+  // Settlement can never exceed the listing price — de-glue an OCR ₹→digit read
+  if (p.settlement != null && p.listingPrice != null && p.settlement > p.listingPrice)
+    p.settlement = fixGlue(p.settlement, p.listingPrice);
 
   return (p.settlement != null || p.listingPrice != null || p.fsn) ? [p] : [];
 }
@@ -2364,6 +2401,9 @@ function parseShopcluesText(raw) {
     else if (p.codFee == null && low.includes('cod processing fee'))     p.codFee = rupee(l);
     else if (p.shippingCost == null && low.includes('shipping cost'))    p.shippingCost = rupee(l);
   }
+  // Net payout can never exceed selling price + shipping — de-glue ₹→digit reads
+  if (p.payout != null && p.sellingPrice != null && p.payout > p.sellingPrice + (p.shippingCost || 0))
+    p.payout = fixGlue(p.payout, p.sellingPrice + (p.shippingCost || 0));
   return (p.payout != null || p.sellingPrice != null || p.productId) ? [p] : [];
 }
 
@@ -2401,11 +2441,16 @@ function parseAmazonOrderText(raw) {
   }
 
   const lt = (a, b) => { const v = _labelAmt(lines, a, true); return v != null ? v : (b ? _labelAmt(lines, b, true) : null); };
-  p.itemTotal    = lt('item total', 'grand total');
+  // Price appears at Item total / Grand total / Unit price — majority vote
+  // defeats the OCR ₹→digit glue error (₹1,350 read as 21,350)
+  p.itemTotal    = _voteAmt([_labelAmt(lines, 'item total', true), _labelAmt(lines, 'grand total', true), _labelAmt(lines, 'unit price', true)]);
   p.itemSubtotal = lt('item subtotal', 'items total');
   p.tax          = lt('tax');
   p.shipFee      = lt('easy ship fee', 'total shipping cost');
   if (p.shipFee == null) p.shipFee = _labelAmt(lines, 'shipping cost', true);
+  if (p.itemTotal != null) p.itemSubtotal = fixGlue(p.itemSubtotal, p.itemTotal);
+  p.tax     = fixGlue(p.tax, p.itemSubtotal ? p.itemSubtotal * 0.45 : 1000);
+  p.shipFee = fixGlue(p.shipFee, 1200);   // ATS slabs top out well below this
   if (p.tax != null && p.itemSubtotal) {
     const r = Math.round(p.tax / p.itemSubtotal * 100);
     if ([0, 3, 5, 12, 18, 28, 40].includes(r)) p.gstRate = r;
