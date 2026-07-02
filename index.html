@@ -419,7 +419,7 @@ input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-
       <div class="panel-icon">📸</div>
       <div>
         <div class="panel-title">Scan Listing Screenshot · Seller Dashboard</div>
-        <div class="panel-sub">Upload or paste a screenshot from Amazon Seller Central or Flipkart/Shopsy Seller Hub — price &amp; fees are extracted automatically</div>
+        <div class="panel-sub">Upload or paste a screenshot from Amazon Seller Central, Flipkart/Shopsy Seller Hub or Meesho Supplier Panel — price &amp; fees are extracted automatically</div>
       </div>
       <button class="scan-clear" id="scan-clear-btn" style="display:none" onclick="clearScans()">✕ Clear scans</button>
     </div>
@@ -427,7 +427,7 @@ input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-
       <div class="dropzone" id="dropzone" onclick="el('scan-file').click()">
         <span class="dz-icon">🖼️</span>
         <div class="dz-msg"><strong>Click to upload</strong> · drag &amp; drop · or press <span class="km-like">Ctrl+V</span> anywhere on this page to paste a screenshot</div>
-        <div class="dz-sub"><strong>Amazon</strong> — Manage Inventory rows: title, ASIN, SKU, Price, Total fees, FBA fee, Units sold, Sales rank (multiple products per screenshot).<br><strong>Flipkart / Shopsy</strong> — open a listing's <em>Listing Details</em> panel: title, SKU, FSN, Bank Settlement, Listing Price, Fees &amp; Taxes, Logistics fee. Platform is detected automatically.</div>
+        <div class="dz-sub"><strong>Amazon</strong> — Manage Inventory rows: title, ASIN, SKU, Price, Total fees, FBA fee, Units sold, Sales rank (multiple products per screenshot).<br><strong>Flipkart / Shopsy</strong> — a listing's <em>Listing Details</em> panel: title, SKU, FSN, Bank Settlement, Listing Price, Fees &amp; Taxes, Logistics fee.<br><strong>Meesho</strong> — the <em>Price calculator</em> popup: selling price, GST/TCS/TDS and Bank settlement amount. Platform is detected automatically.</div>
       </div>
       <input type="file" id="scan-file" accept="image/*" multiple style="display:none" onchange="handleScanFiles(this.files); this.value='';">
       <div class="scan-grid" id="scan-results"></div>
@@ -1756,9 +1756,43 @@ function parseFlipkartText(raw) {
   return (p.settlement != null || p.listingPrice != null || p.fsn) ? [p] : [];
 }
 
-// Dispatch by dashboard fingerprint: Flipkart/Shopsy panels carry FSN / Bank
-// Settlement wording that never appears in Amazon Seller Central rows.
+// ── Meesho Supplier Panel — "Price calculator" popup ──
+// Breakdown: Selling price − Commission − GST − TCS − TDS = Bank settlement
+// amount. Meesho already deducts GST here, so applyScan() switches the
+// calculator's own GST-payable deduction OFF for these scans.
+function parseMeeshoText(raw) {
+  const lines = raw.split(/\n/).map(l => l.trim()).filter(l => l.length > 0);
+  const rupee = l => { const m = l.match(/₹\s*([\d,]+(?:\.\d{1,2})?)/); return m ? parseFloat(m[1].replace(/,/g, '')) : null; };
+  const p = { platform: 'meesho', title: '', sellingPrice: null, settlement: null,
+    commission: null, gstAmt: null, tcs: null, tds: null, gstRate: null };
+
+  p.settlement   = _labelAmt(lines, 'bank settlement amount', false);
+  p.sellingPrice = _labelAmt(lines, 'selling price', false);      // "Selling price 849" breakdown row
+  for (const l of lines) {
+    const low = l.toLowerCase();
+    if (p.commission == null && low.includes('commission'))  p.commission = rupee(l);
+    else if (p.gstAmt == null && /^gst\b/i.test(l))          p.gstAmt = rupee(l);
+    else if (p.tcs == null && /^tcs\b/i.test(l))             p.tcs = rupee(l);
+    else if (p.tds == null && /^tds\b/i.test(l))             p.tds = rupee(l);
+    else if (p.gstRate == null) { const m = l.match(/^(\d{1,2})\s*%$/); if (m) p.gstRate = parseInt(m[1], 10); }
+  }
+  // Title: brand heading if present, else the Product Name field
+  const ti = lines.find(l => /intelligence/i.test(l) && l.length > 15);
+  if (ti) p.title = _titleFrag(ti);
+  if (!p.title) {
+    for (const l of lines) {
+      const m = l.match(/product name[^a-z0-9]*(.+)/i);
+      if (m) { p.title = m[1].replace(/[*©@Oⓘ]\s*/g, ' ').replace(/\s+/g, ' ').trim(); break; }
+    }
+  }
+  return (p.settlement != null || p.sellingPrice != null) ? [p] : [];
+}
+
+// Dispatch by dashboard fingerprint. Meesho first (its "bank settlement
+// amount" wording would otherwise match the Flipkart check); Flipkart/Shopsy
+// wording never appears in Amazon Seller Central rows.
 function parseScreenshot(text) {
+  if (/bank settlement amount|price breakdown|price calculator|supplier\.meesho/i.test(text)) return parseMeeshoText(text);
   if (/fsn\s*id|bank settlement|settlement to price|seller hub/i.test(text)) return parseFlipkartText(text);
   return parseSellerText(text);
 }
@@ -1800,7 +1834,16 @@ async function scanImage(file) {
     prods.forEach(p => {
       const idx  = _scanned.push(p) - 1;
       const isFk = p.platform === 'flipkart' || p.platform === 'shopsy';
-      const chips = (isFk ? [
+      const isMe = p.platform === 'meesho';
+      const chips = (isMe ? [
+        p.sellingPrice != null ? `<span class="scan-chip">Selling ₹${p.sellingPrice.toFixed(2)}</span>` : '',
+        p.settlement   != null ? `<span class="scan-chip fee">Settlement ₹${p.settlement.toFixed(2)} (after GST)</span>` : '',
+        p.gstAmt       != null ? `<span class="scan-chip">GST −₹${p.gstAmt.toFixed(2)}</span>` : '',
+        p.tcs          != null ? `<span class="scan-chip">TCS −₹${p.tcs.toFixed(2)}</span>` : '',
+        p.tds          != null ? `<span class="scan-chip">TDS −₹${p.tds.toFixed(2)}</span>` : '',
+        p.commission   != null ? `<span class="scan-chip">Commission ₹${p.commission.toFixed(2)}</span>` : '',
+        p.gstRate      != null ? `<span class="scan-chip">GST rate ${p.gstRate}%</span>` : ''
+      ] : isFk ? [
         p.listingPrice != null ? `<span class="scan-chip">Listing ₹${p.listingPrice.toFixed(2)}</span>` : '',
         p.settlement   != null ? `<span class="scan-chip fee">Settlement ₹${p.settlement.toFixed(2)}</span>` : '',
         p.feesTaxes    != null ? `<span class="scan-chip">Fees+Taxes ₹${p.feesTaxes.toFixed(2)}</span>` : '',
@@ -1842,6 +1885,17 @@ function applyScan(i) {
     if (p.settlement   != null) el('b-settle-input').value = p.settlement;
     calc();
     showToast('✓ ' + PLATFORMS[p.platform].label + ' data applied — verify GST rate & enter your costs', 'success');
+  } else if (p.platform === 'meesho') {
+    setPlatform('meesho');
+    setMode(2);
+    if (p.title)                el('pname').value          = p.title.slice(0, 120);
+    if (p.sellingPrice != null) el('b-sp-input').value     = p.sellingPrice;
+    if (p.settlement   != null) el('b-settle-input').value = p.settlement;
+    if (p.gstRate != null && [...el('gst').options].some(o => o.value === String(p.gstRate))) el('gst').value = String(p.gstRate);
+    // Meesho's settlement amount is already net of GST/TCS/TDS — don't deduct GST again
+    if (el('gstpay')) el('gstpay').checked = false;
+    calc();
+    showToast('✓ Meesho data applied — settlement already includes GST deduction', 'success');
   } else {
     setPlatform('amazon');   // Seller Central screenshots → Amazon
     setMode(2);              // existing listing check

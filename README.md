@@ -22,6 +22,7 @@ Scan listings straight from your seller dashboards. Take a screenshot (`Win+Shif
 
 - **Amazon Seller Central → Manage Inventory**: extracts Product title, ASIN, SKU, Price (Featured offer), Total fees, FBA fee, Min/Max price, Units sold, Sales rank. Multiple products per screenshot supported. *Apply* switches to **Amazon · Mode 2** and fills name, selling price and platform fee.
 - **Flipkart / Shopsy Seller Hub → Listing Details panel** (click a listing to open it): extracts Product title, SKU ID, FSN ID, **Bank Settlement** (current pricing — not the pending input), **Listing Price**, Average Fees & Taxes, Seller Price, Customer Logistics Fees. Shopsy is recognised by its "Shopsy Budget" tab. *Apply* switches to **Flipkart/Shopsy · Mode 2** and fills name, listing price and bank settlement.
+- **Meesho Supplier Panel → Price calculator popup** (Calculate your selling price): extracts Product name, **Selling price**, GST rate, Commission, GST/TCS/TDS deductions and **Bank settlement amount**. Meesho's settlement is already net of GST, so *Apply* auto-unchecks "Deduct GST payable" to avoid double-counting, sets the GST rate, and fills selling price + settlement in **Meesho · Mode 2**.
 
 After applying, enter your own product/packaging/shipping costs and confirm the GST rate to get true profitability.
 
