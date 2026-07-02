@@ -3,7 +3,7 @@
 Internal seller tool for **India Business International (IBI) · iINTELLIGENCEi**.
 **Live:** https://calculator.indiabusinessinternational.online/ · installable as a PWA (works offline).
 
-**Current version: v4.3** — shown in the top-left badge. Versioning: minor patches bump the decimal (v3.1), big features bump the major (v4). On each release also bump `APP_VERSION` in `index.html` and `CACHE` in `sw.js`.
+**Current version: v4.4** — shown in the top-left badge. Versioning: minor patches bump the decimal (v3.1), big features bump the major (v4). On each release also bump `APP_VERSION` in `index.html` and `CACHE` in `sw.js`.
 
 ## Platforms
 
@@ -47,6 +47,10 @@ Tips for best OCR accuracy: screenshot at 100% browser zoom or larger, PNG forma
 
 - **Copy → Paste**: copies a tab-separated header + value row for manual pasting.
 - **Send → Google Sheets**: POSTs to a Google Apps Script web app (URL configurable in the setup section). The GAS code (`IBI_Calculator_GAS.gs`, also embedded in the page) auto-creates one tab per platform plus a live 📊 Summary tab.
+
+## v4.4 — Scan-drift safeguard
+
+After a screenshot is applied, the calculator remembers the values it wrote into the price / fee / settlement fields. If any of those fields is later changed by more than 2%, an amber banner appears at the top of the Inputs panel — e.g. *"Changed since the scan — check for a typo: Selling price ₹21,350 (scanned ₹1,350); Platform fee ₹3,376.42 (scanned ₹376.42)."* This catches accidental stray-digit typos (a common cause of absurd profit/ROI results). Dismiss with ✕, or it clears automatically on reset, history restore, or switching platform. The calculation engine itself was verified correct — this guards the *inputs*.
 
 ## v4.3 — Amazon fee auto-estimate (fee schedule 10 Jun 2026)
 

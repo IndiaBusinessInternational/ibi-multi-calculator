@@ -341,6 +341,12 @@ body.dark .mode-btn.active .md{color:rgba(255,255,255,.65);}
 .ai-state-pill{font-size:10.5px;font-weight:700;padding:2px 9px;border-radius:20px;background:var(--surface3);color:var(--text3);border:1px solid var(--border-md);letter-spacing:.03em;}
 .ai-state-pill.on{background:var(--green-bg);color:var(--green);border-color:rgba(22,163,74,.3);}
 
+/* ═════════════════ SCAN DRIFT WARNING ═════════════════ */
+.scan-drift{display:flex;gap:9px;align-items:flex-start;background:var(--amber-bg);border:1px solid rgba(217,119,6,.32);border-radius:var(--r);padding:10px 12px;margin-bottom:14px;font-size:12px;color:var(--amber);line-height:1.55;}
+.scan-drift b{font-weight:700;}
+.scan-drift .sd-x{margin-left:auto;cursor:pointer;opacity:.65;flex-shrink:0;font-weight:700;}
+.scan-drift .sd-x:hover{opacity:1;}
+
 /* ═════════════════ VERSION BADGE ═════════════════ */
 .ver-badge{font-size:10px;font-weight:700;font-family:var(--mono);background:rgba(0,197,255,.12);color:#00c5ff;border:1px solid rgba(0,197,255,.35);border-radius:6px;padding:2px 7px;letter-spacing:.04em;white-space:nowrap;align-self:flex-start;}
 
@@ -531,6 +537,12 @@ input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-
         </div>
       </div>
       <div class="panel-body">
+
+        <div class="scan-drift" id="scan-drift" style="display:none">
+          <span>⚠</span>
+          <span id="scan-drift-text"></span>
+          <span class="sd-x" onclick="clearScanRef()" title="Dismiss">✕</span>
+        </div>
 
         <div class="field">
           <label>Product name <span style="color:var(--text3);font-weight:400;text-transform:none;letter-spacing:0">(for history & sheets)</span></label>
@@ -1153,7 +1165,7 @@ function callClaude_(key, prompt) {
 // ═════════════════ VERSION ═════════════════
 // Major = big features (v3 → v4) · minor = small patches (v3.0 → v3.1).
 // Keep in sync with CACHE in sw.js on every release.
-const APP_VERSION = 'v4.3';
+const APP_VERSION = 'v4.4';
 
 // ═════════════════ PLATFORM CONFIG ═════════════════
 const PLATFORMS = {
@@ -1501,6 +1513,7 @@ function calc() {
   renderMetrics(grp, sp_in, sp_ex, mrp, bank_settlement, net_profit, g_margin, roi);
   renderBreakdown(grp, cost, pack, carton, ship, other, fee_amt, total_exp, sp_ex, gst_amt, bank_settlement, net_rev, net_profit, bep_in, g_margin, roi, mrp, baseCost);
   renderViability(net_profit, roi);
+  updateScanDrift();
 }
 
 function showEmptyResults() {
@@ -1508,6 +1521,7 @@ function showEmptyResults() {
   ['b-cost','b-pack','b-carton','b-ship','b-other','b-fee','b-total','b-spex','b-gst','b-settle','b-gstpay','b-rev','b-np2','b-bep','b-gm','b-roi2','b-mrp2'].forEach(id => { const e = el(id); if (e) e.textContent = '—'; });
   el('viability').className = 'viability';
   el('v-text').textContent = 'Enter your costs to see viability assessment.';
+  const b = el('scan-drift'); if (b) b.style.display = 'none';
 }
 
 function renderMetrics(grp, sp_in, sp_ex, mrp, bank_settlement, net_profit, g_margin, roi) {
@@ -1638,6 +1652,37 @@ function renderViability(net_profit, roi) {
   }
 }
 
+// ═════════════════ SCAN-DRIFT SAFEGUARD ═════════════════
+// Remembers the values a scan wrote into the fields and warns if a field
+// is later changed — catches fat-finger typos (e.g. 1350 → 21350).
+let _scanRef = {}, _scanRefPid = null;
+const SCAN_FIELD_LABELS = {
+  'cur-sp': 'Selling price', 'pfee': 'Platform fee', 'ship': 'Shipping cost',
+  'b-sp-input': 'Selling / listing price', 'b-settle-input': 'Bank settlement'
+};
+function setScanRef(pid, ids) {
+  _scanRef = {}; _scanRefPid = pid;
+  ids.forEach(id => { const e = el(id); if (e) _scanRef[id] = parseFloat(e.value); });
+}
+function clearScanRef() {
+  _scanRef = {}; _scanRefPid = null;
+  const b = el('scan-drift'); if (b) b.style.display = 'none';
+}
+function updateScanDrift() {
+  const b = el('scan-drift'); if (!b) return;
+  if (_scanRefPid !== _pid || !Object.keys(_scanRef).length) { b.style.display = 'none'; return; }
+  const drift = [];
+  for (const id in _scanRef) {
+    const ref = _scanRef[id], cur = parseFloat(el(id) ? el(id).value : NaN);
+    if (isNaN(ref) || isNaN(cur)) continue;
+    if (Math.abs(cur - ref) > 0.5 && Math.abs(cur - ref) / Math.max(1, Math.abs(ref)) > 0.02)
+      drift.push(`<b>${SCAN_FIELD_LABELS[id] || id}</b> ₹${cur.toLocaleString('en-IN')} <span style="opacity:.75">(scanned ₹${ref.toLocaleString('en-IN')})</span>`);
+  }
+  if (!drift.length) { b.style.display = 'none'; return; }
+  el('scan-drift-text').innerHTML = 'Changed since the scan — check for a typo: ' + drift.join('; ') + '.';
+  b.style.display = '';
+}
+
 // ═════════════════ AMAZON FEE ESTIMATOR ═════════════════
 function saveAmzEst() {
   localStorage.setItem('ibi_amz_cat', el('amz-cat').value);
@@ -1687,6 +1732,7 @@ function resetDefaults() {
   el('b-sp-input').value     = 299;
   el('b-settle-input').value = 240;
   document.querySelectorAll('.invalid').forEach(e => e.classList.remove('invalid'));
+  clearScanRef();
   calc();
   showToast('↺ Defaults restored');
 }
@@ -1945,6 +1991,7 @@ function restoreFromHistory(id) {
   const entry = getHistory().find(e => e.id === id || e.id === parseInt(id));
   if (!entry) return;
   _activeHistId = entry.id;
+  clearScanRef();
   setPlatform(entry.pid);
   setMode(entry.mode);
   el('pname').value          = entry.pname;
@@ -2523,6 +2570,7 @@ function applyScan(i) {
     if (p.settlement   != null) el('b-settle-input').value = p.settlement;
     if (el('gstpay')) el('gstpay').checked = true;   // these settlements still include GST
     calc();
+    setScanRef(p.platform, ['b-sp-input', 'b-settle-input']);
     showToast('✓ ' + PLATFORMS[p.platform].label + ' data applied — verify GST rate & enter your costs', 'success');
   } else if (p.platform === 'shopclues') {
     setPlatform('shopclues');
@@ -2532,6 +2580,7 @@ function applyScan(i) {
     if (p.payout       != null) el('b-settle-input').value = p.payout;
     if (el('gstpay')) el('gstpay').checked = true;   // ShopClues payout does not deduct output GST
     calc();
+    setScanRef('shopclues', ['b-sp-input', 'b-settle-input']);
     showToast('✓ ShopClues data applied — verify GST rate & enter your costs', 'success');
   } else if (p.platform === 'meesho') {
     setPlatform('meesho');
@@ -2543,6 +2592,7 @@ function applyScan(i) {
     // Meesho's settlement amount is already net of GST/TCS/TDS — don't deduct GST again
     if (el('gstpay')) el('gstpay').checked = false;
     calc();
+    setScanRef('meesho', ['b-sp-input', 'b-settle-input']);
     showToast('✓ Meesho data applied — settlement already includes GST deduction', 'success');
   } else if (p.type === 'order') {
     setPlatform('amazon');   // Order details page → Amazon existing listing
@@ -2552,6 +2602,7 @@ function applyScan(i) {
     if (p.shipFee   != null) el('ship').value   = p.shipFee;   // real ATS courier charge
     if (p.gstRate != null && [...el('gst').options].some(o => o.value === String(p.gstRate))) el('gst').value = String(p.gstRate);
     calc();
+    setScanRef('amazon', ['cur-sp', 'ship']);
     showToast('✓ Order applied (price, ATS shipping, GST) — add Total fees from the listing + your costs', 'success');
   } else {
     setPlatform('amazon');   // Seller Central screenshots → Amazon
@@ -2560,6 +2611,7 @@ function applyScan(i) {
     if (p.price  != null) el('cur-sp').value = p.price;
     if (p.fees   != null) el('pfee').value   = p.fees;
     calc();
+    setScanRef('amazon', ['cur-sp', 'pfee']);
     showToast('✓ Scanned data applied — now enter your product, packing & shipping costs', 'success');
   }
   window.scrollTo({ top: 0, behavior: 'smooth' });

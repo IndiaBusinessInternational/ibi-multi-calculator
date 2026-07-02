@@ -1,7 +1,7 @@
 // IBI Multi-Calculator — service worker
 // Network-first for the page itself (so updates arrive immediately),
 // cache-first for static assets. Bump CACHE on each release.
-const CACHE = 'ibi-calc-v4.3';
+const CACHE = 'ibi-calc-v4.4';
 const ASSETS = [
   './',
   './index.html',
