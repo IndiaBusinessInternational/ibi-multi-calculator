@@ -370,6 +370,17 @@ var AI_PROVIDERS = {
   claude  : 'AI_KEY_CLAUDE'
 };
 
+/**
+ * RUN THIS ONCE from the editor (▶ Run) after pasting the v4 code.
+ * Google's granular authorization only asks for the "Connect to an
+ * external service" permission when a function actually needs it —
+ * this function forces that prompt so AI extraction can work.
+ */
+function authorizeExternal() {
+  UrlFetchApp.fetch('https://www.google.com');
+  Logger.log('✓ External request permission granted — AI extraction is now enabled');
+}
+
 function handleAiAction(data) {
   try {
     if (data.action === 'save_ai_key') return saveAiKey_(data);

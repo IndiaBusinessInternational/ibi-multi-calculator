@@ -907,6 +907,14 @@ var AI_PROVIDERS = {
   claude  : 'AI_KEY_CLAUDE'
 };
 
+// RUN THIS ONCE from the editor (▶ Run) after pasting this code —
+// it forces Google's "Connect to an external service" permission
+// prompt, which AI extraction needs.
+function authorizeExternal() {
+  UrlFetchApp.fetch('https://www.google.com');
+  Logger.log('External request permission granted');
+}
+
 function handleAiAction(data) {
   try {
     if (data.action === 'save_ai_key') return saveAiKey_(data);
