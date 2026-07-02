@@ -1,7 +1,7 @@
 # IBI Multi-Platform Pricing Calculator
 
 Internal seller tool for **India Business International (IBI) · iINTELLIGENCEi**.
-**Live:** https://indiabusinessinternational.github.io/ibi-multi-calculator/ · installable as a PWA (works offline).
+**Live:** https://calculator.indiabusinessinternational.online/ · installable as a PWA (works offline).
 
 **Current version: v3.0** — shown in the top-left badge. Versioning: minor patches bump the decimal (v3.1), big features bump the major (v4). On each release also bump `APP_VERSION` in `index.html` and `CACHE` in `sw.js`.
 
