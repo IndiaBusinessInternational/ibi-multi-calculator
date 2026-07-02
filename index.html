@@ -508,7 +508,7 @@ input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-
       <div class="dropzone" id="dropzone" onclick="el('scan-file').click()">
         <span class="dz-icon">🖼️</span>
         <div class="dz-msg"><strong>Click to upload</strong> · drag &amp; drop · or press <span class="km-like">Ctrl+V</span> anywhere on this page to paste a screenshot</div>
-        <div class="dz-sub"><strong>Amazon</strong> — Manage Inventory rows: title, ASIN, SKU, Price, Total fees, FBA fee, Units sold, Sales rank (multiple products per screenshot).<br><strong>Flipkart / Shopsy</strong> — a listing's <em>Listing Details</em> panel: title, SKU, FSN, Bank Settlement, Listing Price, Fees &amp; Taxes, Logistics fee.<br><strong>Meesho</strong> — the <em>Price calculator</em> popup: selling price, GST/TCS/TDS and Bank settlement amount.<br><strong>ShopClues</strong> — the <em>Payout Calculator</em> popup (📊 icon in Manage Products): selling price, service/fulfillment fees and Expected Net Payout. Platform is detected automatically.</div>
+        <div class="dz-sub"><strong>Amazon</strong> — Manage Inventory rows: title, ASIN, SKU, Price, Total fees, FBA fee, Units sold, Sales rank (multiple products per screenshot). Also <em>Order details</em> pages: item price, tax/GST rate and the real <strong>ATS / Easy Ship courier charge</strong>.<br><strong>Flipkart / Shopsy</strong> — a listing's <em>Listing Details</em> panel: title, SKU, FSN, Bank Settlement, Listing Price, Fees &amp; Taxes, Logistics fee.<br><strong>Meesho</strong> — the <em>Price calculator</em> popup: selling price, GST/TCS/TDS and Bank settlement amount.<br><strong>ShopClues</strong> — the <em>Payout Calculator</em> popup (📊 icon in Manage Products): selling price, service/fulfillment fees and Expected Net Payout. Platform is detected automatically.</div>
       </div>
       <input type="file" id="scan-file" accept="image/*" multiple style="display:none" onchange="handleScanFiles(this.files); this.value='';">
       <div class="scan-grid" id="scan-results"></div>
@@ -969,7 +969,7 @@ function refreshSummaryNow() {
 // ═════════════════ VERSION ═════════════════
 // Major = big features (v3 → v4) · minor = small patches (v3.0 → v3.1).
 // Keep in sync with CACHE in sw.js on every release.
-const APP_VERSION = 'v3.0';
+const APP_VERSION = 'v3.1';
 
 // ═════════════════ PLATFORM CONFIG ═════════════════
 const PLATFORMS = {
@@ -1988,14 +1988,62 @@ function parseShopcluesText(raw) {
   return (p.payout != null || p.sellingPrice != null || p.productId) ? [p] : [];
 }
 
+// ── Amazon Seller Central — "Order details" page (Easy Ship / ATS) ──
+// Carries the REAL courier charge per order (Easy Ship Fee / Total shipping
+// cost) plus item price and tax. Tax ÷ subtotal reveals the GST rate.
+function parseAmazonOrderText(raw) {
+  const lines = raw.split(/\n/).map(l => l.trim()).filter(l => l.length > 0);
+  const joined = lines.join(' ');
+  const p = { platform: 'amazon', type: 'order', title: '', asin: '', sku: '', orderId: '',
+    itemTotal: null, itemSubtotal: null, tax: null, shipFee: null, gstRate: null };
+
+  p.asin = fixAsin((joined.match(ASIN_RE) || [''])[0]);
+  const oid = joined.match(/\b(\d{3}-\d{7}-\d{7})\b/);
+  if (oid) p.orderId = oid[1];
+  const skuL = lines.find(l => /^sku[:\s]/i.test(l));
+  if (skuL) p.sku = skuL.replace(/^sku[:\s]*/i, '').trim().slice(0, 60);
+
+  // Title: brand line(s) in Order contents, cut at right-hand columns
+  const ORDER_STOP = /(condition\s*:|order item id|₹|asin|sku\b|quantity|unit price|proceeds|item subtotal|item total|more information)/i;
+  const ti = lines.findIndex(l => /intelligence/i.test(l) && l.length > 15);
+  if (ti >= 0) {
+    for (let i = ti; i < Math.min(ti + 4, lines.length); i++) {
+      let s = lines[i];
+      if (/^(asin|sku)/i.test(s)) break;
+      const m = s.match(ORDER_STOP);
+      if (m && m.index === 0) break;
+      if (m) s = s.slice(0, m.index);
+      s = s.trim();
+      if (!s) continue;
+      p.title += (p.title ? ' ' : '') + s;
+      if (p.title.length > 150) break;
+    }
+    p.title = p.title.replace(/^(picked up|shipped|unshipped|pending|delivered|cancelled)\s*/i, '').trim();
+  }
+
+  const lt = (a, b) => { const v = _labelAmt(lines, a, true); return v != null ? v : (b ? _labelAmt(lines, b, true) : null); };
+  p.itemTotal    = lt('item total', 'grand total');
+  p.itemSubtotal = lt('item subtotal', 'items total');
+  p.tax          = lt('tax');
+  p.shipFee      = lt('easy ship fee', 'total shipping cost');
+  if (p.shipFee == null) p.shipFee = _labelAmt(lines, 'shipping cost', true);
+  if (p.tax != null && p.itemSubtotal) {
+    const r = Math.round(p.tax / p.itemSubtotal * 100);
+    if ([0, 3, 5, 12, 18, 28, 40].includes(r)) p.gstRate = r;
+  }
+  return (p.itemTotal != null || p.shipFee != null || p.asin) ? [p] : [];
+}
+
 // Dispatch by dashboard fingerprint. Meesho first (its "bank settlement
 // amount" wording would otherwise match the Flipkart check); ShopClues has
-// its own "Payout Calculator" wording; Flipkart/Shopsy wording never appears
-// in Amazon Seller Central rows.
+// its own "Payout Calculator" wording; Amazon Order-details pages carry
+// Easy Ship / Order wording; Flipkart/Shopsy wording never appears in
+// Amazon Seller Central rows.
 function parseScreenshot(text) {
   if (/payout calculator|expected net payout|net payout calculation|storemanager\.shopclues|shopclues/i.test(text)) return parseShopcluesText(text);
   if (/bank settlement amount|price breakdown|price calculator|supplier\.meesho/i.test(text)) return parseMeeshoText(text);
   if (/fsn\s*id|bank settlement|settlement to price|seller hub/i.test(text)) return parseFlipkartText(text);
+  if (/easy ship fee|order item id|order contents|go back to list orders|sales proceeds/i.test(text)) return parseAmazonOrderText(text);
   return parseSellerText(text);
 }
 
@@ -2050,7 +2098,15 @@ function renderScanProducts(box, prods) {
       const isFk = p.platform === 'flipkart' || p.platform === 'shopsy';
       const isMe = p.platform === 'meesho';
       const isSc = p.platform === 'shopclues';
-      const chips = (isSc ? [
+      const isOrd = p.type === 'order';
+      const chips = (isOrd ? [
+        p.itemTotal    != null ? `<span class="scan-chip">Price ₹${p.itemTotal.toFixed(2)}</span>` : '',
+        p.itemSubtotal != null ? `<span class="scan-chip">Subtotal ₹${p.itemSubtotal.toFixed(2)}</span>` : '',
+        p.tax          != null ? `<span class="scan-chip">Tax ₹${p.tax.toFixed(2)}</span>` : '',
+        p.gstRate      != null ? `<span class="scan-chip">GST rate ${p.gstRate}%</span>` : '',
+        p.shipFee      != null ? `<span class="scan-chip fee">ATS shipping ₹${p.shipFee.toFixed(2)}</span>` : '',
+        p.orderId              ? `<span class="scan-chip">Order ${p.orderId}</span>` : ''
+      ] : isSc ? [
         p.sellingPrice != null ? `<span class="scan-chip">Selling ₹${p.sellingPrice.toFixed(2)}</span>` : '',
         p.payout       != null ? `<span class="scan-chip fee">Net payout ₹${p.payout.toFixed(2)}</span>` : '',
         p.sellingFee   != null ? `<span class="scan-chip">Selling fee −₹${p.sellingFee.toFixed(2)}</span>` : '',
@@ -2151,6 +2207,15 @@ function applyScan(i) {
     if (el('gstpay')) el('gstpay').checked = false;
     calc();
     showToast('✓ Meesho data applied — settlement already includes GST deduction', 'success');
+  } else if (p.type === 'order') {
+    setPlatform('amazon');   // Order details page → Amazon existing listing
+    setMode(2);
+    if (p.title)             el('pname').value  = p.title.slice(0, 120);
+    if (p.itemTotal != null) el('cur-sp').value = p.itemTotal;
+    if (p.shipFee   != null) el('ship').value   = p.shipFee;   // real ATS courier charge
+    if (p.gstRate != null && [...el('gst').options].some(o => o.value === String(p.gstRate))) el('gst').value = String(p.gstRate);
+    calc();
+    showToast('✓ Order applied (price, ATS shipping, GST) — add Total fees from the listing + your costs', 'success');
   } else {
     setPlatform('amazon');   // Seller Central screenshots → Amazon
     setMode(2);              // existing listing check
