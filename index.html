@@ -5,6 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>IBI Multi-Platform Pricing Calculator</title>
 <meta name="description" content="Multi-platform eCommerce pricing calculator for Amazon, Flipkart, Meesho, Shopsy, ShopClues, IBI Website and Offline. By India Business International.">
+<meta name="theme-color" content="#000000">
+<link rel="manifest" href="manifest.webmanifest">
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="India Business International">
+<meta property="og:title" content="IBI Multi-Platform Pricing Calculator">
+<meta property="og:description" content="Price smarter on Amazon, Flipkart, Meesho, Shopsy & ShopClues — scan Seller Dashboard screenshots, get true profit, ROI & break-even instantly.">
+<meta property="og:url" content="https://indiabusinessinternational.github.io/ibi-multi-calculator/">
+<meta property="og:image" content="https://indiabusinessinternational.github.io/ibi-multi-calculator/assets/og-banner.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="IBI Multi-Platform Pricing Calculator">
+<meta name="twitter:description" content="Price smarter on Amazon, Flipkart, Meesho, Shopsy & ShopClues — scan Seller Dashboard screenshots, get true profit, ROI & break-even instantly.">
+<meta name="twitter:image" content="https://indiabusinessinternational.github.io/ibi-multi-calculator/assets/og-banner.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -83,15 +99,18 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .container{max-width:1080px;margin:0 auto;padding:18px 16px 40px;}
 .calc-area{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:14px;}
 @media(max-width:680px){
-  .calc-area{grid-template-columns:1fr;}
-  .header{height:auto;padding:9px 14px;flex-wrap:wrap;gap:6px;}
+  .calc-area{grid-template-columns:1fr;gap:10px;}
+  .header{height:auto;padding:9px 10px;flex-wrap:wrap;gap:6px;}
   .header-brand{font-size:13px;}
   .header-sub{font-size:10px;}
-  .header-badge,.kbd-toggle{display:none;}
-  .bg-toggle{padding:5px 11px;}
-  .header-left{gap:10px;}
+  .header-badge,.kbd-toggle,.switch-lbl{display:none;}
+  .header-left{gap:8px;}
   .header-left svg{width:36px;height:30px;}
-  .container{padding:14px 12px 32px;}
+  /* Edge-to-edge: no side padding, panels span the full screen width */
+  .container{padding:0 0 32px;}
+  .platform-wrap,.mode-wrap,.notice,.history-wrap,.footer{margin-left:8px;margin-right:8px;}
+  .platform-wrap{margin-top:12px;}
+  body .panel,body .gs-setup-wrap{border-radius:0;border-left:none;border-right:none;}
 }
 
 /* ═════════════════ SECTION LABEL ═════════════════ */
@@ -133,10 +152,10 @@ body.dark .mode-btn.active .md{color:rgba(255,255,255,.65);}
 
 /* ═════════════════ PANELS ═════════════════ */
 .panel{background:var(--surface);border-radius:var(--r-lg);border:1px solid var(--border);box-shadow:var(--sh);overflow:hidden;}
-.panel-header{padding:14px 18px 13px;border-bottom:1px solid var(--border);background:var(--surface2);display:flex;align-items:center;gap:10px;}
-.panel-icon{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;background:var(--purple-dim);flex-shrink:0;}
-.panel-title{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text2);}
-.panel-sub{font-size:11px;color:var(--text3);margin-top:1px;}
+.panel-header{padding:14px 18px 13px;border-bottom:1px solid rgba(0,197,255,.25);background:#000;display:flex;align-items:center;gap:10px;}
+.panel-icon{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;background:rgba(0,197,255,.14);flex-shrink:0;}
+.panel-title{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#00c5ff;}
+.panel-sub{font-size:11px;color:rgba(0,197,255,.65);margin-top:1px;}
 .panel-body{padding:18px;}
 
 /* ═════════════════ FIELDS ═════════════════ */
@@ -318,6 +337,50 @@ body.dark .mode-btn.active .md{color:rgba(255,255,255,.65);}
 .footer{text-align:center;margin-top:36px;padding-top:22px;border-top:1px solid var(--border);font-size:11.5px;color:var(--text3);line-height:2;}
 .footer strong{color:var(--text2);}
 
+/* ═════════════════ VERSION BADGE ═════════════════ */
+.ver-badge{font-size:10px;font-weight:700;font-family:var(--mono);background:rgba(0,197,255,.12);color:#00c5ff;border:1px solid rgba(0,197,255,.35);border-radius:6px;padding:2px 7px;letter-spacing:.04em;white-space:nowrap;align-self:flex-start;}
+
+/* ═════════════════ THEME TOGGLE SWITCH ═════════════════ */
+.switch-wrap{display:flex;align-items:center;gap:7px;cursor:pointer;user-select:none;}
+.switch-lbl{font-size:11.5px;font-weight:500;color:rgba(255,255,255,.7);}
+.switch{position:relative;width:42px;height:22px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:22px;transition:background .25s;flex-shrink:0;}
+.switch::after{content:'☀️';position:absolute;top:1px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;font-size:11px;line-height:18px;text-align:center;transition:transform .25s;}
+body.dark .switch{background:#00c5ff;border-color:#00c5ff;}
+body.dark .switch::after{transform:translateX(19px);content:'🌙';background:#08080f;}
+
+/* ═════════════════ SETTINGS MENU ═════════════════ */
+.settings-wrap{position:relative;}
+.settings-btn{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.8);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.settings-btn:hover{background:rgba(255,255,255,.16);color:#fff;}
+.settings-menu{position:absolute;top:40px;right:0;background:var(--surface);border:1px solid var(--border-md);border-radius:var(--r-lg);box-shadow:var(--sh-lg);min-width:230px;padding:6px;display:none;z-index:200;}
+.settings-menu.open{display:block;}
+.settings-item{display:flex;align-items:center;gap:9px;width:100%;padding:9px 12px;border:none;background:none;border-radius:var(--r);font-size:12.5px;font-weight:500;color:var(--text);cursor:pointer;font-family:var(--font);text-align:left;transition:background .12s;}
+.settings-item:hover{background:var(--surface2);}
+.settings-item .si-icon{font-size:14px;width:18px;text-align:center;}
+.settings-div{height:1px;background:var(--border);margin:5px 8px;}
+.settings-note{font-size:10.5px;color:var(--text3);padding:4px 12px 7px;line-height:1.5;}
+
+/* ═════════════════ PWA INSTALL ═════════════════ */
+.install-btn{display:none;align-items:center;gap:5px;background:#00c5ff;border:none;border-radius:20px;padding:6px 13px;cursor:pointer;font-size:12px;font-weight:700;color:#000;font-family:var(--font);transition:all .2s;white-space:nowrap;}
+.install-btn:hover{background:#41d4ff;}
+.install-btn.show{display:inline-flex;}
+.install-banner{position:fixed;left:50%;bottom:18px;transform:translateX(-50%) translateY(120px);background:#000;border:1px solid rgba(0,197,255,.4);border-radius:var(--r-lg);box-shadow:0 12px 40px rgba(0,0,0,.5);padding:14px 16px;display:flex;align-items:center;gap:12px;z-index:998;max-width:420px;width:calc(100vw - 24px);transition:transform .4s cubic-bezier(.34,1.56,.64,1);}
+.install-banner.show{transform:translateX(-50%) translateY(0);}
+.install-banner .ib-icon{width:40px;height:40px;border-radius:9px;flex-shrink:0;}
+.install-banner .ib-txt{flex:1;min-width:0;}
+.install-banner .ib-title{font-size:13px;font-weight:700;color:#00c5ff;}
+.install-banner .ib-sub{font-size:11px;color:rgba(255,255,255,.6);margin-top:1px;line-height:1.4;}
+.install-banner .ib-install{background:#00c5ff;color:#000;border:none;border-radius:var(--r);padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font);white-space:nowrap;}
+.install-banner .ib-close{background:none;border:none;color:rgba(255,255,255,.5);font-size:16px;cursor:pointer;padding:4px;line-height:1;}
+
+/* ═════════════════ ENTRY DATE & TIME ═════════════════ */
+.entry-dt{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.entry-dt-val{flex:1;min-width:200px;font-family:var(--mono);font-size:12.5px;font-weight:600;color:var(--teal);background:var(--teal-bg);border:1.5px solid rgba(13,148,136,.25);border-radius:var(--r);padding:9px 12px;line-height:1.4;}
+.entry-dt-btn{height:38px;padding:0 12px;border-radius:var(--r);border:1px solid var(--border-md);background:var(--surface);color:var(--text2);font-size:11.5px;font-weight:600;cursor:pointer;font-family:var(--font);transition:all .15s;white-space:nowrap;}
+.entry-dt-btn:hover{background:var(--surface2);border-color:var(--border-lg);}
+.entry-dt input[type=datetime-local]{height:38px;border:1.5px solid var(--border-md);border-radius:var(--r);background:var(--surface);color:var(--text);padding:0 10px;font-family:var(--mono);font-size:12px;outline:none;}
+.entry-dt input[type=datetime-local]:focus{border-color:var(--purple);box-shadow:0 0 0 3px var(--purple-dim);}
+
 /* ═════════════════ SCREENSHOT SCANNER ═════════════════ */
 .scan-panel{margin-bottom:18px;}
 .scan-clear{margin-left:auto;font-size:11.5px;font-weight:600;padding:5px 11px;border-radius:var(--r);cursor:pointer;font-family:var(--font);border:1px solid var(--border-md);background:var(--surface);color:var(--text2);transition:all .15s;}
@@ -364,6 +427,7 @@ input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-
 <!-- ═════════════════ HEADER (slim sticky toolbar) ═════════════════ -->
 <header class="header">
   <div class="header-left">
+    <span class="ver-badge" id="ver-badge" title="IBI Multi-Calculator version">v3.0</span>
     <div>
       <div class="header-brand">IBI Multi-Platform Pricing Calculator</div>
       <div class="header-sub">iINTELLIGENCEi · Internal Seller Tool</div>
@@ -372,7 +436,24 @@ input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-
   <div class="header-right">
     <div class="header-badge" id="platform-badge">Amazon · Seller Tool</div>
     <button class="kbd-toggle" onclick="showKbdHelp()" title="Keyboard shortcuts">⌨ Shortcuts</button>
-    <button class="bg-toggle" onclick="toggleBg()" id="bg-toggle-btn"><span>🌙</span> Dark mode</button>
+    <button class="install-btn" id="install-btn" onclick="promptInstall()" title="Install as app">⬇ Install</button>
+    <div class="switch-wrap" onclick="toggleBg()" title="Toggle dark / light mode">
+      <span class="switch-lbl" id="switch-lbl">Dark mode</span>
+      <div class="switch" id="theme-switch"></div>
+    </div>
+    <div class="settings-wrap">
+      <button class="settings-btn" id="settings-btn" onclick="toggleSettings(event)" title="Settings">⚙</button>
+      <div class="settings-menu" id="settings-menu">
+        <button class="settings-item" onclick="promptInstall()"><span class="si-icon">⬇</span> Install as App (PWA)</button>
+        <div class="settings-div"></div>
+        <button class="settings-item" onclick="downloadBackup()"><span class="si-icon">💾</span> Download Backup</button>
+        <button class="settings-item" onclick="el('restore-file').click()"><span class="si-icon">📥</span> Restore from Backup</button>
+        <div class="settings-div"></div>
+        <button class="settings-item" onclick="showKbdHelp()"><span class="si-icon">⌨</span> Keyboard Shortcuts</button>
+        <div class="settings-note" id="settings-ver">IBI Multi-Calculator · v3.0</div>
+      </div>
+    </div>
+    <input type="file" id="restore-file" accept="application/json,.json" style="display:none" onchange="restoreBackup(this.files[0]); this.value='';">
   </div>
 </header>
 
@@ -419,15 +500,15 @@ input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-
       <div class="panel-icon">📸</div>
       <div>
         <div class="panel-title">Scan Listing Screenshot · Seller Dashboard</div>
-        <div class="panel-sub">Upload or paste a screenshot from Amazon Seller Central, Flipkart/Shopsy Seller Hub or Meesho Supplier Panel — price &amp; fees are extracted automatically</div>
+        <div class="panel-sub">Upload or paste a screenshot from Amazon Seller Central, Flipkart/Shopsy Seller Hub, Meesho Supplier Panel or ShopClues Store Manager — price &amp; fees are extracted automatically</div>
       </div>
-      <button class="scan-clear" id="scan-clear-btn" style="display:none" onclick="clearScans()">✕ Clear scans</button>
+      <button class="scan-clear" id="scan-clear-btn" style="display:none" onclick="clearScans()">✕ Clear Off</button>
     </div>
     <div class="panel-body">
       <div class="dropzone" id="dropzone" onclick="el('scan-file').click()">
         <span class="dz-icon">🖼️</span>
         <div class="dz-msg"><strong>Click to upload</strong> · drag &amp; drop · or press <span class="km-like">Ctrl+V</span> anywhere on this page to paste a screenshot</div>
-        <div class="dz-sub"><strong>Amazon</strong> — Manage Inventory rows: title, ASIN, SKU, Price, Total fees, FBA fee, Units sold, Sales rank (multiple products per screenshot).<br><strong>Flipkart / Shopsy</strong> — a listing's <em>Listing Details</em> panel: title, SKU, FSN, Bank Settlement, Listing Price, Fees &amp; Taxes, Logistics fee.<br><strong>Meesho</strong> — the <em>Price calculator</em> popup: selling price, GST/TCS/TDS and Bank settlement amount. Platform is detected automatically.</div>
+        <div class="dz-sub"><strong>Amazon</strong> — Manage Inventory rows: title, ASIN, SKU, Price, Total fees, FBA fee, Units sold, Sales rank (multiple products per screenshot).<br><strong>Flipkart / Shopsy</strong> — a listing's <em>Listing Details</em> panel: title, SKU, FSN, Bank Settlement, Listing Price, Fees &amp; Taxes, Logistics fee.<br><strong>Meesho</strong> — the <em>Price calculator</em> popup: selling price, GST/TCS/TDS and Bank settlement amount.<br><strong>ShopClues</strong> — the <em>Payout Calculator</em> popup (📊 icon in Manage Products): selling price, service/fulfillment fees and Expected Net Payout. Platform is detected automatically.</div>
       </div>
       <input type="file" id="scan-file" accept="image/*" multiple style="display:none" onchange="handleScanFiles(this.files); this.value='';">
       <div class="scan-grid" id="scan-results"></div>
@@ -450,6 +531,16 @@ input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-
         <div class="field">
           <label>Product name <span style="color:var(--text3);font-weight:400;text-transform:none;letter-spacing:0">(for history & sheets)</span></label>
           <input type="text" id="pname" class="solo" placeholder="e.g. iINTELLIGENCEi Coconut Coir Brush, 2 Pack" maxlength="120">
+        </div>
+
+        <div class="field">
+          <label>Entry date &amp; time</label>
+          <div class="entry-dt">
+            <div class="entry-dt-val" id="entry-dt-display">—</div>
+            <input type="datetime-local" id="entry-dt-input" style="display:none" onchange="setEntryDate(this.value)">
+            <button class="entry-dt-btn" id="entry-dt-edit" onclick="toggleEntryDtEdit()">📅 Edit</button>
+          </div>
+          <div class="hint" id="entry-dt-hint">Auto (live) — recorded with each save / send. Click 📅 Edit to pick from calendar.</div>
         </div>
 
         <div class="field">
@@ -861,9 +952,25 @@ function refreshSummaryNow() {
   <button class="modal-close" onclick="hideKbdHelp()">Close</button>
 </div>
 
+<!-- ═════════════════ PWA INSTALL BANNER ═════════════════ -->
+<div class="install-banner" id="install-banner">
+  <img class="ib-icon" src="assets/icon-192.png" alt="IBI">
+  <div class="ib-txt">
+    <div class="ib-title">Install IBI Calculator</div>
+    <div class="ib-sub" id="ib-sub">Add it to your device — works offline, opens like an app.</div>
+  </div>
+  <button class="ib-install" onclick="promptInstall()">Install</button>
+  <button class="ib-close" onclick="dismissInstallBanner()" title="Not now">✕</button>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
+// ═════════════════ VERSION ═════════════════
+// Major = big features (v3 → v4) · minor = small patches (v3.0 → v3.1).
+// Keep in sync with CACHE in sw.js on every release.
+const APP_VERSION = 'v3.0';
+
 // ═════════════════ PLATFORM CONFIG ═════════════════
 const PLATFORMS = {
   amazon:     { label:'Amazon',        grp:'A', defFee:30,  defShip:64.90, defPack:20 },
@@ -1255,8 +1362,7 @@ function resetDefaults() {
 // ═════════════════ FIXED SHEET COLUMNS ═════════════════
 function buildSheetData() {
   const pname = el('pname').value.trim() || '—';
-  const d  = new Date();
-  const ds = d.toLocaleDateString('en-IN') + ' ' + d.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+  const ds = fmtDateTime(getEntryDate());
   const grp = _last.grp;
   const n   = v => (v !== null && v !== undefined && !isNaN(parseFloat(v))) ? parseFloat(v).toFixed(2) : 'N/A';
   const modeLabel = grp === 'B'
@@ -1372,21 +1478,67 @@ function showToast(msg, type) {
   _toastTimer = setTimeout(() => t.className = 'toast' + (type ? ' ' + type : ''), 3500);
 }
 
-// ═════════════════ BG TOGGLE ═════════════════
+// ═════════════════ THEME TOGGLE SWITCH ═════════════════
 function toggleBg() {
   const isDark = document.body.classList.toggle('dark');
-  el('bg-toggle-btn').innerHTML = isDark
-    ? '<span>☀️</span> Light mode'
-    : '<span>🌙</span> Dark mode';
+  const lbl = el('switch-lbl');
+  if (lbl) lbl.textContent = isDark ? 'Light mode' : 'Dark mode';
   localStorage.setItem('ibi_theme', isDark ? 'dark' : 'light');
 }
 (function(){
   if (localStorage.getItem('ibi_theme') === 'dark') {
     document.body.classList.add('dark');
-    const b = el('bg-toggle-btn');
-    if (b) b.innerHTML = '<span>☀️</span> Light mode';
+    const lbl = el('switch-lbl');
+    if (lbl) lbl.textContent = 'Light mode';
   }
 })();
+
+// ═════════════════ ENTRY DATE & TIME ═════════════════
+// Display format: "28 May 2026, Thursday, 01:38:00 PM"
+// Auto (live clock) by default; 📅 Edit switches to a calendar picker.
+let _entryDate = null;   // null = auto (now)
+
+function fmtDateTime(d) {
+  const days   = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  let h = d.getHours(); const ap = h >= 12 ? 'PM' : 'AM';
+  h = h % 12; if (h === 0) h = 12;
+  const p2 = n => String(n).padStart(2, '0');
+  return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}, ${days[d.getDay()]}, ${p2(h)}:${p2(d.getMinutes())}:${p2(d.getSeconds())} ${ap}`;
+}
+function getEntryDate() { return _entryDate || new Date(); }
+
+function renderEntryDt() {
+  const e = el('entry-dt-display');
+  if (e) e.textContent = fmtDateTime(getEntryDate());
+}
+setInterval(() => { if (!_entryDate) renderEntryDt(); }, 1000);
+
+function toggleEntryDtEdit() {
+  const inp = el('entry-dt-input'), btn = el('entry-dt-edit');
+  if (inp.style.display === 'none') {
+    // open calendar picker, pre-filled with the current entry time
+    const d = getEntryDate();
+    const p2 = n => String(n).padStart(2, '0');
+    inp.value = `${d.getFullYear()}-${p2(d.getMonth()+1)}-${p2(d.getDate())}T${p2(d.getHours())}:${p2(d.getMinutes())}`;
+    inp.style.display = '';
+    btn.textContent = '↺ Auto';
+    el('entry-dt-hint').textContent = 'Pick date & time from the calendar — or click ↺ Auto to go back to live time.';
+    try { inp.showPicker(); } catch(e) {}
+  } else {
+    _entryDate = null;
+    inp.style.display = 'none';
+    btn.textContent = '📅 Edit';
+    el('entry-dt-hint').textContent = 'Auto (live) — recorded with each save / send. Click 📅 Edit to pick from calendar.';
+    renderEntryDt();
+  }
+}
+function setEntryDate(v) {
+  const d = v ? new Date(v) : null;
+  _entryDate = (d && !isNaN(d.getTime())) ? d : null;
+  renderEntryDt();
+  if (_entryDate) showToast('📅 Entry time set: ' + fmtDateTime(_entryDate));
+}
 
 // ═════════════════ GS SETUP ═════════════════
 function saveGsUrl() {
@@ -1433,7 +1585,7 @@ function saveToHistory() {
   const history = getHistory();
   const entry = {
     id: uniqueId(), pname, pid: _pid,
-    date: new Date().toLocaleDateString('en-IN') + ' ' + new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'}),
+    date: fmtDateTime(getEntryDate()),
     timestamp: Date.now(), mode: _last.mode,
     cost: el('cost').value, gst: el('gst').value, pack: el('pack').value,
     carton: el('carton').value, ship: el('ship').value, pfee: el('pfee').value,
@@ -1788,10 +1940,60 @@ function parseMeeshoText(raw) {
   return (p.settlement != null || p.sellingPrice != null) ? [p] : [];
 }
 
+// ── ShopClues Store Manager — "Payout Calculator" popup ──
+// Breakdown: Selling Price + Shipping + COD − Selling Service Fee −
+// Fulfillment Fee − TCS − Order Processing Fee = Expected Net Payout.
+// Output GST is NOT deducted by ShopClues, so the calculator's GST-payable
+// toggle stays ON when applying.
+function parseShopcluesText(raw) {
+  const lines = raw.split(/\n/).map(l => l.trim()).filter(l => l.length > 0);
+  const joined = lines.join(' ');
+  const rupee = l => { const m = l.match(/₹\s*([\d,]+(?:\.\d{1,2})?)/); return m ? parseFloat(m[1].replace(/,/g, '')) : null; };
+  const p = { platform: 'shopclues', title: '', productId: '', category: '',
+    sellingPrice: null, payout: null, sellingFee: null, fulfillFee: null,
+    tcs: null, orderFee: null, codFee: null, shippingCost: null };
+
+  const pidM = joined.match(/product\s*id\s*[:\s]*(\d{6,12})/i);
+  if (pidM) p.productId = pidM[1];
+  const catLine = lines.find(l => /category\s*:/i.test(l));
+  if (catLine) { const m = catLine.match(/category\s*:\s*(.+)/i); if (m) p.category = m[1].trim().slice(0, 40); }
+
+  // Title: lines between "Payout Calculator" and the "Product id" line
+  const pi = lines.findIndex(l => /product\s*id/i.test(l));
+  if (pi > 0) {
+    const ci = lines.findIndex(l => /payout calculator/i.test(l));
+    const from = (ci >= 0 && ci < pi) ? ci + 1 : Math.max(0, pi - 3);
+    for (let i = from; i < pi; i++) {
+      const l = lines[i];
+      if (/payout calculator|store manager|shopclues university|merchant support|register on/i.test(l)) continue;
+      p.title += (p.title ? ' ' : '') + l;
+      if (p.title.length > 160) break;
+    }
+    p.title = p.title.trim();
+  }
+
+  p.sellingPrice = _labelAmt(lines, 'selling price', true);
+  if (p.sellingPrice == null) p.sellingPrice = _labelAmt(lines, 'selling price', false);
+  p.payout      = _labelAmt(lines, 'expected net payout', false);
+  if (p.payout == null) p.payout = _labelAmt(lines, 'net payout', false);
+  for (const l of lines) {
+    const low = l.toLowerCase();
+    if (p.sellingFee == null && low.includes('selling service fee'))     p.sellingFee = rupee(l);
+    else if (p.fulfillFee == null && low.includes('fulfillment service fee')) p.fulfillFee = rupee(l);
+    else if (p.tcs == null && low.includes('tax collected at source'))   p.tcs = rupee(l);
+    else if (p.orderFee == null && low.includes('order processing fee')) p.orderFee = rupee(l);
+    else if (p.codFee == null && low.includes('cod processing fee'))     p.codFee = rupee(l);
+    else if (p.shippingCost == null && low.includes('shipping cost'))    p.shippingCost = rupee(l);
+  }
+  return (p.payout != null || p.sellingPrice != null || p.productId) ? [p] : [];
+}
+
 // Dispatch by dashboard fingerprint. Meesho first (its "bank settlement
-// amount" wording would otherwise match the Flipkart check); Flipkart/Shopsy
-// wording never appears in Amazon Seller Central rows.
+// amount" wording would otherwise match the Flipkart check); ShopClues has
+// its own "Payout Calculator" wording; Flipkart/Shopsy wording never appears
+// in Amazon Seller Central rows.
 function parseScreenshot(text) {
+  if (/payout calculator|expected net payout|net payout calculation|storemanager\.shopclues|shopclues/i.test(text)) return parseShopcluesText(text);
   if (/bank settlement amount|price breakdown|price calculator|supplier\.meesho/i.test(text)) return parseMeeshoText(text);
   if (/fsn\s*id|bank settlement|settlement to price|seller hub/i.test(text)) return parseFlipkartText(text);
   return parseSellerText(text);
@@ -1828,14 +2030,34 @@ async function scanImage(file) {
       fill.parentElement.remove();
       return;
     }
-    box.querySelector('.scan-body').innerHTML =
-      `<div class="scan-state">✓ Found ${prods.length} product${prods.length > 1 ? 's' : ''} — click Apply to load one into the calculator</div><div class="scan-prods"></div>`;
-    const wrap = box.querySelector('.scan-prods');
-    prods.forEach(p => {
+    renderScanProducts(box, prods);
+    persistScan(canvas, prods);
+    showToast(`✓ Extracted ${prods.length} product${prods.length > 1 ? 's' : ''} from screenshot`, 'success');
+  } catch (err) {
+    state.textContent = '⚠ ' + (err.message || 'Scan failed');
+    if (fill.parentElement) fill.parentElement.remove();
+  }
+}
+
+// Render parsed products into a scan card — used for fresh scans and for
+// scans restored from local storage after a refresh
+function renderScanProducts(box, prods) {
+  box.querySelector('.scan-body').innerHTML =
+    `<div class="scan-state">✓ Found ${prods.length} product${prods.length > 1 ? 's' : ''} — click Apply to load one into the calculator</div><div class="scan-prods"></div>`;
+  const wrap = box.querySelector('.scan-prods');
+  prods.forEach(p => {
       const idx  = _scanned.push(p) - 1;
       const isFk = p.platform === 'flipkart' || p.platform === 'shopsy';
       const isMe = p.platform === 'meesho';
-      const chips = (isMe ? [
+      const isSc = p.platform === 'shopclues';
+      const chips = (isSc ? [
+        p.sellingPrice != null ? `<span class="scan-chip">Selling ₹${p.sellingPrice.toFixed(2)}</span>` : '',
+        p.payout       != null ? `<span class="scan-chip fee">Net payout ₹${p.payout.toFixed(2)}</span>` : '',
+        p.sellingFee   != null ? `<span class="scan-chip">Selling fee −₹${p.sellingFee.toFixed(2)}</span>` : '',
+        p.fulfillFee   != null ? `<span class="scan-chip">Fulfillment −₹${p.fulfillFee.toFixed(2)}</span>` : '',
+        p.tcs          != null ? `<span class="scan-chip">TCS −₹${p.tcs.toFixed(2)}</span>` : '',
+        p.orderFee     != null ? `<span class="scan-chip">Order fee −₹${p.orderFee.toFixed(2)}</span>` : ''
+      ] : isMe ? [
         p.sellingPrice != null ? `<span class="scan-chip">Selling ₹${p.sellingPrice.toFixed(2)}</span>` : '',
         p.settlement   != null ? `<span class="scan-chip fee">Settlement ₹${p.settlement.toFixed(2)} (after GST)</span>` : '',
         p.gstAmt       != null ? `<span class="scan-chip">GST −₹${p.gstAmt.toFixed(2)}</span>` : '',
@@ -1859,19 +2081,42 @@ async function scanImage(file) {
         p.salesRank != null ? `<span class="scan-chip">Rank ${p.salesRank.toLocaleString('en-IN')}</span>` : ''
       ]).join('');
       const platLbl = PLATFORMS[p.platform] ? PLATFORMS[p.platform].label : 'Amazon';
-      const pid = p.asin || p.fsn || '';
+      const pid = p.asin || p.fsn || p.productId || '';
       const div = document.createElement('div');
       div.className = 'scan-prod';
       div.innerHTML = `<div class="scan-prod-name">${esc(p.title) || '(title not read)'}${pid ? ` <span class="scan-asin">${esc(pid)}</span>` : ''}${p.sku ? ` <span class="scan-asin">· ${esc(p.sku)}</span>` : ''} <span class="scan-asin">· ${platLbl}</span></div>
         <div class="scan-chips">${chips || '<span class="scan-chip">No amounts detected</span>'}</div>
         <button class="scan-apply" onclick="applyScan(${idx})">→ Apply to calculator (${platLbl})</button>`;
       wrap.appendChild(div);
-    });
-    showToast(`✓ Extracted ${prods.length} product${prods.length > 1 ? 's' : ''} from screenshot`, 'success');
-  } catch (err) {
-    state.textContent = '⚠ ' + (err.message || 'Scan failed');
-    if (fill.parentElement) fill.parentElement.remove();
-  }
+  });
+}
+
+// ── Scan persistence: screenshots + extracted data survive refresh ──
+const SCAN_STORE_KEY = 'ibi_scans_v1';
+function persistScan(canvas, prods) {
+  try {
+    const t = document.createElement('canvas');
+    const w = 480, h = Math.max(1, Math.round(canvas.height * w / canvas.width));
+    t.width = w; t.height = h;
+    t.getContext('2d').drawImage(canvas, 0, 0, w, h);
+    const store = JSON.parse(localStorage.getItem(SCAN_STORE_KEY) || '[]');
+    store.unshift({ thumb: t.toDataURL('image/jpeg', .68), prods, ts: Date.now() });
+    if (store.length > 12) store.length = 12;
+    localStorage.setItem(SCAN_STORE_KEY, JSON.stringify(store));
+  } catch (e) { /* storage full — scan still usable this session */ }
+}
+function restoreScansFromStore() {
+  let store = [];
+  try { store = JSON.parse(localStorage.getItem(SCAN_STORE_KEY) || '[]'); } catch (e) {}
+  if (!store.length) return;
+  store.forEach(s => {
+    const box = document.createElement('div');
+    box.className = 'scan-item';
+    box.innerHTML = `<img class="scan-thumb" src="${s.thumb}" alt="screenshot"><div class="scan-body"></div>`;
+    el('scan-results').appendChild(box);
+    renderScanProducts(box, s.prods);
+  });
+  show('scan-clear-btn', true);
 }
 
 function applyScan(i) {
@@ -1883,8 +2128,18 @@ function applyScan(i) {
     if (p.title)               el('pname').value          = p.title.slice(0, 120);
     if (p.listingPrice != null) el('b-sp-input').value     = p.listingPrice;
     if (p.settlement   != null) el('b-settle-input').value = p.settlement;
+    if (el('gstpay')) el('gstpay').checked = true;   // these settlements still include GST
     calc();
     showToast('✓ ' + PLATFORMS[p.platform].label + ' data applied — verify GST rate & enter your costs', 'success');
+  } else if (p.platform === 'shopclues') {
+    setPlatform('shopclues');
+    setMode(2);
+    if (p.title)                el('pname').value          = p.title.slice(0, 120);
+    if (p.sellingPrice != null) el('b-sp-input').value     = p.sellingPrice;
+    if (p.payout       != null) el('b-settle-input').value = p.payout;
+    if (el('gstpay')) el('gstpay').checked = true;   // ShopClues payout does not deduct output GST
+    calc();
+    showToast('✓ ShopClues data applied — verify GST rate & enter your costs', 'success');
   } else if (p.platform === 'meesho') {
     setPlatform('meesho');
     setMode(2);
@@ -1911,7 +2166,9 @@ function applyScan(i) {
 function clearScans() {
   _scanned = [];
   el('scan-results').innerHTML = '';
+  localStorage.removeItem(SCAN_STORE_KEY);
   show('scan-clear-btn', false);
+  showToast('Scans cleared');
 }
 
 (function initScanner() {
@@ -1927,6 +2184,100 @@ function clearScans() {
     showToast('📸 Screenshot received — scanning…');
   });
 })();
+
+// ═════════════════ SETTINGS MENU ═════════════════
+function toggleSettings(e) {
+  e.stopPropagation();
+  el('settings-menu').classList.toggle('open');
+}
+document.addEventListener('click', e => {
+  const m = el('settings-menu');
+  if (m && m.classList.contains('open') && !e.target.closest('.settings-wrap')) m.classList.remove('open');
+});
+
+// ═════════════════ BACKUP & RESTORE ═════════════════
+function downloadBackup() {
+  el('settings-menu').classList.remove('open');
+  const data = { app: 'IBI Multi-Calculator', version: APP_VERSION, exported: fmtDateTime(new Date()), localStorage: {} };
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (k && k.startsWith('ibi_')) data.localStorage[k] = localStorage.getItem(k);
+  }
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'IBI-Calculator-Backup-' + new Date().toISOString().slice(0, 10) + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('✓ Backup downloaded (history, scans, settings)', 'success');
+}
+function restoreBackup(file) {
+  el('settings-menu').classList.remove('open');
+  if (!file) return;
+  const r = new FileReader();
+  r.onload = () => {
+    try {
+      const data = JSON.parse(r.result);
+      const ls = (data && data.localStorage) || {};
+      let n = 0;
+      for (const k in ls) {
+        if (k.startsWith('ibi_') && typeof ls[k] === 'string') { localStorage.setItem(k, ls[k]); n++; }
+      }
+      if (!n) { showToast('⚠ No IBI data found in that file', 'error'); return; }
+      showToast('✓ Restored ' + n + ' item(s) — reloading…', 'success');
+      setTimeout(() => location.reload(), 900);
+    } catch (e) { showToast('⚠ Invalid backup file', 'error'); }
+  };
+  r.readAsText(file);
+}
+
+// ═════════════════ PWA INSTALL ═════════════════
+let _deferredPrompt = null;
+const INSTALL_DISMISS_KEY = 'ibi_install_dismissed_at';
+const INSTALL_RESHOW_MS = 24 * 60 * 60 * 1000;   // banner re-appears after 24 h
+
+function isStandalone() {
+  return matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+}
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  _deferredPrompt = e;
+  el('install-btn').classList.add('show');
+  maybeShowInstallBanner();
+});
+function maybeShowInstallBanner() {
+  if (isStandalone()) return;
+  const at = parseInt(localStorage.getItem(INSTALL_DISMISS_KEY) || '0', 10);
+  if (Date.now() - at < INSTALL_RESHOW_MS) return;
+  setTimeout(() => el('install-banner').classList.add('show'), 1600);
+}
+function dismissInstallBanner() {
+  el('install-banner').classList.remove('show');
+  localStorage.setItem(INSTALL_DISMISS_KEY, String(Date.now()));
+}
+async function promptInstall() {
+  el('settings-menu').classList.remove('open');
+  el('install-banner').classList.remove('show');
+  if (_deferredPrompt) {
+    _deferredPrompt.prompt();
+    const res = await _deferredPrompt.userChoice;
+    if (res && res.outcome === 'accepted') el('install-btn').classList.remove('show');
+    _deferredPrompt = null;
+  } else if (isStandalone()) {
+    showToast('✓ Already installed — running as an app');
+  } else {
+    showToast('To install: browser menu → "Add to Home Screen" / "Install app"');
+  }
+}
+window.addEventListener('appinstalled', () => {
+  el('install-btn').classList.remove('show');
+  el('install-banner').classList.remove('show');
+  showToast('✓ IBI Calculator installed', 'success');
+});
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+  window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); });
+}
 
 // ═════════════════ KEYBOARD SHORTCUTS ═════════════════
 function showKbdHelp() { el('kbd-bg').classList.add('show'); el('kbd-modal').classList.add('show'); }
@@ -1949,9 +2300,13 @@ document.addEventListener('keydown', (e) => {
 });
 
 // ═════════════════ INIT ═════════════════
+el('ver-badge').textContent = APP_VERSION;
+el('settings-ver').textContent = 'IBI Multi-Calculator · ' + APP_VERSION;
 setPlatform('amazon');
 setMode(1);
 renderHistory();
+renderEntryDt();
+restoreScansFromStore();
 </script>
 </body>
 </html>

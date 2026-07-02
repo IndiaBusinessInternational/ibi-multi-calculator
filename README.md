@@ -1,7 +1,9 @@
 # IBI Multi-Platform Pricing Calculator
 
 Internal seller tool for **India Business International (IBI) · iINTELLIGENCEi**.
-Single-file web app — open `index.html` in any modern browser (Chrome/Edge recommended). No install needed.
+**Live:** https://indiabusinessinternational.github.io/ibi-multi-calculator/ · installable as a PWA (works offline).
+
+**Current version: v3.0** — shown in the top-left badge. Versioning: minor patches bump the decimal (v3.1), big features bump the major (v4). On each release also bump `APP_VERSION` in `index.html` and `CACHE` in `sw.js`.
 
 ## Platforms
 
@@ -23,6 +25,9 @@ Scan listings straight from your seller dashboards. Take a screenshot (`Win+Shif
 - **Amazon Seller Central → Manage Inventory**: extracts Product title, ASIN, SKU, Price (Featured offer), Total fees, FBA fee, Min/Max price, Units sold, Sales rank. Multiple products per screenshot supported. *Apply* switches to **Amazon · Mode 2** and fills name, selling price and platform fee.
 - **Flipkart / Shopsy Seller Hub → Listing Details panel** (click a listing to open it): extracts Product title, SKU ID, FSN ID, **Bank Settlement** (current pricing — not the pending input), **Listing Price**, Average Fees & Taxes, Seller Price, Customer Logistics Fees. Shopsy is recognised by its "Shopsy Budget" tab. *Apply* switches to **Flipkart/Shopsy · Mode 2** and fills name, listing price and bank settlement.
 - **Meesho Supplier Panel → Price calculator popup** (Calculate your selling price): extracts Product name, **Selling price**, GST rate, Commission, GST/TCS/TDS deductions and **Bank settlement amount**. Meesho's settlement is already net of GST, so *Apply* auto-unchecks "Deduct GST payable" to avoid double-counting, sets the GST rate, and fills selling price + settlement in **Meesho · Mode 2**.
+- **ShopClues Store Manager → Payout Calculator popup** (📊 icon in Manage Products): extracts Product title, Product ID, Category, **Selling Price**, Selling/Fulfillment service fees, TCS, Order Processing Fee and **Expected Net Payout**. ShopClues does not deduct output GST from the payout, so the GST-payable toggle stays ON. *Apply* fills selling price + payout in **ShopClues · Mode 2**.
+
+**Persistence:** scanned screenshots (thumbnail + extracted data) are saved locally and survive page refresh — remove them with the **✕ Clear Off** button on the scan panel.
 
 After applying, enter your own product/packaging/shipping costs and confirm the GST rate to get true profitability.
 
@@ -41,6 +46,17 @@ Tips for best OCR accuracy: screenshot at 100% browser zoom or larger, PNG forma
 
 - **Copy → Paste**: copies a tab-separated header + value row for manual pasting.
 - **Send → Google Sheets**: POSTs to a Google Apps Script web app (URL configurable in the setup section). The GAS code (`IBI_Calculator_GAS.gs`, also embedded in the page) auto-creates one tab per platform plus a live 📊 Summary tab.
+
+## v3.0 additions
+
+- **PWA install**: install banner (re-appears 24 h after dismissal), ⬇ Install button in the header, and an Install entry inside the ⚙ Settings menu. Service worker caches the app shell for offline use.
+- **Entry Date & Time** field — live clock displayed as `28 May 2026, Thursday, 01:38:00 PM`; 📅 Edit opens a calendar picker for manual entry; the chosen timestamp is recorded in History and Google Sheets.
+- **Backup & Restore** (⚙ Settings menu): download all local data (history, scans, settings) as JSON; restore from a backup file.
+- **Branding**: panel headings in #00c5ff on black (Roboto), IBI favicon + PWA icons, company logo banner at the top, dark/light **toggle switch**, version badge top-left.
+- **Mobile**: edge-to-edge layout (no side padding) for maximum screen area.
+- **Open Graph + Twitter Card** meta tags with a branded preview banner (`assets/og-banner.png`).
+- Local history: up to 24 saved calculations with per-item delete and Clear-all (existing feature, retained).
+- No API keys are used in this app (the Google Apps Script URL is a webhook, not a secret key).
 
 ## Keyboard shortcuts
 
