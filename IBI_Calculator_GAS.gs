@@ -29,6 +29,15 @@
 //  7. Copy the Web App URL
 //  8. Paste it in the calculator's Setup panel → Save URL
 //
+//  AI API KEYS (v4) — stored in Google Drive → this Apps Script project →
+//  Script Properties. Two ways to add them:
+//    A) From the calculator: AI panel → paste key → "Save Key → Apps Script"
+//    B) Manually here: ⚙ Project Settings → Script Properties →
+//       Add script property, with these EXACT names:
+//         AI_KEY_DEEPSEEK   AI_KEY_GEMINI   AI_KEY_OPENAI   AI_KEY_CLAUDE
+//  Keys never leave your Google account; the web app only sends the OCR
+//  text and receives cleaned product data back.
+//
 // ══════════════════════════════════════════════════════════════════════
 
 // ──────────────── CONFIG ────────────────

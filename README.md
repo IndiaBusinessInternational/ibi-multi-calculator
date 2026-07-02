@@ -3,7 +3,7 @@
 Internal seller tool for **India Business International (IBI) · iINTELLIGENCEi**.
 **Live:** https://calculator.indiabusinessinternational.online/ · installable as a PWA (works offline).
 
-**Current version: v4.0** — shown in the top-left badge. Versioning: minor patches bump the decimal (v3.1), big features bump the major (v4). On each release also bump `APP_VERSION` in `index.html` and `CACHE` in `sw.js`.
+**Current version: v4.1** — shown in the top-left badge. Versioning: minor patches bump the decimal (v3.1), big features bump the major (v4). On each release also bump `APP_VERSION` in `index.html` and `CACHE` in `sw.js`.
 
 ## Platforms
 
@@ -52,7 +52,7 @@ Tips for best OCR accuracy: screenshot at 100% browser zoom or larger, PNG forma
 
 OCR titles from wide dashboard tables are often mangled. The **🤖 AI Product-Name Extraction** panel fixes this using an AI model of your choice: **DeepSeek, Google Gemini, OpenAI or Claude**.
 
-- **Keys live in your Google Apps Script** (Script Properties on your Google account) — never in the browser. The web app proxies AI calls through your GAS web app.
+- **Keys live in your Google Drive — inside the Apps Script project, under Script Properties** — never in the browser. The web app proxies AI calls through your GAS web app. Add keys either from the calculator's AI panel (Save Key → Apps Script) or manually in Apps Script via **⚙ Project Settings → Script Properties** with the exact names `AI_KEY_DEEPSEEK`, `AI_KEY_GEMINI`, `AI_KEY_OPENAI`, `AI_KEY_CLAUDE`.
 - **Each provider is independent** — only the currently selected provider is ever called.
 - **Master OFF**: select "🚫 All APIs OFF" to disable AI completely (pure OCR extraction, the default).
 - The key field is **paste-only** (copy/cut disabled) with no reveal eye, and clears after saving.

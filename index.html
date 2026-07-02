@@ -1012,8 +1012,11 @@ function callClaude_(key, prompt) {
     <div class="gs-setup-body" id="ai-setup-body" style="display:none">
       <div class="hint" style="margin:0;font-size:12px;">
         Cleans up OCR-mangled product names using an AI model of your choice, routed through your Google Apps Script.
-        <strong>API keys are stored inside your Apps Script on your Google account (Script Properties) — never in this browser.</strong>
-        Only the selected provider is ever called — each works independently. Select <strong>All APIs OFF</strong> to disable AI completely (OCR-only extraction).
+        <strong>API keys are stored inside your Google Drive — in the Apps Script project, under Script Properties — never in this browser.</strong>
+        Only the selected provider is ever called — each works independently. Select <strong>All APIs OFF</strong> to disable AI completely (OCR-only extraction).<br><br>
+        <strong>Two ways to add a key:</strong> (1) paste it below and click Save — it is written into Script Properties; or
+        (2) enter it manually in Apps Script: open the script → ⚙ <strong>Project Settings → Script Properties → Add script property</strong>, using these exact names:
+        <code>AI_KEY_DEEPSEEK</code> · <code>AI_KEY_GEMINI</code> · <code>AI_KEY_OPENAI</code> · <code>AI_KEY_CLAUDE</code>
       </div>
       <div class="field" style="margin:0">
         <label>Active AI provider</label>
@@ -1114,7 +1117,7 @@ function callClaude_(key, prompt) {
 // ═════════════════ VERSION ═════════════════
 // Major = big features (v3 → v4) · minor = small patches (v3.0 → v3.1).
 // Keep in sync with CACHE in sw.js on every release.
-const APP_VERSION = 'v4.0';
+const APP_VERSION = 'v4.1';
 
 // ═════════════════ PLATFORM CONFIG ═════════════════
 const PLATFORMS = {
