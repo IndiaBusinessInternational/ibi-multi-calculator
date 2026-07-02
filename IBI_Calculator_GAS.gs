@@ -1,5 +1,5 @@
 // ══════════════════════════════════════════════════════════════════════
-//  IBI Multi-Platform Pricing Calculator — Google Apps Script v3.0
+//  IBI Multi-Platform Pricing Calculator — Google Apps Script v4.0
 //  India Business International · Dr. T. Sasimurugan
 //  ─────────────────────────────────────────────────────────────────────
 //  FEATURES:
@@ -9,6 +9,10 @@
 //  • Validates all incoming data — never crashes on bad input
 //  • Logs all activity for debugging
 //  • Returns proper JSON responses for the calculator to parse
+//  • NEW v4: AI product-name extraction proxy — DeepSeek, Google Gemini,
+//    OpenAI & Claude. API keys are stored HERE (Script Properties on your
+//    Google account), never in the browser. Each provider works
+//    independently; the calculator selects one (or ALL OFF).
 // ══════════════════════════════════════════════════════════════════════
 //
 //  SETUP INSTRUCTIONS:
@@ -40,6 +44,10 @@ var LOSS_RED       = '#dc2626';
 function doPost(e) {
   try {
     var data = JSON.parse(e.postData.contents);
+
+    // ── AI actions (v4) ──
+    if (data && data.action) return handleAiAction(data);
+
     if (!data || !data.headers || !data.values) {
       return jsonResponse({ status: 'error', message: 'Missing headers or values' });
     }
@@ -336,4 +344,114 @@ function testEndpoint() {
   styleDataRow(sheet, sheet.getLastRow(), sample.values.length);
   updateSummaryTab(ss);
   Logger.log('✓ Test row added to "Amazon" tab. Check your sheet.');
+}
+
+// ══════════════════════════════════════════════════════════════════════
+//  AI PRODUCT-NAME EXTRACTION PROXY (v4)
+//  Keys live in Script Properties on YOUR Google account — the web app
+//  never sees or stores them. Each provider is independent; the web app
+//  sends { action:'ai_extract', provider:'deepseek|gemini|openai|claude',
+//  text:'<OCR text>' } and gets back cleaned product data.
+// ══════════════════════════════════════════════════════════════════════
+
+var AI_PROVIDERS = {
+  deepseek: 'AI_KEY_DEEPSEEK',
+  gemini  : 'AI_KEY_GEMINI',
+  openai  : 'AI_KEY_OPENAI',
+  claude  : 'AI_KEY_CLAUDE'
+};
+
+function handleAiAction(data) {
+  try {
+    if (data.action === 'save_ai_key') return saveAiKey_(data);
+    if (data.action === 'ai_status')   return aiStatus_();
+    if (data.action === 'ai_extract')  return aiExtract_(data);
+    return jsonResponse({ status: 'error', message: 'Unknown action: ' + data.action });
+  } catch (err) {
+    return jsonResponse({ status: 'error', message: err.toString() });
+  }
+}
+
+function saveAiKey_(d) {
+  var prop = AI_PROVIDERS[d.provider];
+  if (!prop) return jsonResponse({ status: 'error', message: 'Unknown provider' });
+  var sp = PropertiesService.getScriptProperties();
+  if (!d.key) {
+    sp.deleteProperty(prop);
+    return jsonResponse({ status: 'ok', message: d.provider + ' key removed' });
+  }
+  sp.setProperty(prop, String(d.key).trim());
+  return jsonResponse({ status: 'ok', message: d.provider + ' key saved securely in Apps Script' });
+}
+
+function aiStatus_() {
+  var sp = PropertiesService.getScriptProperties(), keys = {};
+  for (var k in AI_PROVIDERS) keys[k] = !!sp.getProperty(AI_PROVIDERS[k]);
+  return jsonResponse({ status: 'ok', keys: keys });
+}
+
+function aiExtract_(d) {
+  var prop = AI_PROVIDERS[d.provider];
+  if (!prop) return jsonResponse({ status: 'error', message: 'Unknown provider' });
+  var key = PropertiesService.getScriptProperties().getProperty(prop);
+  if (!key) return jsonResponse({ status: 'error', message: 'No ' + d.provider + ' API key saved. Save it in the AI settings first.' });
+
+  var prompt =
+    'You are given OCR text captured from an Indian e-commerce seller dashboard ' +
+    '(Amazon Seller Central inventory or order page, Flipkart/Shopsy Seller Hub, ' +
+    'Meesho Supplier Panel, or ShopClues Store Manager). The OCR interleaves table ' +
+    'columns, so product names may be broken across lines and mixed with other data. ' +
+    'Extract EVERY distinct product listing. Respond with ONLY a JSON array — no ' +
+    'markdown fences, no commentary. Each element: ' +
+    '{"title":"<full clean product name, OCR errors fixed>",' +
+    '"id":"<ASIN / FSN / Product ID if visible, else empty string>",' +
+    '"price":<main selling or listing price as number, or null>,' +
+    '"fees":<total fees / charges as number, or null>,' +
+    '"settlement":<bank settlement / net payout as number, or null>}\n\nOCR TEXT:\n' +
+    String(d.text || '').slice(0, 6000);
+
+  var out;
+  if (d.provider === 'gemini')      out = callGemini_(key, prompt);
+  else if (d.provider === 'claude') out = callClaude_(key, prompt);
+  else if (d.provider === 'deepseek')
+    out = callOpenAiCompat_('https://api.deepseek.com/chat/completions', 'deepseek-chat', key, prompt);
+  else
+    out = callOpenAiCompat_('https://api.openai.com/v1/chat/completions', 'gpt-4o-mini', key, prompt);
+
+  var m = String(out).match(/\[[\s\S]*\]/);
+  if (!m) return jsonResponse({ status: 'error', message: 'AI response contained no JSON array' });
+  return jsonResponse({ status: 'ok', provider: d.provider, products: JSON.parse(m[0]) });
+}
+
+function callOpenAiCompat_(url, model, key, prompt) {
+  var res = UrlFetchApp.fetch(url, {
+    method: 'post', contentType: 'application/json', muteHttpExceptions: true,
+    headers: { Authorization: 'Bearer ' + key },
+    payload: JSON.stringify({ model: model, temperature: 0, messages: [{ role: 'user', content: prompt }] })
+  });
+  var j = JSON.parse(res.getContentText());
+  if (j.error) throw new Error(j.error.message || 'API error');
+  return j.choices[0].message.content;
+}
+
+function callGemini_(key, prompt) {
+  var res = UrlFetchApp.fetch(
+    'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + encodeURIComponent(key), {
+    method: 'post', contentType: 'application/json', muteHttpExceptions: true,
+    payload: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+  });
+  var j = JSON.parse(res.getContentText());
+  if (j.error) throw new Error(j.error.message || 'Gemini API error');
+  return j.candidates[0].content.parts[0].text;
+}
+
+function callClaude_(key, prompt) {
+  var res = UrlFetchApp.fetch('https://api.anthropic.com/v1/messages', {
+    method: 'post', contentType: 'application/json', muteHttpExceptions: true,
+    headers: { 'x-api-key': key, 'anthropic-version': '2023-06-01' },
+    payload: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 2048, messages: [{ role: 'user', content: prompt }] })
+  });
+  var j = JSON.parse(res.getContentText());
+  if (j.error) throw new Error(j.error.message || 'Claude API error');
+  return j.content[0].text;
 }

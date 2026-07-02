@@ -3,7 +3,7 @@
 Internal seller tool for **India Business International (IBI) · iINTELLIGENCEi**.
 **Live:** https://calculator.indiabusinessinternational.online/ · installable as a PWA (works offline).
 
-**Current version: v3.1** — shown in the top-left badge. Versioning: minor patches bump the decimal (v3.1), big features bump the major (v4). On each release also bump `APP_VERSION` in `index.html` and `CACHE` in `sw.js`.
+**Current version: v4.0** — shown in the top-left badge. Versioning: minor patches bump the decimal (v3.1), big features bump the major (v4). On each release also bump `APP_VERSION` in `index.html` and `CACHE` in `sw.js`.
 
 ## Platforms
 
@@ -47,6 +47,17 @@ Tips for best OCR accuracy: screenshot at 100% browser zoom or larger, PNG forma
 
 - **Copy → Paste**: copies a tab-separated header + value row for manual pasting.
 - **Send → Google Sheets**: POSTs to a Google Apps Script web app (URL configurable in the setup section). The GAS code (`IBI_Calculator_GAS.gs`, also embedded in the page) auto-creates one tab per platform plus a live 📊 Summary tab.
+
+## v4.0 — AI Product-Name Extraction (optional)
+
+OCR titles from wide dashboard tables are often mangled. The **🤖 AI Product-Name Extraction** panel fixes this using an AI model of your choice: **DeepSeek, Google Gemini, OpenAI or Claude**.
+
+- **Keys live in your Google Apps Script** (Script Properties on your Google account) — never in the browser. The web app proxies AI calls through your GAS web app.
+- **Each provider is independent** — only the currently selected provider is ever called.
+- **Master OFF**: select "🚫 All APIs OFF" to disable AI completely (pure OCR extraction, the default).
+- The key field is **paste-only** (copy/cut disabled) with no reveal eye, and clears after saving.
+- Setup: paste the latest `IBI_Calculator_GAS.gs` into Apps Script → **Deploy → Manage deployments → Edit (✏) → Version: New version → Deploy**. Then pick a provider in the AI panel, paste its API key, click **Save Key → Apps Script**.
+- When enabled, each scan shows "✨ AI cleaning product names…" after OCR; if the AI call fails, the scan falls back to OCR titles automatically.
 
 ## v3.0 additions
 

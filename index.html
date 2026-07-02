@@ -337,6 +337,10 @@ body.dark .mode-btn.active .md{color:rgba(255,255,255,.65);}
 .footer{text-align:center;margin-top:36px;padding-top:22px;border-top:1px solid var(--border);font-size:11.5px;color:var(--text3);line-height:2;}
 .footer strong{color:var(--text2);}
 
+/* ═════════════════ AI STATE PILL ═════════════════ */
+.ai-state-pill{font-size:10.5px;font-weight:700;padding:2px 9px;border-radius:20px;background:var(--surface3);color:var(--text3);border:1px solid var(--border-md);letter-spacing:.03em;}
+.ai-state-pill.on{background:var(--green-bg);color:var(--green);border-color:rgba(22,163,74,.3);}
+
 /* ═════════════════ VERSION BADGE ═════════════════ */
 .ver-badge{font-size:10px;font-weight:700;font-family:var(--mono);background:rgba(0,197,255,.12);color:#00c5ff;border:1px solid rgba(0,197,255,.35);border-radius:6px;padding:2px 7px;letter-spacing:.04em;white-space:nowrap;align-self:flex-start;}
 
@@ -728,7 +732,7 @@ input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-
       <div class="gs-status" id="gs-status"></div>
       <div class="gs-code-label">Latest Apps Script code (paste this entire block):</div>
       <pre class="gs-code" id="gs-code-block">// ══════════════════════════════════════════════════════
-//  IBI Multi-Platform Pricing Calculator — GAS v3.0
+//  IBI Multi-Platform Pricing Calculator — GAS v4.0
 //  India Business International · Dr. T. Sasimurugan
 // ══════════════════════════════════════════════════════
 // FEATURES:
@@ -737,6 +741,9 @@ input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-
 // • Platform-wise headers with branded purple styling
 // • Auto-colored Net Profit cells (green/red)
 // • Validates incoming data, logs errors
+// • v4: AI product-name extraction proxy (DeepSeek /
+//   Gemini / OpenAI / Claude) — keys stored in Script
+//   Properties on YOUR Google account, never in browser
 // ══════════════════════════════════════════════════════
 
 var SUMMARY_TAB  = '📊 Summary';
@@ -749,6 +756,7 @@ var LOSS_RED     = '#dc2626';
 function doPost(e) {
   try {
     var data = JSON.parse(e.postData.contents);
+    if (data &amp;&amp; data.action) return handleAiAction(data);
     if (!data || !data.headers || !data.values) {
       return jsonResp({ status: 'error', message: 'Missing data' });
     }
@@ -887,11 +895,148 @@ function findCol(hdr, key) {
 
 function refreshSummaryNow() {
   updateSummaryTab(SpreadsheetApp.getActiveSpreadsheet());
+}
+
+// ══════════ AI EXTRACTION PROXY (v4) ══════════
+// Keys live in Script Properties on YOUR Google
+// account — the browser never sees them.
+var AI_PROVIDERS = {
+  deepseek: 'AI_KEY_DEEPSEEK',
+  gemini  : 'AI_KEY_GEMINI',
+  openai  : 'AI_KEY_OPENAI',
+  claude  : 'AI_KEY_CLAUDE'
+};
+
+function handleAiAction(data) {
+  try {
+    if (data.action === 'save_ai_key') return saveAiKey_(data);
+    if (data.action === 'ai_status')   return aiStatus_();
+    if (data.action === 'ai_extract')  return aiExtract_(data);
+    return jsonResp({ status:'error', message:'Unknown action' });
+  } catch (err) {
+    return jsonResp({ status:'error', message: err.toString() });
+  }
+}
+
+function saveAiKey_(d) {
+  var prop = AI_PROVIDERS[d.provider];
+  if (!prop) return jsonResp({ status:'error', message:'Unknown provider' });
+  var sp = PropertiesService.getScriptProperties();
+  if (!d.key) { sp.deleteProperty(prop); return jsonResp({ status:'ok', message:d.provider + ' key removed' }); }
+  sp.setProperty(prop, String(d.key).trim());
+  return jsonResp({ status:'ok', message:d.provider + ' key saved securely in Apps Script' });
+}
+
+function aiStatus_() {
+  var sp = PropertiesService.getScriptProperties(), keys = {};
+  for (var k in AI_PROVIDERS) keys[k] = !!sp.getProperty(AI_PROVIDERS[k]);
+  return jsonResp({ status:'ok', keys: keys });
+}
+
+function aiExtract_(d) {
+  var prop = AI_PROVIDERS[d.provider];
+  if (!prop) return jsonResp({ status:'error', message:'Unknown provider' });
+  var key = PropertiesService.getScriptProperties().getProperty(prop);
+  if (!key) return jsonResp({ status:'error', message:'No ' + d.provider + ' API key saved. Save it in the AI settings first.' });
+  var prompt = 'You are given OCR text captured from an Indian e-commerce seller dashboard ' +
+    '(Amazon Seller Central inventory or order page, Flipkart/Shopsy Seller Hub, Meesho ' +
+    'Supplier Panel, or ShopClues Store Manager). The OCR interleaves table columns, so ' +
+    'product names may be broken across lines and mixed with other data. Extract EVERY ' +
+    'distinct product listing. Respond with ONLY a JSON array - no markdown fences, no ' +
+    'commentary. Each element: {"title":"full clean product name, OCR errors fixed",' +
+    '"id":"ASIN / FSN / Product ID if visible, else empty string",' +
+    '"price": main selling or listing price as number or null,' +
+    '"fees": total fees / charges as number or null,' +
+    '"settlement": bank settlement / net payout as number or null}' +
+    '\n\nOCR TEXT:\n' + String(d.text || '').slice(0, 6000);
+  var out;
+  if (d.provider === 'gemini')      out = callGemini_(key, prompt);
+  else if (d.provider === 'claude') out = callClaude_(key, prompt);
+  else if (d.provider === 'deepseek')
+    out = callOpenAiCompat_('https://api.deepseek.com/chat/completions', 'deepseek-chat', key, prompt);
+  else
+    out = callOpenAiCompat_('https://api.openai.com/v1/chat/completions', 'gpt-4o-mini', key, prompt);
+  var m = String(out).match(/\[[\s\S]*\]/);
+  if (!m) return jsonResp({ status:'error', message:'AI response contained no JSON array' });
+  return jsonResp({ status:'ok', provider:d.provider, products: JSON.parse(m[0]) });
+}
+
+function callOpenAiCompat_(url, model, key, prompt) {
+  var res = UrlFetchApp.fetch(url, {
+    method:'post', contentType:'application/json', muteHttpExceptions:true,
+    headers:{ Authorization:'Bearer ' + key },
+    payload: JSON.stringify({ model:model, temperature:0, messages:[{ role:'user', content:prompt }] })
+  });
+  var j = JSON.parse(res.getContentText());
+  if (j.error) throw new Error(j.error.message || 'API error');
+  return j.choices[0].message.content;
+}
+
+function callGemini_(key, prompt) {
+  var res = UrlFetchApp.fetch(
+    'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + encodeURIComponent(key), {
+    method:'post', contentType:'application/json', muteHttpExceptions:true,
+    payload: JSON.stringify({ contents:[{ parts:[{ text:prompt }] }] })
+  });
+  var j = JSON.parse(res.getContentText());
+  if (j.error) throw new Error(j.error.message || 'Gemini API error');
+  return j.candidates[0].content.parts[0].text;
+}
+
+function callClaude_(key, prompt) {
+  var res = UrlFetchApp.fetch('https://api.anthropic.com/v1/messages', {
+    method:'post', contentType:'application/json', muteHttpExceptions:true,
+    headers:{ 'x-api-key': key, 'anthropic-version':'2023-06-01' },
+    payload: JSON.stringify({ model:'claude-haiku-4-5-20251001', max_tokens:2048, messages:[{ role:'user', content:prompt }] })
+  });
+  var j = JSON.parse(res.getContentText());
+  if (j.error) throw new Error(j.error.message || 'Claude API error');
+  return j.content[0].text;
 }</pre>
       <button class="gs-copy-code-btn" onclick="copyAppScript()">
         <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
         Copy Apps Script Code
       </button>
+    </div>
+  </div>
+
+  <!-- ── AI EXTRACTION SETUP ── -->
+  <div class="gs-setup-wrap">
+    <div class="gs-setup-header" onclick="toggleAiSetup()">
+      <div class="gs-setup-title">
+        🤖 AI Product-Name Extraction
+        <span class="ai-state-pill" id="ai-state-pill">OFF</span>
+      </div>
+      <span class="gs-setup-toggle" id="ai-toggle-icon">▼ Configure</span>
+    </div>
+    <div class="gs-setup-body" id="ai-setup-body" style="display:none">
+      <div class="hint" style="margin:0;font-size:12px;">
+        Cleans up OCR-mangled product names using an AI model of your choice, routed through your Google Apps Script.
+        <strong>API keys are stored inside your Apps Script on your Google account (Script Properties) — never in this browser.</strong>
+        Only the selected provider is ever called — each works independently. Select <strong>All APIs OFF</strong> to disable AI completely (OCR-only extraction).
+      </div>
+      <div class="field" style="margin:0">
+        <label>Active AI provider</label>
+        <select id="ai-provider" class="solo" onchange="setAiProvider(this.value)">
+          <option value="off" selected>🚫 All APIs OFF (OCR only)</option>
+          <option value="deepseek">DeepSeek</option>
+          <option value="gemini">Google Gemini</option>
+          <option value="openai">OpenAI</option>
+          <option value="claude">Claude (Anthropic)</option>
+        </select>
+      </div>
+      <div id="ai-key-row" style="display:none">
+        <div class="field" style="margin:0 0 8px">
+          <label id="ai-key-label">API key</label>
+          <div class="gs-url-row">
+            <input type="password" id="ai-key-input" placeholder="Paste API key here — paste only, copying is disabled" autocomplete="off" spellcheck="false">
+            <button class="gs-save-btn" onclick="saveAiKeyToGas()">Save Key → Apps Script</button>
+            <button class="btn-mini danger" style="height:40px" onclick="removeAiKeyFromGas()">Remove Key</button>
+          </div>
+          <div class="hint">Paste-only field (copy/cut disabled, key never displayed). Requires the latest v4 Apps Script code deployed as a new version.</div>
+        </div>
+        <div class="gs-status" id="ai-status"></div>
+      </div>
     </div>
   </div>
 
@@ -969,7 +1114,7 @@ function refreshSummaryNow() {
 // ═════════════════ VERSION ═════════════════
 // Major = big features (v3 → v4) · minor = small patches (v3.0 → v3.1).
 // Keep in sync with CACHE in sw.js on every release.
-const APP_VERSION = 'v3.1';
+const APP_VERSION = 'v4.0';
 
 // ═════════════════ PLATFORM CONFIG ═════════════════
 const PLATFORMS = {
@@ -2072,11 +2217,16 @@ async function scanImage(file) {
     const { data } = await Tesseract.recognize(canvas, 'eng', {
       logger: m => { if (m.status === 'recognizing text') fill.style.width = Math.round(m.progress * 100) + '%'; }
     });
-    const prods = parseScreenshot(data.text || '');
+    let prods = parseScreenshot(data.text || '');
     if (!prods.length) {
       state.innerHTML = '⚠ No listing data recognised — try a sharper / larger screenshot (Amazon Manage Inventory row, or Flipkart/Shopsy Listing Details panel).';
       fill.parentElement.remove();
       return;
+    }
+    if (getAiProvider() !== 'off') {
+      state.textContent = '✨ AI cleaning product names (' + AI_LABELS[getAiProvider()] + ')…';
+      try { prods = await aiEnhance(data.text || '', prods); }
+      catch (e) { showToast('⚠ AI enhance failed: ' + (e.message || e) + ' — using OCR titles', 'error'); }
     }
     renderScanProducts(box, prods);
     persistScan(canvas, prods);
@@ -2250,6 +2400,97 @@ function clearScans() {
   });
 })();
 
+// ═════════════════ AI PRODUCT-NAME EXTRACTION ═════════════════
+// Proxied through the user's Google Apps Script — keys live in Script
+// Properties there, never in this browser. Only the selected provider is
+// called; 'off' disables all AI (OCR-only titles).
+const AI_PROVIDER_KEY = 'ibi_ai_provider';
+const AI_LABELS = { off: 'OFF', deepseek: 'DeepSeek', gemini: 'Google Gemini', openai: 'OpenAI', claude: 'Claude' };
+
+function getAiProvider() {
+  const v = localStorage.getItem(AI_PROVIDER_KEY) || 'off';
+  return AI_LABELS[v] ? v : 'off';
+}
+function setAiProvider(v) {
+  localStorage.setItem(AI_PROVIDER_KEY, AI_LABELS[v] ? v : 'off');
+  renderAiState();
+  showToast(v === 'off'
+    ? '🚫 All AI APIs OFF — OCR-only extraction'
+    : '🤖 AI extraction via ' + AI_LABELS[v] + ' — make sure its key is saved');
+}
+function renderAiState() {
+  const v = getAiProvider();
+  if (el('ai-provider')) el('ai-provider').value = v;
+  const pill = el('ai-state-pill');
+  if (pill) { pill.textContent = v === 'off' ? 'OFF' : AI_LABELS[v]; pill.className = 'ai-state-pill' + (v === 'off' ? '' : ' on'); }
+  show('ai-key-row', v !== 'off');
+  if (v !== 'off' && el('ai-key-label')) el('ai-key-label').textContent = AI_LABELS[v] + ' API key';
+}
+function toggleAiSetup() {
+  const body = el('ai-setup-body'), icon = el('ai-toggle-icon');
+  const open = body.style.display === 'none';
+  body.style.display = open ? '' : 'none';
+  icon.textContent = open ? '▲ Collapse' : '▼ Configure';
+}
+
+// text/plain keeps this a CORS "simple request" so the GAS response is readable
+async function gasCall(payload) {
+  const url = localStorage.getItem(GS_URL_KEY) || GS_URL_DEFAULT;
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(payload),
+    redirect: 'follow'
+  });
+  return await res.json();
+}
+
+async function saveAiKeyToGas() {
+  const provider = getAiProvider();
+  if (provider === 'off') { showToast('⚠ Select a provider first', 'error'); return; }
+  const key = el('ai-key-input').value.trim();
+  if (!key) { showToast('⚠ Paste the API key first', 'error'); return; }
+  setAiStatus('', 'Saving key to your Apps Script…');
+  try {
+    const r = await gasCall({ action: 'save_ai_key', provider, key });
+    if (r.status === 'ok') {
+      el('ai-key-input').value = '';
+      setAiStatus('ok', '✓ ' + r.message);
+      showToast('✓ Key saved securely in Google Apps Script', 'success');
+    } else setAiStatus('err', '⚠ ' + (r.message || 'Save failed'));
+  } catch (e) {
+    setAiStatus('err', '⚠ Could not reach Apps Script — deploy the latest v4 GAS code as a NEW VERSION, then try again.');
+  }
+}
+async function removeAiKeyFromGas() {
+  const provider = getAiProvider();
+  if (provider === 'off') { showToast('⚠ Select a provider first', 'error'); return; }
+  try {
+    const r = await gasCall({ action: 'save_ai_key', provider, key: '' });
+    setAiStatus(r.status === 'ok' ? 'ok' : 'err', (r.status === 'ok' ? '✓ ' : '⚠ ') + (r.message || ''));
+  } catch (e) { setAiStatus('err', '⚠ Could not reach Apps Script'); }
+}
+function setAiStatus(type, msg) { const s = el('ai-status'); s.textContent = msg; s.className = 'gs-status ' + type; }
+
+async function aiEnhance(rawText, prods) {
+  const provider = getAiProvider();
+  if (provider === 'off' || !prods.length) return prods;
+  const r = await gasCall({ action: 'ai_extract', provider, text: rawText });
+  if (r.status !== 'ok' || !Array.isArray(r.products)) throw new Error(r.message || 'AI extraction failed');
+  prods.forEach((p, i) => {
+    const pid = String(p.asin || p.fsn || p.productId || '').toUpperCase();
+    const ai = r.products.find(a => a && a.id && pid && String(a.id).toUpperCase() === pid) || r.products[i];
+    if (ai && ai.title && String(ai.title).trim().length > 5) p.title = String(ai.title).trim().slice(0, 200);
+  });
+  return prods;
+}
+
+// Paste-only key field: block copy / cut / drag (paste stays allowed)
+(function () {
+  const k = el('ai-key-input');
+  if (k) ['copy', 'cut', 'dragstart'].forEach(ev => k.addEventListener(ev, e => e.preventDefault()));
+})();
+
 // ═════════════════ SETTINGS MENU ═════════════════
 function toggleSettings(e) {
   e.stopPropagation();
@@ -2380,6 +2621,7 @@ setMode(1);
 renderHistory();
 renderEntryDt();
 restoreScansFromStore();
+renderAiState();
 </script>
 </body>
 </html>
