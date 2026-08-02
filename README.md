@@ -40,9 +40,23 @@ publish unless Drive returns a real xlsx with 200–600 uniquely-named products,
 HSN codes keep their leading zeros (34 of them start with `0`), and the app
 ignores any payload with fewer than 50 products.
 
-⚠ The same 268 names are embedded in six other IBI apps (Marketplace, Listing
-Generator, Order Processing, Stock, Returns, Dimensions). They are **not** on
-this feed yet — they still need a manual sync when the master changes.
+### `catalogue.json` is a shared feed — six other apps read it too
+
+GitHub Pages serves it with `Access-Control-Allow-Origin: *`, so the other IBI
+apps that embed the same 268 names fetch it cross-origin from here and are now
+self-syncing as well: **Marketplace, Listing Generator, Order Processing, Stock
+Availability, Returns Logger, Dimensions Logger**. Each keeps its own embedded
+list as the offline fallback and the floor (a payload under 50 products is
+ignored), and each still allows free-typed names.
+
+Two consumers differ on purpose: the **Marketplace** fetches only from
+`_ibiRefreshAINameList()`, which is seller-side, so a shopper browsing the
+storefront never pays for the request — and a seller's own uploaded 📋 Catalogue
+list still wins over the feed. Everywhere else the fetch is deferred 400 ms after
+load so it never competes with first paint.
+
+**Keep this file's URL stable.** Renaming or moving it silently drops all six
+apps back to their embedded snapshots — they fail quietly by design.
 
 ## Modes
 
