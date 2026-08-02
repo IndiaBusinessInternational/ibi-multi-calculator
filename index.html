@@ -1168,7 +1168,7 @@ function callClaude_(key, prompt) {
 // ═════════════════ VERSION ═════════════════
 // Major = big features (v3 → v4) · minor = small patches (v3.0 → v3.1).
 // Keep in sync with CACHE in sw.js on every release.
-const APP_VERSION = 'v4.8';
+const APP_VERSION = 'v4.9';
 
 // ═════════════════ IBI PRODUCT CATALOGUE ═════════════════
 // The 268-SKU product master, synced 2 Aug 2026 from
@@ -1451,6 +1451,45 @@ const IBI_PRODUCTS = [
 
 const IBI_PRODUCT_MAP = new Map(IBI_PRODUCTS.map(p => [p.n.toLowerCase(), p]));
 
+// ── Live refresh ──────────────────────────────────────────────────────────
+// catalogue.json is rebuilt straight from the Drive master by
+// .github/workflows/sync-catalogue.yml, so a name edited in the spreadsheet
+// reaches this page on its own — no code change, no redeploy. The array above
+// is the offline fallback and the floor if the feed is ever unreachable.
+let _catStamp = '';
+
+function applyCatalogue(list, stamp) {
+  if (!Array.isArray(list) || list.length < 50) return false;   // never shrink to a stub
+  const clean = list.filter(p => p && p.n).map(p => ({
+    n: String(p.n), h: String(p.h || ''), g: Number(p.g) || 0, c: String(p.c || '')
+  }));
+  if (!clean.length) return false;
+  IBI_PRODUCTS.length = 0;
+  IBI_PRODUCT_MAP.clear();
+  clean.forEach(p => { IBI_PRODUCTS.push(p); IBI_PRODUCT_MAP.set(p.n.toLowerCase(), p); });
+  _catStamp = stamp || '';
+  buildProductDatalist();
+  syncProductMeta(false);
+  return true;
+}
+
+function refreshCatalogue() {
+  // Last good copy first — instant, and it is what an offline PWA launch gets.
+  try {
+    const cached = JSON.parse(localStorage.getItem('ibi_catalogue') || 'null');
+    if (cached && cached.products) applyCatalogue(cached.products, cached.generated);
+  } catch (err) { /* corrupt cache — the embedded list stands */ }
+
+  fetch('catalogue.json?t=' + Date.now(), { cache: 'no-store' })
+    .then(res => res.ok ? res.json() : Promise.reject(res.status))
+    .then(data => {
+      if (applyCatalogue(data.products, data.generated)) {
+        try { localStorage.setItem('ibi_catalogue', JSON.stringify(data)); } catch (err) {}
+      }
+    })
+    .catch(() => { /* offline, or opened as a file:// — keep what we have */ });
+}
+
 // Fills the <datalist> behind the Product name box. Typing is never restricted
 // to the list — any name can still be entered by hand.
 function buildProductDatalist() {
@@ -1462,6 +1501,18 @@ function buildProductDatalist() {
   dl.appendChild(frag);
 }
 
+// " · synced 2 Aug 2026, 11:36 AM" — empty while the embedded list is in use.
+function catStampText() {
+  if (!_catStamp) return '';
+  const d = new Date(_catStamp);
+  if (isNaN(d)) return '';
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  let h = d.getHours(); const ap = h >= 12 ? 'PM' : 'AM';
+  h = h % 12; if (h === 0) h = 12;
+  return ' · synced ' + d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear() +
+         ', ' + h + ':' + String(d.getMinutes()).padStart(2, '0') + ' ' + ap;
+}
+
 // Shows what the typed name matched. applyGst = true only on an explicit pick
 // (change event), so a hand-picked GST rate is never overwritten while typing.
 let _gstAutoFor = '';
@@ -1471,7 +1522,7 @@ function syncProductMeta(applyGst) {
   const raw = inp.value.trim();
   if (!raw) {
     hint.className = 'hint';
-    hint.textContent = 'Type to search the ' + IBI_PRODUCTS.length + '-product IBI master — picking one fills in HSN & GST. Any other name can be typed freely.';
+    hint.textContent = 'Type to search the ' + IBI_PRODUCTS.length + '-product IBI master — picking one fills in HSN & GST. Any other name can be typed freely.' + catStampText();
     _gstAutoFor = '';
     return;
   }
@@ -3229,6 +3280,7 @@ document.addEventListener('keydown', (e) => {
 el('ver-badge').textContent = APP_VERSION;
 el('settings-ver').textContent = 'IBI Multi-Calculator · ' + APP_VERSION;
 buildProductDatalist();
+refreshCatalogue();
 setPlatform('amazon');
 setMode(1);
 renderHistory();

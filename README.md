@@ -3,7 +3,7 @@
 Internal seller tool for **India Business International (IBI) · iINTELLIGENCEi**.
 **Live:** https://calculator.indiabusinessinternational.online/ · installable as a PWA (works offline).
 
-**Current version: v4.8** — shown in the top-left badge. (v4.8: the Product name field is now a searchable picker backed by the 268-SKU IBI product master — picking a catalogue product shows its HSN/category and sets the GST rate automatically; free text still works. v4.6: brand accent colour changed to #7F00FF violet across UI, favicon, PWA icons and OG banner.) Versioning: minor patches bump the decimal (v3.1), big features bump the major (v4). On each release also bump `APP_VERSION` in `index.html` and `CACHE` in `sw.js`.
+**Current version: v4.9** — shown in the top-left badge. (v4.9: the catalogue now refreshes itself from the Google master — see below. v4.8: the Product name field became a searchable picker backed by the 268-SKU IBI product master — picking a catalogue product shows its HSN/category and sets the GST rate automatically; free text still works. v4.6: brand accent colour changed to #7F00FF violet across UI, favicon, PWA icons and OG banner.) Versioning: minor patches bump the decimal (v3.1), big features bump the major (v4). On each release also bump `APP_VERSION` in `index.html` and `CACHE` in `sw.js`.
 
 ## Platforms
 
@@ -12,6 +12,37 @@ Internal seller tool for **India Business International (IBI) · iINTELLIGENCEi*
 | A | Amazon, Amazon Bazaar, IBI Website | Costs + platform fee → selling price (fee entered in ₹ from Seller Central) |
 | B | Flipkart, Shopsy, Meesho, ShopClues | Settlement-based — platform fee is opaque, works from bank settlement |
 | C | Offline | Simple cost + GST + margin |
+
+## Product catalogue — kept in step with the Google master
+
+The **Product name** box is a searchable picker over the full IBI product master
+(268 SKUs). Type any fragment to filter it; pick a product and the field below
+shows its HSN code and category and the **GST rate is set automatically**. Names
+outside the master are still accepted — they are just flagged as custom, and
+typing never moves the GST rate on its own.
+
+The list keeps itself current:
+
+| Layer | File | Role |
+|---|---|---|
+| Master | `IBI_Complete_Product_Master_HSN_GST.xlsx` in Google Drive (`1UmQZSCrJcmMeMKHh41B-Xl2jfx25bTSr`) | The only place to edit product names. Link-shared, so no credentials are involved. |
+| Sync | [`tools/build_catalogue.py`](tools/build_catalogue.py) + [`.github/workflows/sync-catalogue.yml`](.github/workflows/sync-catalogue.yml) | Downloads the workbook on a schedule, rebuilds `catalogue.json`, commits **only** when a product actually changed. |
+| Feed | `catalogue.json` | Served next to the app; fetched on every page load, cached in `localStorage`, network-first in the service worker. |
+| Fallback | `IBI_PRODUCTS` in `index.html` | The list as of the last release — used offline and if the feed is ever unreachable. |
+
+So **editing the spreadsheet is enough** — no code change, no redeploy. The lag is
+just the workflow schedule (`*/5`, GitHub's shortest; a busy queue can stretch
+it). To publish an edit at once, run **Actions → Sync product catalogue → Run
+workflow**. The sync timestamp is shown under the empty Product name box.
+
+Guard rails, so a bad fetch can never empty the picker: the script refuses to
+publish unless Drive returns a real xlsx with 200–600 uniquely-named products,
+HSN codes keep their leading zeros (34 of them start with `0`), and the app
+ignores any payload with fewer than 50 products.
+
+⚠ The same 268 names are embedded in six other IBI apps (Marketplace, Listing
+Generator, Order Processing, Stock, Returns, Dimensions). They are **not** on
+this feed yet — they still need a manual sync when the master changes.
 
 ## Modes
 

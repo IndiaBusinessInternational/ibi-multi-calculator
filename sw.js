@@ -1,7 +1,7 @@
 // IBI Multi-Calculator — service worker
 // Network-first for the page itself (so updates arrive immediately),
 // cache-first for static assets. Bump CACHE on each release.
-const CACHE = 'ibi-calc-v4.8';
+const CACHE = 'ibi-calc-v4.9';
 const ASSETS = [
   './',
   './index.html',
@@ -35,6 +35,18 @@ self.addEventListener('fetch', e => {
       fetch(req)
         .then(res => { const copy = res.clone(); caches.open(CACHE).then(c => c.put('./index.html', copy)); return res; })
         .catch(() => caches.match('./index.html'))
+    );
+    return;
+  }
+
+  // Product catalogue feed: network first, so an edit in the Google master
+  // shows up on the next load. Cached under a fixed key (the page requests it
+  // with a ?t= cache-buster) so an offline launch still gets the last good copy.
+  if (url.origin === location.origin && url.pathname.endsWith('/catalogue.json')) {
+    e.respondWith(
+      fetch(req)
+        .then(res => { const copy = res.clone(); caches.open(CACHE).then(c => c.put('./catalogue.json', copy)); return res; })
+        .catch(() => caches.match('./catalogue.json'))
     );
     return;
   }
