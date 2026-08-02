@@ -42,6 +42,9 @@ jobs:
       - name: Rebuild catalogue.json from the Drive master
         run: python tools/build_catalogue.py
 
+      - name: TEMP push-permission probe
+        run: git push --dry-run origin HEAD:main && echo "PROBE-PUSH-OK" || echo "PROBE-PUSH-DENIED"
+
       - name: Commit and push when it changed
         run: |
           if git diff --quiet -- catalogue.json; then
