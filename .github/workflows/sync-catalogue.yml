@@ -42,9 +42,8 @@ jobs:
       - name: Rebuild catalogue.json from the Drive master
         run: python tools/build_catalogue.py
 
-      - name: TEMP push-permission probe
-        run: git push --dry-run origin HEAD:main && echo "PROBE-PUSH-OK" || echo "PROBE-PUSH-DENIED"
-
+      # The repo default for GITHUB_TOKEN is read-only; the permissions block
+      # above overrides it for this workflow (verified with a --dry-run push).
       - name: Commit and push when it changed
         run: |
           if git diff --quiet -- catalogue.json; then
