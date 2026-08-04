@@ -435,7 +435,13 @@ function aiExtract_(d) {
   if (d.provider === 'gemini')      out = callGemini_(key, prompt);
   else if (d.provider === 'claude') out = callClaude_(key, prompt);
   else if (d.provider === 'deepseek')
-    out = callOpenAiCompat_('https://api.deepseek.com/chat/completions', 'deepseek-chat', key, prompt);
+    // 'deepseek-chat' was retired on 2026-07-24 — v4-flash replaces it.
+    // thinking:disabled because v4 defaults to THINKING at high effort, and
+    // this call only lifts already-OCR'd fields into a JSON array — there is
+    // nothing to reason about, and the reasoning pass runs before the first
+    // character of the answer. (Reasoning tokens also share the output budget.)
+    out = callOpenAiCompat_('https://api.deepseek.com/chat/completions', 'deepseek-v4-flash', key, prompt,
+                            { thinking: { type: 'disabled' } });
   else
     out = callOpenAiCompat_('https://api.openai.com/v1/chat/completions', 'gpt-4o-mini', key, prompt);
 
@@ -444,11 +450,15 @@ function aiExtract_(d) {
   return jsonResponse({ status: 'ok', provider: d.provider, products: JSON.parse(m[0]) });
 }
 
-function callOpenAiCompat_(url, model, key, prompt) {
+// extra: optional provider-specific body fields (DeepSeek passes thinking here).
+// Kept as a parameter so the shared OpenAI path is not sent a field it would reject.
+function callOpenAiCompat_(url, model, key, prompt, extra) {
+  var body = { model: model, temperature: 0, messages: [{ role: 'user', content: prompt }] };
+  if (extra) { for (var k in extra) body[k] = extra[k]; }
   var res = UrlFetchApp.fetch(url, {
     method: 'post', contentType: 'application/json', muteHttpExceptions: true,
     headers: { Authorization: 'Bearer ' + key },
-    payload: JSON.stringify({ model: model, temperature: 0, messages: [{ role: 'user', content: prompt }] })
+    payload: JSON.stringify(body)
   });
   var j = JSON.parse(res.getContentText());
   if (j.error) throw new Error(j.error.message || 'API error');

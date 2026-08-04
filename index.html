@@ -438,7 +438,7 @@ input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-
 <!-- ═════════════════ HEADER (slim sticky toolbar) ═════════════════ -->
 <header class="header">
   <div class="header-left">
-    <span class="ver-badge" id="ver-badge" title="IBI Multi-Calculator version">v3.0</span>
+    <span class="ver-badge" id="ver-badge" title="IBI Multi-Calculator version">v3.1</span>
     <div>
       <div class="header-brand">IBI Multi-Platform Pricing Calculator</div>
       <div class="header-sub">iINTELLIGENCEi · Internal Seller Tool</div>
@@ -461,7 +461,7 @@ input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-
         <button class="settings-item" onclick="el('restore-file').click()"><span class="si-icon">📥</span> Restore from Backup</button>
         <div class="settings-div"></div>
         <button class="settings-item" onclick="showKbdHelp()"><span class="si-icon">⌨</span> Keyboard Shortcuts</button>
-        <div class="settings-note" id="settings-ver">IBI Multi-Calculator · v3.0</div>
+        <div class="settings-note" id="settings-ver">IBI Multi-Calculator · v3.1</div>
       </div>
     </div>
     <input type="file" id="restore-file" accept="application/json,.json" style="display:none" onchange="restoreBackup(this.files[0]); this.value='';">
@@ -1004,7 +1004,13 @@ function aiExtract_(d) {
   if (d.provider === 'gemini')      out = callGemini_(key, prompt);
   else if (d.provider === 'claude') out = callClaude_(key, prompt);
   else if (d.provider === 'deepseek')
-    out = callOpenAiCompat_('https://api.deepseek.com/chat/completions', 'deepseek-chat', key, prompt);
+    // 'deepseek-chat' was retired on 2026-07-24 — v4-flash replaces it.
+    // thinking:disabled because v4 defaults to THINKING at high effort, and
+    // this call only lifts already-OCR'd fields into a JSON array — there is
+    // nothing to reason about, and the reasoning pass runs before the first
+    // character of the answer. (Reasoning tokens also share the output budget.)
+    out = callOpenAiCompat_('https://api.deepseek.com/chat/completions', 'deepseek-v4-flash', key, prompt,
+                            { thinking: { type: 'disabled' } });
   else
     out = callOpenAiCompat_('https://api.openai.com/v1/chat/completions', 'gpt-4o-mini', key, prompt);
   var m = String(out).match(/\[[\s\S]*\]/);
@@ -1012,11 +1018,15 @@ function aiExtract_(d) {
   return jsonResp({ status:'ok', provider:d.provider, products: JSON.parse(m[0]) });
 }
 
-function callOpenAiCompat_(url, model, key, prompt) {
+// extra: optional provider-specific body fields (DeepSeek passes thinking here).
+// Kept as a parameter so the shared OpenAI path is not sent a field it would reject.
+function callOpenAiCompat_(url, model, key, prompt, extra) {
+  var body = { model:model, temperature:0, messages:[{ role:'user', content:prompt }] };
+  if (extra) { for (var k in extra) body[k] = extra[k]; }
   var res = UrlFetchApp.fetch(url, {
     method:'post', contentType:'application/json', muteHttpExceptions:true,
     headers:{ Authorization:'Bearer ' + key },
-    payload: JSON.stringify({ model:model, temperature:0, messages:[{ role:'user', content:prompt }] })
+    payload: JSON.stringify(body)
   });
   var j = JSON.parse(res.getContentText());
   if (j.error) throw new Error(j.error.message || 'API error');
