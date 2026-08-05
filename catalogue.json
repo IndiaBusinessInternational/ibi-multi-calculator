@@ -1,5 +1,5 @@
 {
- "generated": "2026-08-05T15:33:41Z",
+ "generated": "2026-08-05T17:05:55Z",
  "source": "Product Names, HSN Code, GST, Prod & Pack Dimensions 5 Aug 2026.xlsx",
  "fileId": "18_gEDm7vNZt1-skIZqxu-FyDPxGUO9Yw",
  "count": 268,
@@ -3525,7 +3525,7 @@
    "pwt": 517
   },
   {
-   "n": "Stainless Steel Grater, 28.5x11 cm, 145 gm each, 2 Qty",
+   "n": "Stainless Steel Grater, 28.5x11 x1.5cm, 151 gm each, 2 Qty",
    "h": "73239390",
    "g": 5,
    "c": "STAINLESS STEEL",
@@ -3543,7 +3543,7 @@
    "pwt": 300
   },
   {
-   "n": "Stainless Steel Grater, 28.5x11 cm, 145 gm,1 Qty",
+   "n": "Stainless Steel Grater, 28.5x11x1.5cm, 151 gm,1 Qty",
    "h": "73239390",
    "g": 5,
    "c": "STAINLESS STEEL",
@@ -3597,25 +3597,7 @@
    "pwt": 182
   },
   {
-   "n": "Stainless Steel Manual Lemon Squeezer, 20 x 6.5 x 3.3 cm, 100 gm each, 2 Qty",
-   "h": "73239390",
-   "g": 5,
-   "c": "STAINLESS STEEL",
-   "d": [
-    20,
-    6.5,
-    3
-   ],
-   "wt": 102,
-   "pd": [
-    21,
-    7,
-    6.5
-   ],
-   "pwt": 208
-  },
-  {
-   "n": "Stainless Steel Manual Lemon Squeezer, 20 x 6.5 x 3.3 cm, 100 gm, 1 Qty",
+   "n": "Stainless Steel Manual Lemon Squeezer, 20 x 6.5 x 3 cm, 102 gm, 1 Qty",
    "h": "73239390",
    "g": 5,
    "c": "STAINLESS STEEL",
@@ -3631,6 +3613,24 @@
     3.5
    ],
    "pwt": 130
+  },
+  {
+   "n": "Stainless Steel Manual Lemon Squeezer, 20 x 6.5 x 3cm, 102 gm each, 2 Qty",
+   "h": "73239390",
+   "g": 5,
+   "c": "STAINLESS STEEL",
+   "d": [
+    20,
+    6.5,
+    3
+   ],
+   "wt": 102,
+   "pd": [
+    21,
+    7,
+    6.5
+   ],
+   "pwt": 208
   },
   {
    "n": "Stainless Steel Mug with Handle, 500 ml, 13x9x9.5 cm, 115 gm, 1 Qty",
@@ -3651,7 +3651,7 @@
    "pwt": 221
   },
   {
-   "n": "Stainless Steel Non-Stick Fry Pan, BIS, 44x26.5x4 cm, 550 gm, 1 Qty",
+   "n": "Stainless Steel Non-Stick Fry Pan, BIS, 44x26.5x4 cm, 552 gm, 1 Qty",
    "h": "73239390",
    "g": 5,
    "c": "STAINLESS STEEL",
