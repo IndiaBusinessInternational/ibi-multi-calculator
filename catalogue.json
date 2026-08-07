@@ -1,5 +1,5 @@
 {
- "generated": "2026-08-07T07:47:35Z",
+ "generated": "2026-08-07T14:29:53Z",
  "source": "Product Names, HSN Code, GST, Prod & Pack Dimensions 5 Aug 2026.xlsx",
  "fileId": "18_gEDm7vNZt1-skIZqxu-FyDPxGUO9Yw",
  "count": 268,
@@ -3173,6 +3173,24 @@
    "pwt": null
   },
   {
+   "n": "Rat Trap - Iron, Spring Type, 39x15.5x12.5 cm, 445 gm each, 2 Qty",
+   "h": "73269090",
+   "g": 18,
+   "c": "IRON/STEEL TOOLS",
+   "d": [
+    39,
+    15.5,
+    12.5
+   ],
+   "wt": 491,
+   "pd": [
+    42,
+    34,
+    16.5
+   ],
+   "pwt": 1250
+  },
+  {
    "n": "Rat Trap - Iron, Spring Type, 39x15.5x12.5 cm, 491 gm, 1 Qty",
    "h": "73269090",
    "g": 18,
@@ -3189,24 +3207,6 @@
     16.5
    ],
    "pwt": 938
-  },
-  {
-   "n": "Rat Trap - Iron, Spring Type, 39x16x12 cm, 445 gm each, 2 Qty",
-   "h": "73269090",
-   "g": 18,
-   "c": "IRON/STEEL TOOLS",
-   "d": [
-    39,
-    15.5,
-    12.5
-   ],
-   "wt": 491,
-   "pd": [
-    42,
-    34,
-    16.5
-   ],
-   "pwt": 1250
   },
   {
    "n": "Rat Trap - Iron, SpringLess Type, 35x16.5x15 cm, 560gm, 1 Qty",
