@@ -1,5 +1,5 @@
 {
- "generated": "2026-08-06T15:32:19Z",
+ "generated": "2026-08-07T07:47:35Z",
  "source": "Product Names, HSN Code, GST, Prod & Pack Dimensions 5 Aug 2026.xlsx",
  "fileId": "18_gEDm7vNZt1-skIZqxu-FyDPxGUO9Yw",
  "count": 268,
@@ -3173,6 +3173,24 @@
    "pwt": null
   },
   {
+   "n": "Rat Trap - Iron, Spring Type, 39x15.5x12.5 cm, 491 gm, 1 Qty",
+   "h": "73269090",
+   "g": 18,
+   "c": "IRON/STEEL TOOLS",
+   "d": [
+    39,
+    15.5,
+    12.5
+   ],
+   "wt": 491,
+   "pd": [
+    42,
+    18.5,
+    16.5
+   ],
+   "pwt": 938
+  },
+  {
    "n": "Rat Trap - Iron, Spring Type, 39x16x12 cm, 445 gm each, 2 Qty",
    "h": "73269090",
    "g": 18,
@@ -3191,25 +3209,7 @@
    "pwt": 1250
   },
   {
-   "n": "Rat Trap - Iron, Spring Type, 39x16x12 cm, 445 gm, 1 Qty",
-   "h": "73269090",
-   "g": 18,
-   "c": "IRON/STEEL TOOLS",
-   "d": [
-    39,
-    15.5,
-    12.5
-   ],
-   "wt": 491,
-   "pd": [
-    42,
-    18.5,
-    16.5
-   ],
-   "pwt": 938
-  },
-  {
-   "n": "Rat Trap - Iron, SpringLess Type, 32x16.5x15 cm, 826 gm, 1 Qty",
+   "n": "Rat Trap - Iron, SpringLess Type, 35x16.5x15 cm, 560gm, 1 Qty",
    "h": "73269090",
    "g": 18,
    "c": "IRON/STEEL TOOLS",
@@ -4067,7 +4067,7 @@
    "pwt": null
   },
   {
-   "n": "Stone Diyas Big, 10x9x4.5 cm, 407 gm each, 2 Qty",
+   "n": "Stone Diyas Big, 9.5x9.5x4.5 cm, 365 gm each, 2 Qty",
    "h": "68029900",
    "g": 5,
    "c": "STONE HANDICRAFTS",
@@ -4085,7 +4085,7 @@
    "pwt": 920
   },
   {
-   "n": "Stone Diyas Big, 10x9x4.5 cm, 407 gm, 1 Qty",
+   "n": "Stone Diyas Big, 9.5x9x4.5 cm, 365 gm, 1 Qty",
    "h": "68029900",
    "g": 5,
    "c": "STONE HANDICRAFTS",
@@ -4103,7 +4103,7 @@
    "pwt": 525
   },
   {
-   "n": "Stone Diyas Small, 7x6x4 cm, 109 gm each, 2 Qty",
+   "n": "Stone Diyas Small, 7x6.5x4.5 cm, 233 gm each, 2 Qty",
    "h": "68029900",
    "g": 5,
    "c": "STONE HANDICRAFTS",
@@ -4121,7 +4121,7 @@
    "pwt": 550
   },
   {
-   "n": "Stone Diyas Small, 7x6x4 cm, 109 gm, 1 Qty",
+   "n": "Stone Diyas Small, 7x6.5x4.5 cm, 233 gm, 1 Qty",
    "h": "68029900",
    "g": 5,
    "c": "STONE HANDICRAFTS",
@@ -4139,7 +4139,7 @@
    "pwt": 286
   },
   {
-   "n": "Stone Diyas,Drop Model, 8x6x2 cm, 160 gm each, 2 Qty",
+   "n": "Stone Diyas,Drop Model, 8x6.5x2 cm, 158 gm each, 2 Qty",
    "h": "68029900",
    "g": 5,
    "c": "STONE HANDICRAFTS",
@@ -4157,7 +4157,7 @@
    "pwt": 350
   },
   {
-   "n": "Stone Grinder Mortar and Pestle Set, 10x10x20 cm, 2.58 Kg, 1 Qty",
+   "n": "Stone Grinder Mortar and Pestle Set, 10.5x10.5x20 cm, 2.612 Kg, 1 Qty",
    "h": "68159990",
    "g": 5,
    "c": "STONE HANDICRAFTS",
