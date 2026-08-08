@@ -1,5 +1,5 @@
 {
- "generated": "2026-08-07T15:26:47Z",
+ "generated": "2026-08-08T10:53:32Z",
  "source": "Product Names, HSN Code, GST, Prod & Pack Dimensions 5 Aug 2026.xlsx",
  "fileId": "18_gEDm7vNZt1-skIZqxu-FyDPxGUO9Yw",
  "count": 268,
@@ -621,6 +621,24 @@
    "pwt": null
   },
   {
+   "n": "Chappal Stitching Tool | Cobbler Awl, 12x2x2 cm, 11 gm, 1 Qty",
+   "h": "82059000",
+   "g": 18,
+   "c": "IRON/STEEL TOOLS",
+   "d": [
+    12,
+    2,
+    2
+   ],
+   "wt": 11,
+   "pd": [
+    15,
+    10,
+    3
+   ],
+   "pwt": 39
+  },
+  {
    "n": "Chappal Stitching Tool | Cobbler Awl, 13.5x2x2 cm, 12 gm each, 2 Qty",
    "h": "82059000",
    "g": 18,
@@ -637,24 +655,6 @@
     3
    ],
    "pwt": 54
-  },
-  {
-   "n": "Chappal Stitching Tool | Cobbler Awl, 13.5x2x2 cm, 12 gm, 1 Qty",
-   "h": "82059000",
-   "g": 18,
-   "c": "IRON/STEEL TOOLS",
-   "d": [
-    12,
-    2,
-    2
-   ],
-   "wt": 11,
-   "pd": [
-    15,
-    10,
-    3
-   ],
-   "pwt": 39
   },
   {
    "n": "Clay Appam Maker with Lid, 27x24x13.5 cm, 1.8 Kg, 1.5 Liters, 1 Qty",
