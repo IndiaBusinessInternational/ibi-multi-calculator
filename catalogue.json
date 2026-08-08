@@ -1,5 +1,5 @@
 {
- "generated": "2026-08-08T11:45:57Z",
+ "generated": "2026-08-08T12:04:12Z",
  "source": "Product Names, HSN Code, GST, Prod & Pack Dimensions 5 Aug 2026.xlsx",
  "fileId": "18_gEDm7vNZt1-skIZqxu-FyDPxGUO9Yw",
  "count": 268,
@@ -2423,10 +2423,18 @@
    "h": "06021000",
    "g": 0,
    "c": "LIVE PLANTS",
-   "d": null,
-   "wt": null,
-   "pd": null,
-   "pwt": null
+   "d": [
+    20,
+    2,
+    2
+   ],
+   "wt": 92,
+   "pd": [
+    23,
+    9.5,
+    6.5
+   ],
+   "pwt": 256
   },
   {
    "n": "Invisible Chain - 3 Layer, 21x13x0.5 cm, 35 gm, 1 Qty",
@@ -2880,9 +2888,13 @@
     13,
     13
    ],
-   "wt": null,
-   "pd": null,
-   "pwt": null
+   "wt": 1108,
+   "pd": [
+    29,
+    17.5,
+    17
+   ],
+   "pwt": 1358
   },
   {
    "n": "Men's Cotton Polo T-Shirt with Pocket, XL, Black, 74x56x74 cm, 275 gm, 1 Qty",
@@ -2979,10 +2991,18 @@
    "h": "06022010",
    "g": 0,
    "c": "LIVE PLANTS",
-   "d": null,
-   "wt": null,
-   "pd": null,
-   "pwt": null
+   "d": [
+    29,
+    13,
+    13
+   ],
+   "wt": 1108,
+   "pd": [
+    29,
+    17.5,
+    17
+   ],
+   "pwt": 1358
   },
   {
    "n": "Original Mango Leaves Thoranam, 91.44x15x2 cm, 55 gm each, 2 Qty",
@@ -3219,10 +3239,18 @@
    "h": "06022010",
    "g": 0,
    "c": "LIVE PLANTS",
-   "d": null,
-   "wt": null,
-   "pd": null,
-   "pwt": null
+   "d": [
+    29,
+    13,
+    13
+   ],
+   "wt": 1108,
+   "pd": [
+    29,
+    17.5,
+    17
+   ],
+   "pwt": 1358
   },
   {
    "n": "Rat Trap - Iron, Spring Type, 39x15.5x12.5 cm, 445 gm each, 2 Qty",
@@ -3319,10 +3347,18 @@
    "h": "06022010",
    "g": 0,
    "c": "LIVE PLANTS",
-   "d": null,
-   "wt": 11,
-   "pd": null,
-   "pwt": null
+   "d": [
+    29,
+    13,
+    13
+   ],
+   "wt": 1108,
+   "pd": [
+    29,
+    17.5,
+    17
+   ],
+   "pwt": 1358
   },
   {
    "n": "Round Grow Bag, 40x40x41cm, 170 gm, 1 Qty",
@@ -4277,10 +4313,18 @@
    "h": "06021000",
    "g": 0,
    "c": "LIVE PLANTS",
-   "d": null,
-   "wt": null,
-   "pd": null,
-   "pwt": null
+   "d": [
+    20,
+    2,
+    2
+   ],
+   "wt": 92,
+   "pd": [
+    23,
+    9.5,
+    6.5
+   ],
+   "pwt": 445
   },
   {
    "n": "Teak Wood Trowel, 30x15x8 cm, 1.37 kg, 1 Qty",
