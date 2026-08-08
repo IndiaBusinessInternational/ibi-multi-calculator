@@ -1,5 +1,5 @@
 {
- "generated": "2026-08-08T10:53:32Z",
+ "generated": "2026-08-08T11:45:57Z",
  "source": "Product Names, HSN Code, GST, Prod & Pack Dimensions 5 Aug 2026.xlsx",
  "fileId": "18_gEDm7vNZt1-skIZqxu-FyDPxGUO9Yw",
  "count": 268,
@@ -2257,60 +2257,108 @@
    "h": "71179010",
    "g": 3,
    "c": "IMITATION JEWELLERY",
-   "d": null,
-   "wt": null,
-   "pd": null,
-   "pwt": null
+   "d": [
+    26,
+    1,
+    1
+   ],
+   "wt": 50,
+   "pd": [
+    20,
+    15,
+    3
+   ],
+   "pwt": 101
   },
   {
-   "n": "Glass Beads Chain, Light Blue, Dark Green Glass Beads, 26x1.5x0.8 cm, 60 gm",
+   "n": "Glass Beads Chain, Light Blue, Dark Green Glass Beads, 26x1x1 cm, 50 gm",
    "h": "71179010",
    "g": 3,
    "c": "IMITATION JEWELLERY",
-   "d": null,
-   "wt": null,
-   "pd": null,
-   "pwt": null
+   "d": [
+    26,
+    1,
+    1
+   ],
+   "wt": 50,
+   "pd": [
+    20,
+    15,
+    3
+   ],
+   "pwt": 101
   },
   {
-   "n": "Glass Beads Chain, Light Blue, Medium Blue Glass Beads, 26x1.5x0.8 cm, 60 gm",
+   "n": "Glass Beads Chain, Light Blue, Medium Blue Glass Beads, 26x1x1 cm, 50 gm",
    "h": "71179010",
    "g": 3,
    "c": "IMITATION JEWELLERY",
-   "d": null,
-   "wt": null,
-   "pd": null,
-   "pwt": null
+   "d": [
+    26,
+    1,
+    1
+   ],
+   "wt": 50,
+   "pd": [
+    20,
+    15,
+    3
+   ],
+   "pwt": 101
   },
   {
-   "n": "Glass Beads Chain, Light Green, Black Glass Beads, 26x1.5x0.8 cm, 60 gm",
+   "n": "Glass Beads Chain, Light Green, Black Glass Beads, 26x1x1cm, 50 gm",
    "h": "71179010",
    "g": 3,
    "c": "IMITATION JEWELLERY",
-   "d": null,
-   "wt": null,
-   "pd": null,
-   "pwt": null
+   "d": [
+    26,
+    1,
+    1
+   ],
+   "wt": 50,
+   "pd": [
+    20,
+    15,
+    3
+   ],
+   "pwt": 101
   },
   {
-   "n": "Glass Beads Chain, Pink, Black Glass Beads, 26x1.5x0.8 cm, 60 gm",
+   "n": "Glass Beads Chain, Pink, Black Glass Beads, 26x1x1cm, 50 gm",
    "h": "71179010",
    "g": 3,
    "c": "IMITATION JEWELLERY",
-   "d": null,
-   "wt": null,
-   "pd": null,
-   "pwt": null
+   "d": [
+    26,
+    1,
+    1
+   ],
+   "wt": 50,
+   "pd": [
+    20,
+    15,
+    3
+   ],
+   "pwt": 101
   },
   {
-   "n": "Glass Beads Chain, Red Glass Beads, 26x1.5x0.8 cm, 60 gm",
+   "n": "Glass Beads Chain, Red Glass Beads, 26x1x1 cm, 50 gm",
    "h": "71179010",
    "g": 3,
    "c": "IMITATION JEWELLERY",
-   "d": null,
-   "wt": null,
-   "pd": null,
-   "pwt": null
+   "d": [
+    26,
+    1,
+    1
+   ],
+   "wt": 50,
+   "pd": [
+    20,
+    15,
+    3
+   ],
+   "pwt": 101
   },
   {
    "n": "Guava Leaves 10 Qty Pack, 1 Qty",
@@ -2827,7 +2875,11 @@
    "h": "06022010",
    "g": 0,
    "c": "LIVE PLANTS",
-   "d": null,
+   "d": [
+    29,
+    13,
+    13
+   ],
    "wt": null,
    "pd": null,
    "pwt": null
