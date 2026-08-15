@@ -1,5 +1,5 @@
 {
- "generated": "2026-08-10T15:31:50Z",
+ "generated": "2026-08-15T09:27:18Z",
  "source": "Product Names, HSN Code, GST, Prod & Pack Dimensions 5 Aug 2026.xlsx",
  "fileId": "18_gEDm7vNZt1-skIZqxu-FyDPxGUO9Yw",
  "count": 268,
@@ -3033,10 +3033,18 @@
    "h": "06049000",
    "g": 0,
    "c": "FRESH LEAVES & FOLIAGE",
-   "d": null,
-   "wt": null,
-   "pd": null,
-   "pwt": null
+   "d": [
+    12,
+    5,
+    1
+   ],
+   "wt": 2,
+   "pd": [
+    18,
+    18,
+    16
+   ],
+   "pwt": 216
   },
   {
    "n": "Original Mango Leaves Thoranam, 91.44x15x2 cm, 55 gm, 1 Qty",
