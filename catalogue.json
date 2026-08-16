@@ -1,8 +1,8 @@
 {
- "generated": "2026-08-16T07:19:37Z",
+ "generated": "2026-08-16T10:36:34Z",
  "source": "Product Names, HSN Code, GST, Prod & Pack Dimensions 5 Aug 2026.xlsx",
  "fileId": "18_gEDm7vNZt1-skIZqxu-FyDPxGUO9Yw",
- "count": 275,
+ "count": 273,
  "products": [
   {
    "n": "Aari Work Stand - Iron, 49.5x44.5x31.5 cm, 1365 gm, 1 Qty",
@@ -301,42 +301,6 @@
     15
    ],
    "pwt": 1819
-  },
-  {
-   "n": "Aluminium Kadhai with Lid, BIS, 32.5x27x13.5 cm, 3 Liters, 445 gm, 1 Qty",
-   "h": "76151030",
-   "g": 5,
-   "c": "ALUMINIUM COOKWARE",
-   "d": [
-    32.5,
-    27,
-    9
-   ],
-   "wt": 445,
-   "pd": [
-    30.5,
-    30.5,
-    15
-   ],
-   "pwt": 897
-  },
-  {
-   "n": "Aluminium Kadhai with Lid, BIS, 32.5x27x13.5 cm, 3 Liters, 445gm each, 2 Qty",
-   "h": "76151030",
-   "g": 5,
-   "c": "ALUMINIUM COOKWARE",
-   "d": [
-    32.5,
-    27,
-    9
-   ],
-   "wt": 445,
-   "pd": [
-    30.5,
-    30.5,
-    15
-   ],
-   "pwt": 1601
   },
   {
    "n": "Aluminium Non-stick Dosa Tawa, BIS, 47x29.65x1.5cm, 549 gm, 1 Qty",
