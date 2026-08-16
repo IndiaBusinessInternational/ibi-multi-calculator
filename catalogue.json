@@ -1,8 +1,8 @@
 {
- "generated": "2026-08-15T09:27:18Z",
+ "generated": "2026-08-16T06:51:39Z",
  "source": "Product Names, HSN Code, GST, Prod & Pack Dimensions 5 Aug 2026.xlsx",
  "fileId": "18_gEDm7vNZt1-skIZqxu-FyDPxGUO9Yw",
- "count": 268,
+ "count": 275,
  "products": [
   {
    "n": "Aari Work Stand - Iron, 49.5x44.5x31.5 cm, 1365 gm, 1 Qty",
@@ -265,6 +265,42 @@
     19
    ],
    "pwt": 1627
+  },
+  {
+   "n": "Aluminium Kadhai with Lid, BIS, 32.5 x 27.5 x 10cm, 676 g, 1 Qty",
+   "h": "76151030",
+   "g": 5,
+   "c": "ALUMINIUM COOKWARE",
+   "d": [
+    32.5,
+    27.5,
+    10
+   ],
+   "wt": 676,
+   "pd": [
+    30,
+    30,
+    15
+   ],
+   "pwt": 1130
+  },
+  {
+   "n": "Aluminium Kadhai with Lid, BIS, 32.5 x 27.5 x 10cm, 676 gm each, 2 Qty",
+   "h": "76151030",
+   "g": 5,
+   "c": "ALUMINIUM COOKWARE",
+   "d": [
+    32.5,
+    27.5,
+    10
+   ],
+   "wt": 676,
+   "pd": [
+    30,
+    30,
+    15
+   ],
+   "pwt": 1819
   },
   {
    "n": "Aluminium Kadhai with Lid, BIS, 32.5x27x13.5 cm, 3 Liters, 445 gm, 1 Qty",
@@ -589,6 +625,24 @@
     10
    ],
    "pwt": 993
+  },
+  {
+   "n": "Aluminum Rice Pot with Lid, 11 Size, BIS, 17x17x13 cm, 408 gm",
+   "h": "76151030",
+   "g": 5,
+   "c": "ALUMINIUM COOKWARE",
+   "d": [
+    17,
+    17,
+    13
+   ],
+   "wt": 408,
+   "pd": [
+    19,
+    19,
+    16
+   ],
+   "pwt": 635
   },
   {
    "n": "Banana Leaves Round-Cut, 9 Inch Dia, 10 Qty Pack",
@@ -4173,6 +4227,62 @@
     5
    ],
    "pwt": 283
+  },
+  {
+   "n": "Stone Diya 4inch, 11.5x11x5 cm, 619 gm each, 2 Qty",
+   "h": "68029900",
+   "g": 5,
+   "c": "STONE HANDICRAFTS",
+   "d": [
+    11.5,
+    11,
+    5
+   ],
+   "wt": 619,
+   "pd": [
+    14,
+    12.5,
+    12.5
+   ],
+   "pwt": 1359
+  },
+  {
+   "n": "Stone Diya 4inch, 11.5x11x5 cm, 619 gm, 1 Qty",
+   "h": "68029900",
+   "g": 5,
+   "c": "STONE HANDICRAFTS",
+   "d": [
+    11.5,
+    11,
+    5
+   ],
+   "wt": 619,
+   "pd": [
+    14,
+    12.5,
+    12.5
+   ],
+   "pwt": 731
+  },
+  {
+   "n": "Stone Diya Hand made, 9x7.5x4 cm, 412 gm each, 2 Qty",
+   "h": "68029900",
+   "g": 5,
+   "c": "STONE HANDICRAFTS",
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
+  },
+  {
+   "n": "Stone Diya Hand made, 9x7.5x4 cm, 412 gm, 1 Qty",
+   "h": "68029900",
+   "g": 5,
+   "c": "STONE HANDICRAFTS",
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
   },
   {
    "n": "Stone Diya, 7x6x4 cm, 190 gm each, 2 Qty",
