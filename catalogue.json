@@ -1,8 +1,10 @@
 {
- "generated": "2026-08-16T10:36:34Z",
+ "generated": "2026-08-17T10:11:30Z",
  "source": "Product Names, HSN Code, GST, Prod & Pack Dimensions 5 Aug 2026.xlsx",
  "fileId": "18_gEDm7vNZt1-skIZqxu-FyDPxGUO9Yw",
- "count": 273,
+ "jewellerySource": "register",
+ "jewelleryCount": 25,
+ "count": 287,
  "products": [
   {
    "n": "Aari Work Stand - Iron, 49.5x44.5x31.5 cm, 1365 gm, 1 Qty",
@@ -2287,114 +2289,6 @@
    "pwt": 299
   },
   {
-   "n": "Glass Beads Chain, Light Blue, Black Glass Beads, 26x1.5x0.8 cm, 60 gm",
-   "h": "71179010",
-   "g": 3,
-   "c": "IMITATION JEWELLERY",
-   "d": [
-    26,
-    1,
-    1
-   ],
-   "wt": 50,
-   "pd": [
-    20,
-    15,
-    3
-   ],
-   "pwt": 101
-  },
-  {
-   "n": "Glass Beads Chain, Light Blue, Dark Green Glass Beads, 26x1x1 cm, 50 gm",
-   "h": "71179010",
-   "g": 3,
-   "c": "IMITATION JEWELLERY",
-   "d": [
-    26,
-    1,
-    1
-   ],
-   "wt": 50,
-   "pd": [
-    20,
-    15,
-    3
-   ],
-   "pwt": 101
-  },
-  {
-   "n": "Glass Beads Chain, Light Blue, Medium Blue Glass Beads, 26x1x1 cm, 50 gm",
-   "h": "71179010",
-   "g": 3,
-   "c": "IMITATION JEWELLERY",
-   "d": [
-    26,
-    1,
-    1
-   ],
-   "wt": 50,
-   "pd": [
-    20,
-    15,
-    3
-   ],
-   "pwt": 101
-  },
-  {
-   "n": "Glass Beads Chain, Light Green, Black Glass Beads, 26x1x1cm, 50 gm",
-   "h": "71179010",
-   "g": 3,
-   "c": "IMITATION JEWELLERY",
-   "d": [
-    26,
-    1,
-    1
-   ],
-   "wt": 50,
-   "pd": [
-    20,
-    15,
-    3
-   ],
-   "pwt": 101
-  },
-  {
-   "n": "Glass Beads Chain, Pink, Black Glass Beads, 26x1x1cm, 50 gm",
-   "h": "71179010",
-   "g": 3,
-   "c": "IMITATION JEWELLERY",
-   "d": [
-    26,
-    1,
-    1
-   ],
-   "wt": 50,
-   "pd": [
-    20,
-    15,
-    3
-   ],
-   "pwt": 101
-  },
-  {
-   "n": "Glass Beads Chain, Red Glass Beads, 26x1x1 cm, 50 gm",
-   "h": "71179010",
-   "g": 3,
-   "c": "IMITATION JEWELLERY",
-   "d": [
-    26,
-    1,
-    1
-   ],
-   "wt": 50,
-   "pd": [
-    20,
-    15,
-    3
-   ],
-   "pwt": 101
-  },
-  {
    "n": "Guava Leaves 10 Qty Pack, 1 Qty",
    "h": "07099990",
    "g": 0,
@@ -2471,94 +2365,258 @@
    "pwt": 256
   },
   {
-   "n": "Invisible Chain - 3 Layer, 21x13x0.5 cm, 35 gm, 1 Qty",
-   "h": "71171990",
+   "n": "Hydro Crystal Beads Chain - Red & Black",
+   "h": "71179010",
    "g": 3,
    "c": "IMITATION JEWELLERY",
    "d": [
-    21,
-    13,
+    30,
+    1,
     0.5
    ],
-   "wt": 35,
-   "pd": [
-    19.5,
-    15,
-    3
-   ],
-   "pwt": 90
+   "wt": 16,
+   "pd": null,
+   "pwt": null
   },
   {
-   "n": "Invisible Chain - Double Layer, 21x12.5x0.5 cm, 30 gm each, 2 Qty",
-   "h": "71171990",
+   "n": "Hydro Crystal Beads Chain Double Color Black & Transparent Crystal Clear",
+   "h": "7117",
    "g": 3,
    "c": "IMITATION JEWELLERY",
-   "d": [
-    21,
-    13,
-    0.5
-   ],
-   "wt": 30,
-   "pd": [
-    19.5,
-    15,
-    3
-   ],
-   "pwt": 115
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
   },
   {
-   "n": "Invisible Chain - Double Layer, 21x12.5x0.5 cm, 30 gm, 1 Qty",
-   "h": "71171990",
+   "n": "Hydro Crystal Beads Chain Single Color Black",
+   "h": "7117",
    "g": 3,
    "c": "IMITATION JEWELLERY",
-   "d": [
-    21,
-    13,
-    0.5
-   ],
-   "wt": 30,
-   "pd": [
-    19.5,
-    15,
-    3
-   ],
-   "pwt": 85
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
   },
   {
-   "n": "Invisible Chain - Single Layer, 21x13x0.5 cm, 22 gm each, 2 Qty",
-   "h": "71171990",
+   "n": "Hydro Crystal Beads Chain Single Color Bright Red",
+   "h": "7117",
    "g": 3,
    "c": "IMITATION JEWELLERY",
-   "d": [
-    21,
-    13,
-    0.5
-   ],
-   "wt": 22,
-   "pd": [
-    19.5,
-    15,
-    3
-   ],
-   "pwt": 90
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
   },
   {
-   "n": "Invisible Chain - Single Layer, 21x13x0.5 cm, 22 gm, 1 Qty",
-   "h": "71171990",
+   "n": "Hydro Crystal Beads Chain Single Color Dark Olive Green",
+   "h": "7117",
    "g": 3,
    "c": "IMITATION JEWELLERY",
-   "d": [
-    21,
-    13,
-    0.5
-   ],
-   "wt": 22,
-   "pd": [
-    19.5,
-    15,
-    3
-   ],
-   "pwt": 78
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
+  },
+  {
+   "n": "Hydro Crystal Beads Chain Single Color Deep Ruby Red",
+   "h": "7117",
+   "g": 3,
+   "c": "IMITATION JEWELLERY",
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
+  },
+  {
+   "n": "Hydro Crystal Beads Chain Single Color Deep Teal Blue",
+   "h": "7117",
+   "g": 3,
+   "c": "IMITATION JEWELLERY",
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
+  },
+  {
+   "n": "Hydro Crystal Beads Chain Single Color Navy Blue",
+   "h": "7117",
+   "g": 3,
+   "c": "IMITATION JEWELLERY",
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
+  },
+  {
+   "n": "Hydro Crystal Beads Chain Single Color Purple",
+   "h": "7117",
+   "g": 3,
+   "c": "IMITATION JEWELLERY",
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
+  },
+  {
+   "n": "Hydro Crystal Beads Chain Single Color Royal Blue",
+   "h": "7117",
+   "g": 3,
+   "c": "IMITATION JEWELLERY",
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
+  },
+  {
+   "n": "Hydro Crystal Beads Chain Triple Color Indian TriColor",
+   "h": "7117",
+   "g": 3,
+   "c": "IMITATION JEWELLERY",
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
+  },
+  {
+   "n": "Invisible Chain Double Layer Deep Red Beads Lotus Pendant with Loreals",
+   "h": "7117",
+   "g": 3,
+   "c": "IMITATION JEWELLERY",
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
+  },
+  {
+   "n": "Invisible Chain Double Layer Deep Red Beads Lotus Pendant without Loreals",
+   "h": "7117",
+   "g": 3,
+   "c": "IMITATION JEWELLERY",
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
+  },
+  {
+   "n": "Invisible Chain Double Layer Green Beaded Lotus Pendant with Loreals",
+   "h": "7117",
+   "g": 3,
+   "c": "IMITATION JEWELLERY",
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
+  },
+  {
+   "n": "Invisible Chain Double Layer Green Beaded Lotus Pendant without Loreals",
+   "h": "7117",
+   "g": 3,
+   "c": "IMITATION JEWELLERY",
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
+  },
+  {
+   "n": "Invisible Chain Double Layer Grey Double Lotus Pendant Gold Tone",
+   "h": "7117",
+   "g": 3,
+   "c": "IMITATION JEWELLERY",
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
+  },
+  {
+   "n": "Invisible Chain Double Layer Red Double Lotus Pendant Gold Tone",
+   "h": "7117",
+   "g": 3,
+   "c": "IMITATION JEWELLERY",
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
+  },
+  {
+   "n": "Invisible Chain Single Layer Blue Beaded Heart Pendant Gold Tone",
+   "h": "7117",
+   "g": 3,
+   "c": "IMITATION JEWELLERY",
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
+  },
+  {
+   "n": "Invisible Chain Single Layer Blue Lotus Beaded Pendant Gold Tone",
+   "h": "7117",
+   "g": 3,
+   "c": "IMITATION JEWELLERY",
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
+  },
+  {
+   "n": "Invisible Chain Single Layer Green Beaded Gold Tone",
+   "h": "7117",
+   "g": 3,
+   "c": "IMITATION JEWELLERY",
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
+  },
+  {
+   "n": "Invisible Chain Single Layer Green Beaded Heart Pendant",
+   "h": "7117",
+   "g": 3,
+   "c": "IMITATION JEWELLERY",
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
+  },
+  {
+   "n": "Invisible Chain Single Layer Green Beads Floral Pendant Gold Tone",
+   "h": "7117",
+   "g": 3,
+   "c": "IMITATION JEWELLERY",
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
+  },
+  {
+   "n": "Invisible Chain Single Layer Pearl Lotus Pendant with Loreals",
+   "h": "7117",
+   "g": 3,
+   "c": "IMITATION JEWELLERY",
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
+  },
+  {
+   "n": "Invisible Chain Single Layer with Golden Kasu Dollar",
+   "h": "7117",
+   "g": 3,
+   "c": "IMITATION JEWELLERY",
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
+  },
+  {
+   "n": "Invisible Chain Single Layer Yellow Beaded Moon Pendant Gold Tone",
+   "h": "7117",
+   "g": 3,
+   "c": "IMITATION JEWELLERY",
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
   },
   {
    "n": "JackFruit Leaves 50 Qty Pack, 1 Qty",

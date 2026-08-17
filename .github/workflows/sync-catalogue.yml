@@ -46,13 +46,17 @@ jobs:
       # above overrides it for this workflow (verified with a --dry-run push).
       - name: Commit and push when it changed
         run: |
-          if git diff --quiet -- catalogue.json; then
+          # jewellery_fallback.json is the last successful pull from the
+          # jewellery register — committed so runs while the laptop is off
+          # can still publish today's jewellery names.
+          if git diff --quiet -- catalogue.json tools/jewellery_fallback.json \
+             && [ -z "$(git status --porcelain -- tools/jewellery_fallback.json)" ]; then
             echo "catalogue.json unchanged — nothing to publish"
             exit 0
           fi
           count=$(python -c "import json;print(json.load(open('catalogue.json'))['count'])")
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add catalogue.json
-          git commit -m "catalogue: sync $count products from the Drive master"
+          git add catalogue.json tools/jewellery_fallback.json
+          git commit -m "catalogue: sync $count products (Drive master + jewellery register)"
           git push

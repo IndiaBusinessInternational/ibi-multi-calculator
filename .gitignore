@@ -3,3 +3,4 @@ IBI Amazon Pricing Calculator/
 *.docx
 Thumbs.db
 desktop.ini
+__pycache__/

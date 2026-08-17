@@ -30,8 +30,20 @@ SHEET_PREFIX = 'Product Names'
 
 OUT = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'catalogue.json')
 
-MIN_PRODUCTS = 200      # the master has 268; a big drop means something went wrong
+MIN_PRODUCTS = 200      # the master has ~290; a big drop means something went wrong
 MAX_PRODUCTS = 600
+
+# ── Fashion jewellery comes from the IBI Fashion Jewellery register, NOT the
+# Drive master (user's instruction, 17 Aug 2026). The register runs on the
+# office laptop behind a Cloudflare tunnel and serves a public, names-only
+# feed shaped exactly like catalogue entries. Any IMITATION JEWELLERY rows
+# still in the Drive master are dropped so the register is the single source.
+# When the laptop is off (tunnel down) the last successful pull — committed to
+# the repo as jewellery_fallback.json by the workflow — is used instead, so
+# the catalogue never flaps between runs.
+JEWELLERY_URL = 'https://jewellery.indiabusinessinternational.online/api?action=catalogueNames'
+JEWELLERY_CATEGORY = 'IMITATION JEWELLERY'
+JEWELLERY_FALLBACK = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'jewellery_fallback.json')
 
 
 def download(file_id):
@@ -168,8 +180,74 @@ def parse(data):
     return out
 
 
+def fetch_jewellery():
+    """Jewellery entries from the register, or the committed fallback.
+
+    Returns (products, source). Every validation failure falls through to the
+    fallback rather than exiting: the master parse succeeding must still
+    publish a catalogue even while the laptop is asleep."""
+    entries = None
+    try:
+        req = urllib.request.Request(JEWELLERY_URL, headers={'User-Agent': 'ibi-catalogue-sync'})
+        with urllib.request.urlopen(req, timeout=30) as r:
+            feed = json.load(r)
+        if feed.get('ok') and isinstance(feed.get('products'), list):
+            got = [p for p in feed['products'] if str(p.get('n', '')).strip()]
+            if got:
+                entries = [{
+                    'n': str(p['n']).strip(),
+                    'h': str(p.get('h', '')).strip(),
+                    'g': p.get('g', 0),
+                    'c': JEWELLERY_CATEGORY,
+                    'd': p.get('d'),
+                    'wt': p.get('wt'),
+                    'pd': p.get('pd'),
+                    'pwt': p.get('pwt'),
+                } for p in got]
+    except Exception as err:                     # noqa: BLE001 — any failure means "laptop off"
+        print('NOTE: jewellery register unreachable (%s)' % err)
+
+    if entries is not None:
+        # Refresh the fallback so the next laptop-off run serves today's list.
+        # The workflow commits this file alongside catalogue.json.
+        current = None
+        if os.path.exists(JEWELLERY_FALLBACK):
+            try:
+                with io.open(JEWELLERY_FALLBACK, encoding='utf-8') as f:
+                    current = json.load(f)
+            except (ValueError, OSError):
+                current = None
+        if current != entries:
+            tmp = JEWELLERY_FALLBACK + '.tmp'
+            with io.open(tmp, 'w', encoding='utf-8', newline='\n') as f:
+                f.write(json.dumps(entries, ensure_ascii=False, indent=1) + '\n')
+            os.replace(tmp, JEWELLERY_FALLBACK)
+        return entries, 'register'
+
+    if os.path.exists(JEWELLERY_FALLBACK):
+        try:
+            with io.open(JEWELLERY_FALLBACK, encoding='utf-8') as f:
+                saved = json.load(f)
+            if isinstance(saved, list) and saved:
+                return saved, 'fallback'
+        except (ValueError, OSError):
+            pass
+    print('WARNING: no jewellery feed and no usable fallback — '
+          'publishing the catalogue without jewellery.')
+    return [], 'none'
+
+
 def main():
     products = parse(download(FILE_ID))
+
+    # The register owns fashion jewellery; drop whatever the master still has.
+    kept = [p for p in products if p['c'].strip().upper() != JEWELLERY_CATEGORY]
+    dropped = len(products) - len(kept)
+    jewellery, jsource = fetch_jewellery()
+    if dropped or jewellery:
+        print('jewellery: dropped %d master row(s), merged %d from the %s'
+              % (dropped, len(jewellery), jsource))
+    products = kept + jewellery
 
     if not MIN_PRODUCTS <= len(products) <= MAX_PRODUCTS:
         sys.exit('ERROR: parsed %d products, expected %d-%d. Refusing to publish.'
@@ -192,6 +270,8 @@ def main():
         'generated': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
         'source': SOURCE_NAME,
         'fileId': FILE_ID,
+        'jewellerySource': jsource,          # 'register' | 'fallback' | 'none'
+        'jewelleryCount': len(jewellery),
         'count': len(products),
         'products': products,
     }
