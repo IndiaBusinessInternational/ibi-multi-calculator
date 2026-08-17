@@ -1,7 +1,7 @@
 // IBI Multi-Calculator — service worker
 // Network-first for the page itself (so updates arrive immediately),
 // cache-first for static assets. Bump CACHE on each release.
-const CACHE = 'ibi-calc-v4.10';
+const CACHE = 'ibi-calc-v4.11';
 const ASSETS = [
   './',
   './index.html',
@@ -13,7 +13,11 @@ const ASSETS = [
 ];
 
 self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
+  // {cache:'reload'} bypasses the HTTP cache — plain addAll() can precache a
+  // STALE file the browser already holds, shipping old JS under a new badge.
+  e.waitUntil(caches.open(CACHE)
+    .then(c => c.addAll(ASSETS.map(u => new Request(u, { cache: 'reload' }))))
+    .then(() => self.skipWaiting()));
 });
 
 self.addEventListener('activate', e => {
