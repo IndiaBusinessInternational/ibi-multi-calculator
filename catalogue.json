@@ -1,10 +1,10 @@
 {
- "generated": "2026-08-18T06:03:25Z",
+ "generated": "2026-08-18T06:57:49Z",
  "source": "Product Names, HSN Code, GST, Prod & Pack Dimensions 5 Aug 2026.xlsx",
  "fileId": "18_gEDm7vNZt1-skIZqxu-FyDPxGUO9Yw",
  "jewellerySource": "register",
- "jewelleryCount": 39,
- "count": 301,
+ "jewelleryCount": 48,
+ "count": 310,
  "products": [
   {
    "n": "Aari Work Stand - Iron, 49.5x44.5x31.5 cm, 1365 gm, 1 Qty",
@@ -2389,6 +2389,26 @@
    "pwt": null
   },
   {
+   "n": "Hydro Crystal Beads Chain Double Color Black & Yellow",
+   "h": "71179010",
+   "g": 3,
+   "c": "IMITATION JEWELLERY",
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
+  },
+  {
+   "n": "Hydro Crystal Beads Chain Double Color Red & Dark Green",
+   "h": "71179010",
+   "g": 3,
+   "c": "IMITATION JEWELLERY",
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
+  },
+  {
    "n": "Hydro Crystal Beads Chain Single Color Black",
    "h": "71179010",
    "g": 3,
@@ -2400,6 +2420,16 @@
   },
   {
    "n": "Hydro Crystal Beads Chain Single Color Bright Red",
+   "h": "71179010",
+   "g": 3,
+   "c": "IMITATION JEWELLERY",
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
+  },
+  {
+   "n": "Hydro Crystal Beads Chain Single Color Dark Green",
    "h": "71179010",
    "g": 3,
    "c": "IMITATION JEWELLERY",
@@ -2439,6 +2469,16 @@
    "pwt": null
   },
   {
+   "n": "Hydro Crystal Beads Chain Single Color Emerald Green",
+   "h": "71179010",
+   "g": 3,
+   "c": "IMITATION JEWELLERY",
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
+  },
+  {
    "n": "Hydro Crystal Beads Chain Single Color Navy Blue",
    "h": "71179010",
    "g": 3,
@@ -2460,6 +2500,36 @@
   },
   {
    "n": "Hydro Crystal Beads Chain Single Color Royal Blue",
+   "h": "71179010",
+   "g": 3,
+   "c": "IMITATION JEWELLERY",
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
+  },
+  {
+   "n": "Hydro Crystal Beads Chain Single Color Ruby Red",
+   "h": "71179010",
+   "g": 3,
+   "c": "IMITATION JEWELLERY",
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
+  },
+  {
+   "n": "Hydro Crystal Beads Chain Single Color White Crystal Clear",
+   "h": "71179010",
+   "g": 3,
+   "c": "IMITATION JEWELLERY",
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
+  },
+  {
+   "n": "Hydro Crystal Beads Chain Single Color Yellow",
    "h": "71179010",
    "g": 3,
    "c": "IMITATION JEWELLERY",
@@ -2689,7 +2759,27 @@
    "pwt": null
   },
   {
+   "n": "Invisible Chain Single Layer Red Enamel Triple Peacock Pendant Gold Tone",
+   "h": "71171990",
+   "g": 3,
+   "c": "IMITATION JEWELLERY",
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
+  },
+  {
    "n": "Invisible Chain Single Layer Red Gold Crystal Beads Gold Tone",
+   "h": "71171990",
+   "g": 3,
+   "c": "IMITATION JEWELLERY",
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
+  },
+  {
+   "n": "Invisible Chain Single Layer Red Lotus Pendant Gold Tone",
    "h": "71171990",
    "g": 3,
    "c": "IMITATION JEWELLERY",
