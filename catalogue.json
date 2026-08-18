@@ -1,10 +1,10 @@
 {
- "generated": "2026-08-18T05:14:17Z",
+ "generated": "2026-08-18T05:45:33Z",
  "source": "Product Names, HSN Code, GST, Prod & Pack Dimensions 5 Aug 2026.xlsx",
  "fileId": "18_gEDm7vNZt1-skIZqxu-FyDPxGUO9Yw",
  "jewellerySource": "register",
- "jewelleryCount": 29,
- "count": 291,
+ "jewelleryCount": 37,
+ "count": 299,
  "products": [
   {
    "n": "Aari Work Stand - Iron, 49.5x44.5x31.5 cm, 1365 gm, 1 Qty",
@@ -2549,6 +2549,16 @@
    "pwt": null
   },
   {
+   "n": "Invisible Chain Single Layer Blue Crystal Beads Tear Drop Pendant",
+   "h": "71171990",
+   "g": 3,
+   "c": "IMITATION JEWELLERY",
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
+  },
+  {
    "n": "Invisible Chain Single Layer Blue Lotus Beaded Pendant Gold Tone",
    "h": "71171990",
    "g": 3,
@@ -2609,6 +2619,36 @@
    "pwt": null
   },
   {
+   "n": "Invisible Chain Single Layer Mauve Purple Crystal Beads Gold Tone",
+   "h": "71171990",
+   "g": 3,
+   "c": "IMITATION JEWELLERY",
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
+  },
+  {
+   "n": "Invisible Chain Single Layer Multi-Color Butterfly Pendant Gold Tone",
+   "h": "71171990",
+   "g": 3,
+   "c": "IMITATION JEWELLERY",
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
+  },
+  {
+   "n": "Invisible Chain Single Layer Multi-Color Crystal Heart Pendant Gold Tone",
+   "h": "71171990",
+   "g": 3,
+   "c": "IMITATION JEWELLERY",
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
+  },
+  {
    "n": "Invisible Chain Single Layer Pearl Lotus Pendant with Loreals",
    "h": "71171990",
    "g": 3,
@@ -2619,7 +2659,27 @@
    "pwt": null
   },
   {
+   "n": "Invisible Chain Single Layer Pink Crystal Beads Stone 3 Pendant Gold Tone",
+   "h": "71171990",
+   "g": 3,
+   "c": "IMITATION JEWELLERY",
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
+  },
+  {
    "n": "Invisible Chain Single Layer Red Crystal Beads Heart Pendant Gold Tone",
+   "h": "71171990",
+   "g": 3,
+   "c": "IMITATION JEWELLERY",
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
+  },
+  {
+   "n": "Invisible Chain Single Layer Red Gold Crystal Beads Gold Tone",
    "h": "71171990",
    "g": 3,
    "c": "IMITATION JEWELLERY",
@@ -2649,7 +2709,27 @@
    "pwt": null
   },
   {
+   "n": "Invisible Chain Single Layer Yellow Crystal Beads Butterfly Pendant Gold Tone",
+   "h": "71171990",
+   "g": 3,
+   "c": "IMITATION JEWELLERY",
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
+  },
+  {
    "n": "Invisible Chain Single Layer Yellow Crystal Beads Gold Tone",
+   "h": "71171990",
+   "g": 3,
+   "c": "IMITATION JEWELLERY",
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
+  },
+  {
+   "n": "Invisible Chain Triple Layer Green 3 Lotus Pendant Gold Tone",
    "h": "71171990",
    "g": 3,
    "c": "IMITATION JEWELLERY",
