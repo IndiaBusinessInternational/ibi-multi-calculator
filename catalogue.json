@@ -1,10 +1,10 @@
 {
- "generated": "2026-08-23T11:59:36Z",
+ "generated": "2026-09-01T18:46:32Z",
  "source": "Product Names, HSN Code, GST, Prod & Pack Dimensions 5 Aug 2026.xlsx",
  "fileId": "18_gEDm7vNZt1-skIZqxu-FyDPxGUO9Yw",
- "jewellerySource": "register",
+ "jewellerySource": "fallback",
  "jewelleryCount": 60,
- "count": 322,
+ "count": 326,
  "products": [
   {
    "n": "Aari Work Stand - Iron, 49.5x44.5x31.5 cm, 1365 gm, 1 Qty",
@@ -215,6 +215,26 @@
    "pwt": 532
   },
   {
+   "n": "Aluminium Food Strainer, BIS, 27x27x7.5 cm, 198 gm each, 2 Qty",
+   "h": "",
+   "g": 0,
+   "c": "",
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
+  },
+  {
+   "n": "Aluminium Food Strainer, BIS, 27x27x7.5 cm, 198 gm, 1 Qty",
+   "h": "",
+   "g": 0,
+   "c": "",
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
+  },
+  {
    "n": "Aluminium Food Strainer, BIS, 29 x 29x 9.5cm, 173 gm each, 2 Qty",
    "h": "76151030",
    "g": 5,
@@ -249,6 +269,26 @@
     12
    ],
    "pwt": 805
+  },
+  {
+   "n": "Aluminium Food Strainer, BIS, 30x30x8 cm, 230 gm Each, 2 Qty",
+   "h": "",
+   "g": 0,
+   "c": "",
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
+  },
+  {
+   "n": "Aluminium Food Strainer, BIS, 30x30x8 cm, 230 gm, 1 Qty",
+   "h": "",
+   "g": 0,
+   "c": "",
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
   },
   {
    "n": "Aluminium Kadhai With Lid, 26.5 x 26.5 x 14 cm, 3 Liters, 469 gm,1 Qty",
