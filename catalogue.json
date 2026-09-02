@@ -1,11 +1,31 @@
 {
- "generated": "2026-09-01T18:46:32Z",
+ "generated": "2026-09-02T14:01:13Z",
  "source": "Product Names, HSN Code, GST, Prod & Pack Dimensions 5 Aug 2026.xlsx",
  "fileId": "18_gEDm7vNZt1-skIZqxu-FyDPxGUO9Yw",
- "jewellerySource": "fallback",
+ "jewellerySource": "register",
  "jewelleryCount": 60,
- "count": 326,
+ "count": 329,
  "products": [
+  {
+   "n": "100% Pure Cotton Hand kerchief White, 43x43 cm, 28 gm each, 2 Qty",
+   "h": "62132000",
+   "g": 5,
+   "c": "TEXTILES & APPAREL",
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
+  },
+  {
+   "n": "100% Pure Cotton Hand kerchief White, 43x43 cm, 28 gm each, 4 Qty",
+   "h": "62132000",
+   "g": 5,
+   "c": "TEXTILES & APPAREL",
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
+  },
   {
    "n": "Aari Work Stand - Iron, 49.5x44.5x31.5 cm, 1365 gm, 1 Qty",
    "h": "73269099",
@@ -216,9 +236,9 @@
   },
   {
    "n": "Aluminium Food Strainer, BIS, 27x27x7.5 cm, 198 gm each, 2 Qty",
-   "h": "",
-   "g": 0,
-   "c": "",
+   "h": "76151030",
+   "g": 5,
+   "c": "ALUMINIUM COOKWARE",
    "d": null,
    "wt": null,
    "pd": null,
@@ -226,9 +246,9 @@
   },
   {
    "n": "Aluminium Food Strainer, BIS, 27x27x7.5 cm, 198 gm, 1 Qty",
-   "h": "",
-   "g": 0,
-   "c": "",
+   "h": "76151030",
+   "g": 5,
+   "c": "ALUMINIUM COOKWARE",
    "d": null,
    "wt": null,
    "pd": null,
@@ -272,9 +292,9 @@
   },
   {
    "n": "Aluminium Food Strainer, BIS, 30x30x8 cm, 230 gm Each, 2 Qty",
-   "h": "",
-   "g": 0,
-   "c": "",
+   "h": "76151030",
+   "g": 5,
+   "c": "ALUMINIUM COOKWARE",
    "d": null,
    "wt": null,
    "pd": null,
@@ -282,9 +302,9 @@
   },
   {
    "n": "Aluminium Food Strainer, BIS, 30x30x8 cm, 230 gm, 1 Qty",
-   "h": "",
-   "g": 0,
-   "c": "",
+   "h": "76151030",
+   "g": 5,
+   "c": "ALUMINIUM COOKWARE",
    "d": null,
    "wt": null,
    "pd": null,
@@ -688,7 +708,7 @@
   },
   {
    "n": "Cast Iron Dosai, 12 inch, 2.16 kg, 1 Qty",
-   "h": "73239100",
+   "h": "73239190",
    "g": 5,
    "c": "IRON/STEEL TOOLS",
    "d": null,
@@ -1464,7 +1484,7 @@
   },
   {
    "n": "Coconut Shell Spatula 60x9x8 cm, 130 gm each, 2 Qty",
-   "h": "14049060",
+   "h": "44190019",
    "g": 5,
    "c": "COCONUT & COIR",
    "d": [
@@ -1482,7 +1502,7 @@
   },
   {
    "n": "Coconut Shell Spatula 60x9x8 cm, 130 gm each, 4 Qty",
-   "h": "14049060",
+   "h": "44190019",
    "g": 5,
    "c": "COCONUT & COIR",
    "d": [
@@ -1500,7 +1520,7 @@
   },
   {
    "n": "Coconut Shell Spatula 60x9x8 cm, 130 gm each, 6 Qty",
-   "h": "14049060",
+   "h": "44190019",
    "g": 5,
    "c": "COCONUT & COIR",
    "d": [
@@ -1518,7 +1538,7 @@
   },
   {
    "n": "Coconut Shell Spatula 60x9x8 cm, 130 gm, 1 Qty",
-   "h": "14049060",
+   "h": "44190019",
    "g": 5,
    "c": "COCONUT & COIR",
    "d": [
@@ -1586,7 +1606,7 @@
   },
   {
    "n": "Coir Brush, 37.5x11x4 cm, 275 gm, 1 Qty",
-   "h": "96301000",
+   "h": "96031000",
    "g": 5,
    "c": "COCONUT & COIR",
    "d": [
@@ -1851,7 +1871,7 @@
    "pwt": 123
   },
   {
-   "n": "Cotton Pillow Covers Burnt Orange, Golden Yellow, 49x48x0.5 cm, 86  gm each, 2 Qty",
+   "n": "Cotton Pillow Covers Burnt Orange, Golden Yellow, 49x48x0.5 cm, 86 gm each, 2 Qty",
    "h": "63049919",
    "g": 5,
    "c": "TEXTILES & APPAREL",
@@ -2157,7 +2177,7 @@
    "pwt": 3150
   },
   {
-   "n": "Cow Dung 500 gm Pack, 19 x 16 x 9 , 505  gm, 1 Qty",
+   "n": "Cow Dung 500 gm Pack, 19 x 16 x 9 , 505 gm, 1 Qty",
    "h": "31010099",
    "g": 0,
    "c": "AGRICULTURAL INPUTS",
@@ -2275,7 +2295,7 @@
    "pwt": 746
   },
   {
-   "n": "Floor Mat Oval Green, 48x31x1 cm, 255  gm, 1 Qty",
+   "n": "Floor Mat Oval Green, 48x31x1 cm, 255 gm, 1 Qty",
    "h": "57050029",
    "g": 5,
    "c": "TEXTILES & APPAREL",
@@ -3238,7 +3258,7 @@
   },
   {
    "n": "Mars Polo T-Shirt for Men, Black, L Size, 71x45x71 cm, 276 gm",
-   "h": "61091000",
+   "h": "61099010",
    "g": 5,
    "c": "TEXTILES & APPAREL",
    "d": null,
@@ -3252,7 +3272,7 @@
   },
   {
    "n": "Mars Polo T-Shirt for Men, Black, M Size, 71x45x71 cm, 270 gm",
-   "h": "61091000",
+   "h": "61099010",
    "g": 5,
    "c": "TEXTILES & APPAREL",
    "d": null,
@@ -3266,7 +3286,7 @@
   },
   {
    "n": "Mars Polo T-Shirt for Men, Black, XL Size, 71x45x71 cm, 300 gm",
-   "h": "61091000",
+   "h": "61099010",
    "g": 5,
    "c": "TEXTILES & APPAREL",
    "d": null,
@@ -3280,7 +3300,7 @@
   },
   {
    "n": "Mars Polo T-Shirt for Men, Navy Blue, L Size, 71x45x71 cm, 266 gm",
-   "h": "61091000",
+   "h": "61099010",
    "g": 5,
    "c": "TEXTILES & APPAREL",
    "d": null,
@@ -3294,7 +3314,7 @@
   },
   {
    "n": "Mars Polo T-Shirt for Men, Navy Blue, M Size, 71x45x71 cm, 275 gm",
-   "h": "61091000",
+   "h": "61099010",
    "g": 5,
    "c": "TEXTILES & APPAREL",
    "d": null,
@@ -3308,7 +3328,7 @@
   },
   {
    "n": "Mars Polo T-Shirt for Men, Navy Blue, XL Size, 71x45x71 cm, 274 gm",
-   "h": "61091000",
+   "h": "61099010",
    "g": 5,
    "c": "TEXTILES & APPAREL",
    "d": null,
@@ -3322,7 +3342,7 @@
   },
   {
    "n": "Mars Polo T-Shirt for Men, White, L Size, 71x45x71 cm, 275 gm",
-   "h": "61091000",
+   "h": "61099010",
    "g": 5,
    "c": "TEXTILES & APPAREL",
    "d": null,
@@ -3332,7 +3352,7 @@
   },
   {
    "n": "Mars Polo T-Shirt for Men, White, M Size, 71x45x71 cm, 236 gm",
-   "h": "61091000",
+   "h": "61099010",
    "g": 5,
    "c": "TEXTILES & APPAREL",
    "d": null,
@@ -3346,7 +3366,7 @@
   },
   {
    "n": "Mars Polo T-Shirt for Men, White, XL Size, 71x45x71 cm, 265 gm",
-   "h": "61091000",
+   "h": "61099010",
    "g": 5,
    "c": "TEXTILES & APPAREL",
    "d": null,
@@ -3813,6 +3833,16 @@
    "pwt": 916
   },
   {
+   "n": "Rat Trap - Iron, SpringLess Type, 35x16x15 cm, 560 gm, 2 Qty",
+   "h": "73269090",
+   "g": 18,
+   "c": "IRON/STEEL TOOLS",
+   "d": null,
+   "wt": null,
+   "pd": null,
+   "pwt": null
+  },
+  {
    "n": "Rat Trap - Wooden, 31x11x13 cm, 870 gm, 1 Qty",
    "h": "44219990",
    "g": 18,
@@ -4011,7 +4041,7 @@
    "pwt": null
   },
   {
-   "n": "Stainless Steel Bowl, 10x10x5 cm, 300 ml,  gm each, 2 Qty",
+   "n": "Stainless Steel Bowl, 10x10x5 cm, 300 ml, gm each, 2 Qty",
    "h": "73239390",
    "g": 5,
    "c": "STAINLESS STEEL",
@@ -4890,9 +4920,9 @@
   },
   {
    "n": "Teak Wood Trowel, 30.5x15x8 cm, 1.115 kg, 1 Qty",
-   "h": "82013000",
-   "g": 0,
-   "c": "IRON/STEEL TOOLS",
+   "h": "44170000",
+   "g": 18,
+   "c": "WOOD PRODUCTS",
    "d": [
     30.5,
     15,
