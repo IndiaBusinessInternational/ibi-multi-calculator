@@ -435,12 +435,13 @@ function aiExtract_(d) {
   if (d.provider === 'gemini')      out = callGemini_(key, prompt);
   else if (d.provider === 'claude') out = callClaude_(key, prompt);
   else if (d.provider === 'deepseek')
-    // 'deepseek-chat' was retired on 2026-07-24 — v4-flash replaces it.
+    // 'deepseek-flash' = DeepSeek V4.1 Flash, the canonical ID (the older
+    // 'deepseek-chat' / 'deepseek-v4-flash' aliases still resolve here).
     // thinking:disabled because v4 defaults to THINKING at high effort, and
     // this call only lifts already-OCR'd fields into a JSON array — there is
     // nothing to reason about, and the reasoning pass runs before the first
     // character of the answer. (Reasoning tokens also share the output budget.)
-    out = callOpenAiCompat_('https://api.deepseek.com/chat/completions', 'deepseek-v4-flash', key, prompt,
+    out = callOpenAiCompat_('https://api.deepseek.com/chat/completions', 'deepseek-flash', key, prompt,
                             { thinking: { type: 'disabled' } });
   else
     out = callOpenAiCompat_('https://api.openai.com/v1/chat/completions', 'gpt-4o-mini', key, prompt);
