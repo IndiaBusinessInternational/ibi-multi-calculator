@@ -1,10 +1,10 @@
 {
- "generated": "2026-09-03T09:24:14Z",
+ "generated": "2026-09-23T12:16:08Z",
  "source": "Product Names, HSN Code, GST, Prod & Pack Dimensions 5 Aug 2026.xlsx",
  "fileId": "18_gEDm7vNZt1-skIZqxu-FyDPxGUO9Yw",
  "jewellerySource": "register",
- "jewelleryCount": 60,
- "count": 329,
+ "jewelleryCount": 61,
+ "count": 330,
  "products": [
   {
    "n": "100% Pure Cotton Hand kerchief White, 43x43 cm, 28 gm each, 2 Qty",
@@ -2555,6 +2555,16 @@
    "c": "IMITATION JEWELLERY",
    "d": null,
    "wt": null,
+   "pd": null,
+   "pwt": null
+  },
+  {
+   "n": "Hydro Crystal Beads Chain Necklace Single Color Premium Pink",
+   "h": "71179010",
+   "g": 3,
+   "c": "IMITATION JEWELLERY",
+   "d": null,
+   "wt": 17,
    "pd": null,
    "pwt": null
   },
