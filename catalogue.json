@@ -1,10 +1,10 @@
 {
- "generated": "2026-09-29T06:05:40Z",
+ "generated": "2026-09-29T07:30:21Z",
  "source": "Product Names, HSN Code, GST, Prod & Pack Dimensions 5 Aug 2026.xlsx",
  "fileId": "18_gEDm7vNZt1-skIZqxu-FyDPxGUO9Yw",
  "jewellerySource": "register",
  "jewelleryCount": 66,
- "count": 335,
+ "count": 338,
  "products": [
   {
    "n": "100% Pure Cotton Hand kerchief White, 43x43 cm, 28 gm each, 2 Qty",
@@ -715,6 +715,42 @@
    "wt": null,
    "pd": null,
    "pwt": null
+  },
+  {
+   "n": "Ceramic Bowl Jar with Lid, Speckled Orange, 11x11x10 cm, 350 ml, 430 gm, 1 Qty",
+   "h": "69120020",
+   "g": 5,
+   "c": "CERAMIC",
+   "d": [
+    11,
+    11,
+    10
+   ],
+   "wt": 430,
+   "pd": [
+    20,
+    13,
+    14
+   ],
+   "pwt": 666
+  },
+  {
+   "n": "Ceramic Pickle Jar with Lid, Brown, 11x11x14 cm, 500 ml, 737 gm, 1 Qty",
+   "h": "69120020",
+   "g": 5,
+   "c": "CERAMIC",
+   "d": [
+    11,
+    11,
+    14
+   ],
+   "wt": 737,
+   "pd": [
+    18,
+    18,
+    16
+   ],
+   "pwt": 995
   },
   {
    "n": "Chappal Stitching Tool | Cobbler Awl, 12x2x2 cm, 11 gm, 1 Qty",
@@ -2347,6 +2383,24 @@
     3.5
    ],
    "pwt": 299
+  },
+  {
+   "n": "Glazed Ceramic Yellow Bowl with Lid, 10.5x10.5x9.5 cm, 400 gm, 1 Qty",
+   "h": "69120010",
+   "g": 5,
+   "c": "CERAMIC",
+   "d": [
+    10.5,
+    10.5,
+    9.5
+   ],
+   "wt": 400,
+   "pd": [
+    20,
+    18,
+    13
+   ],
+   "pwt": 640
   },
   {
    "n": "Guava Leaves 10 Qty Pack, 1 Qty",
