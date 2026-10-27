@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>IBI Multi-Platform Pricing Calculator</title>
+<script src="ibi-share.js" defer data-slot=".header-right"></script>
 <meta name="description" content="Multi-platform eCommerce pricing calculator for Amazon, Flipkart, Meesho, Shopsy, ShopClues, IBI Website and Offline. By India Business International.">
 <meta name="theme-color" content="#000000">
 <link rel="manifest" href="manifest.webmanifest">
@@ -11,16 +12,18 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="India Business International">
 <meta property="og:title" content="IBI Multi-Platform Pricing Calculator">
+<meta property="og:image:secure_url" content="https://calculator.indiabusinessinternational.online/assets/og-banner.jpg">
+<meta property="og:image:type" content="image/jpeg">
 <meta property="og:description" content="Price smarter on Amazon, Flipkart, Meesho, Shopsy & ShopClues — scan Seller Dashboard screenshots, get true profit, ROI & break-even instantly.">
 <meta property="og:url" content="https://calculator.indiabusinessinternational.online/">
-<meta property="og:image" content="https://calculator.indiabusinessinternational.online/assets/og-banner.png">
+<meta property="og:image" content="https://calculator.indiabusinessinternational.online/assets/og-banner.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="IBI Multi-Platform Pricing Calculator">
 <meta name="twitter:description" content="Price smarter on Amazon, Flipkart, Meesho, Shopsy & ShopClues — scan Seller Dashboard screenshots, get true profit, ROI & break-even instantly.">
-<meta name="twitter:image" content="https://calculator.indiabusinessinternational.online/assets/og-banner.png">
+<meta name="twitter:image" content="https://calculator.indiabusinessinternational.online/assets/og-banner.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -454,7 +457,7 @@ input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-
 <!-- ═════════════════ HEADER (slim sticky toolbar) ═════════════════ -->
 <header class="header">
   <div class="header-left">
-    <span class="ver-badge" id="ver-badge" title="IBI Multi-Calculator version">v4.16</span>
+    <span class="ver-badge" id="ver-badge" title="IBI Multi-Calculator version">v4.17</span>
     <div>
       <div class="header-brand">IBI Multi-Platform Pricing Calculator</div>
       <div class="header-sub">iINTELLIGENCEi · Internal Seller Tool</div>
@@ -477,7 +480,7 @@ input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-
         <button class="settings-item" onclick="el('restore-file').click()"><span class="si-icon">📥</span> Restore from Backup</button>
         <div class="settings-div"></div>
         <button class="settings-item" onclick="showKbdHelp()"><span class="si-icon">⌨</span> Keyboard Shortcuts</button>
-        <div class="settings-note" id="settings-ver">IBI Multi-Calculator · v4.16</div>
+        <div class="settings-note" id="settings-ver">IBI Multi-Calculator · v4.17</div>
       </div>
     </div>
     <input type="file" id="restore-file" accept="application/json,.json" style="display:none" onchange="restoreBackup(this.files[0]); this.value='';">
@@ -1195,7 +1198,7 @@ function callClaude_(key, prompt) {
 // ═════════════════ VERSION ═════════════════
 // Major = big features (v3 → v4) · minor = small patches (v3.0 → v3.1).
 // Keep in sync with CACHE in sw.js on every release.
-const APP_VERSION = 'v4.16';
+const APP_VERSION = 'v4.17';
 
 // ═════════════════ IBI PRODUCT CATALOGUE ═════════════════
 // The 268-SKU product master, synced 2 Aug 2026 from

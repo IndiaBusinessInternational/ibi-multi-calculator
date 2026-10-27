@@ -1,9 +1,9 @@
-# IBI Multi-Platform Pricing Calculator — v4.16
+# IBI Multi-Platform Pricing Calculator — v4.17
 
 Internal seller tool for **India Business International (IBI) · iINTELLIGENCEi**.
 **Live:** https://calculator.indiabusinessinternational.online/ · installable as a PWA (works offline).
 
-**Current version: v4.16** — shown in the top-left badge. (v4.16: button and label text never splits mid-word on phones. v4.15: phones run edge to edge — full-width panels, mode switch and notice, 10px side padding, page never wider than the screen. v4.9: the catalogue now refreshes itself from the Google master — see below. v4.8: the Product name field became a searchable picker backed by the 268-SKU IBI product master — picking a catalogue product shows its HSN/category and sets the GST rate automatically; free text still works. v4.6: brand accent colour changed to #7F00FF violet across UI, favicon, PWA icons and OG banner.) Versioning: minor patches bump the decimal (v3.1), big features bump the major (v4). On each release also bump `APP_VERSION` in `index.html` and `CACHE` in `sw.js`.
+**Current version: v4.17** — shown in the top-left badge. (v4.17: WhatsApp link preview uses a JPEG banner with og:image:type, and a round Share this app button sits in the header. v4.16: button and label text never splits mid-word on phones. v4.15: phones run edge to edge — full-width panels, mode switch and notice, 10px side padding, page never wider than the screen. v4.9: the catalogue now refreshes itself from the Google master — see below. v4.8: the Product name field became a searchable picker backed by the 268-SKU IBI product master — picking a catalogue product shows its HSN/category and sets the GST rate automatically; free text still works. v4.6: brand accent colour changed to #7F00FF violet across UI, favicon, PWA icons and OG banner.) Versioning: minor patches bump the decimal (v3.1), big features bump the major (v4). On each release also bump `APP_VERSION` in `index.html` and `CACHE` in `sw.js`.
 
 ## Platforms
 
