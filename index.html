@@ -100,7 +100,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 
 /* ═════════════════ LAYOUT ═════════════════ */
 .container{max-width:1080px;margin:0 auto;padding:18px 16px 40px;}
-.calc-area{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:14px;}
+.calc-area{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;margin-top:14px;}
 @media(max-width:680px){
   .calc-area{grid-template-columns:1fr;gap:10px;}
   .header{height:auto;padding:9px 10px;flex-wrap:wrap;gap:6px;}
@@ -109,28 +109,29 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
   .header-badge,.kbd-toggle,.switch-lbl{display:none;}
   .header-left{gap:8px;}
   .header-left svg{width:36px;height:30px;}
-  /* Edge-to-edge: no side padding, panels span the full screen width */
-  .container{padding:0 0 32px;}
-  .platform-wrap,.mode-wrap,.notice,.history-wrap,.footer{margin-left:8px;margin-right:8px;}
-  .platform-wrap{margin-top:12px;}
-  body .panel,body .gs-setup-wrap{border-radius:0;border-left:none;border-right:none;}
-  /* v4.15 (CEO 11 Oct 2026, edge to edge on phones): the mode switch and the platform notice run the full width too,
-     10px inner side padding everywhere (header 8px), no card shadows, and the page can never be wider than the screen
-     (clip, not hidden, so the sticky header keeps working). Fonts unchanged. */
-  html,body{overflow-x:clip;}
-  .header{padding-left:8px;padding-right:8px;}
-  .mode-wrap,.notice{margin-left:0;margin-right:0;}
-  .platform-wrap,.history-wrap,.footer{margin-left:0;margin-right:0;padding-left:10px;padding-right:10px;}
-  body .mode-toggle{border-radius:0;border-left:none;border-right:none;box-shadow:none;padding:5px 10px;}
-  body .notice{border-radius:0;border-left:none;border-right:none;padding:11px 10px;margin-bottom:8px;}
-  body .notice.grp-a,body .notice.grp-b,body .notice.grp-c{border-left:none;border-right:none;}
-  body .panel,body .gs-setup-wrap{box-shadow:none;}
-  body .panel-header{padding:14px 10px 13px;}
-  body .panel-body{padding:16px 10px;}
-  .calc-area{grid-template-columns:minmax(0,1fr);gap:8px;}
-  .panel,.notice,.hist-card{overflow-wrap:break-word;}
-  body button,body .btn,body select,body input,body [role="button"]{overflow-wrap:normal;}
+  .calc-area{grid-template-columns:minmax(0,1fr);}
 }
+/* v4.19 edge to edge on EVERY screen size (Founder 27 Oct 2026: "make all the apps edge to edge on laptop too").
+   The v4.15 phone spacing now applies at every width: no 1080px centred container, no side gutter, full-bleed
+   panels with no side border, radius or shadow, 10px inner side padding (header 8px), page never wider than the
+   screen (clip, not hidden, so the sticky header keeps working). Wide screens keep the two panels side by side. */
+html,body{overflow-x:clip;}
+.container{max-width:none;margin:0;padding:0 0 32px;}
+.header{padding-left:8px;padding-right:8px;}
+.platform-wrap{margin-top:12px;}
+.mode-wrap,.notice{margin-left:0;margin-right:0;}
+.platform-wrap,.history-wrap,.footer{margin-left:0;margin-right:0;padding-left:10px;padding-right:10px;}
+body .mode-toggle{border-radius:0;border-left:none;border-right:none;box-shadow:none;padding:5px 10px;}
+body .notice{border-radius:0;border-left:none;border-right:none;padding:11px 10px;margin-bottom:8px;}
+body .notice.grp-a,body .notice.grp-b,body .notice.grp-c{border-left:none;border-right:none;}
+body .panel,body .gs-setup-wrap{border-radius:0;border-left:none;border-right:none;box-shadow:none;}
+body .panel-header{padding:14px 10px 13px;}
+body .panel-body{padding:16px 10px;}
+body .gs-setup-header{padding-left:10px;padding-right:10px;}
+body .gs-setup-body{padding-left:10px;padding-right:10px;}
+.calc-area{gap:8px;}
+.panel,.notice,.hist-card{overflow-wrap:break-word;}
+body button,body .btn,body select,body input,body [role="button"]{overflow-wrap:normal;}
 
 /* ═════════════════ SECTION LABEL ═════════════════ */
 .section-label{font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:9px;display:flex;align-items:center;gap:8px;}
@@ -460,7 +461,7 @@ input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-
 <!-- ═════════════════ HEADER (slim sticky toolbar) ═════════════════ -->
 <header class="header">
   <div class="header-left">
-    <span class="ver-badge" id="ver-badge" title="IBI Multi-Calculator version">v4.18</span>
+    <span class="ver-badge" id="ver-badge" title="IBI Multi-Calculator version">v4.19</span>
     <div>
       <div class="header-brand">IBI Multi-Platform Pricing Calculator</div>
       <div class="header-sub">iINTELLIGENCEi · Internal Seller Tool</div>
@@ -483,7 +484,7 @@ input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-
         <button class="settings-item" onclick="el('restore-file').click()"><span class="si-icon">📥</span> Restore from Backup</button>
         <div class="settings-div"></div>
         <button class="settings-item" onclick="showKbdHelp()"><span class="si-icon">⌨</span> Keyboard Shortcuts</button>
-        <div class="settings-note" id="settings-ver">IBI Multi-Calculator · v4.18</div>
+        <div class="settings-note" id="settings-ver">IBI Multi-Calculator · v4.19</div>
       </div>
     </div>
     <input type="file" id="restore-file" accept="application/json,.json" style="display:none" onchange="restoreBackup(this.files[0]); this.value='';">
@@ -1201,7 +1202,7 @@ function callClaude_(key, prompt) {
 // ═════════════════ VERSION ═════════════════
 // Major = big features (v3 → v4) · minor = small patches (v3.0 → v3.1).
 // Keep in sync with CACHE in sw.js on every release.
-const APP_VERSION = 'v4.18';
+const APP_VERSION = 'v4.19';
 
 // ═════════════════ IBI PRODUCT CATALOGUE ═════════════════
 // The 268-SKU product master, synced 2 Aug 2026 from
