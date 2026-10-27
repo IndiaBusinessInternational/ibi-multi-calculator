@@ -445,6 +445,9 @@ body.dark .switch::after{transform:translateX(19px);content:'🌙';background:#0
 ::-webkit-scrollbar-thumb{background:var(--border-md);border-radius:10px;}
 ::-webkit-scrollbar-thumb:hover{background:var(--border-lg);}
 input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{opacity:.5;}
+/* v4.18 (27 Oct 2026): the Share icon inherited the dark page text colour and was nearly invisible on the black
+   header; it now uses the same light grey as the settings gear beside it. */
+.header-right > ibi-share-button{color:rgba(255,255,255,.8) !important;}
 </style>
 </head>
 <body>
@@ -457,7 +460,7 @@ input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-
 <!-- ═════════════════ HEADER (slim sticky toolbar) ═════════════════ -->
 <header class="header">
   <div class="header-left">
-    <span class="ver-badge" id="ver-badge" title="IBI Multi-Calculator version">v4.17</span>
+    <span class="ver-badge" id="ver-badge" title="IBI Multi-Calculator version">v4.18</span>
     <div>
       <div class="header-brand">IBI Multi-Platform Pricing Calculator</div>
       <div class="header-sub">iINTELLIGENCEi · Internal Seller Tool</div>
@@ -480,7 +483,7 @@ input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-
         <button class="settings-item" onclick="el('restore-file').click()"><span class="si-icon">📥</span> Restore from Backup</button>
         <div class="settings-div"></div>
         <button class="settings-item" onclick="showKbdHelp()"><span class="si-icon">⌨</span> Keyboard Shortcuts</button>
-        <div class="settings-note" id="settings-ver">IBI Multi-Calculator · v4.17</div>
+        <div class="settings-note" id="settings-ver">IBI Multi-Calculator · v4.18</div>
       </div>
     </div>
     <input type="file" id="restore-file" accept="application/json,.json" style="display:none" onchange="restoreBackup(this.files[0]); this.value='';">
@@ -1198,7 +1201,7 @@ function callClaude_(key, prompt) {
 // ═════════════════ VERSION ═════════════════
 // Major = big features (v3 → v4) · minor = small patches (v3.0 → v3.1).
 // Keep in sync with CACHE in sw.js on every release.
-const APP_VERSION = 'v4.17';
+const APP_VERSION = 'v4.18';
 
 // ═════════════════ IBI PRODUCT CATALOGUE ═════════════════
 // The 268-SKU product master, synced 2 Aug 2026 from
